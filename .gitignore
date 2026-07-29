@@ -1,0 +1,46 @@
+# Secrets
+.env
+.env.*
+!.env.example
+.security.yml
+**/.security.yml
+*.pem
+*.key
+*.p12
+*.pfx
+.netrc
+.git-credentials
+
+# Runtime/private phone data
+phone-results/
+**/phone-results/
+phase0-diagnostics-*.tar.gz*
+**/runtime/
+**/logs/
+**/reports/
+**/tests/active.json
+
+# Build/cache
+.cache/
+build/
+build-*/
+dist/
+out/
+target/
+node_modules/
+__pycache__/
+*.pyc
+
+# Generic generated archives/binaries
+*.bundle
+*.tar.gz
+*.apk
+*.so
+*.exe
+
+# Intentionally versioned archival qualification kit
+!phase0-android-runtime/release/phase0-phone-kit.tar.gz
+
+# Preservation archives are attached to the archival GitHub Release, not Git history
+archive/phase0-local-all-refs.bundle
+archive/phase0-working-tree-complete.tar.gz
