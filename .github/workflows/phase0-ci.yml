@@ -44,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           bash "$HARNESS/scripts/scan-secrets.sh" .
-          sha256sum -c "$HARNESS/release/phase0-phone-kit.tar.gz.sha256"
+          (cd "$HARNESS/release" && sha256sum -c phase0-phone-kit.tar.gz.sha256)
           python3 -m json.tool "$HARNESS/manifests/source-manifest.json" >/dev/null
           python3 -m json.tool "$HARNESS/manifests/sbom.cdx.json" >/dev/null
 
