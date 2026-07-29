@@ -14,6 +14,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
@@ -26,18 +27,22 @@ type managedSession struct {
 	client  *mcp.Client
 	session *mcp.ClientSession
 	tools   map[string]*mcp.Tool
+	cancel  context.CancelFunc
 }
 
 type Manager struct {
 	mu        sync.Mutex
 	configs   map[string]ServerConfig
 	sessions  map[string]*managedSession
+	ctx       context.Context
+	cancel    context.CancelFunc
 	Approvals *approval.Manager
 	Audit     *audit.Logger
 }
 
 func NewManager(approvals *approval.Manager, auditLogger *audit.Logger) *Manager {
-	return &Manager{configs: map[string]ServerConfig{}, sessions: map[string]*managedSession{}, Approvals: approvals, Audit: auditLogger}
+	ctx, cancel := context.WithCancel(context.Background())
+	return &Manager{configs: map[string]ServerConfig{}, sessions: map[string]*managedSession{}, ctx: ctx, cancel: cancel, Approvals: approvals, Audit: auditLogger}
 }
 
 func (m *Manager) Register(ctx context.Context, config ServerConfig) error {
@@ -156,6 +161,9 @@ func (m *Manager) authorize(ctx context.Context, config ServerConfig, call skill
 }
 
 func (m *Manager) getSession(ctx context.Context, config ServerConfig) (*managedSession, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
 	m.mu.Lock()
 	if session := m.sessions[config.ID]; session != nil {
 		m.mu.Unlock()
@@ -163,7 +171,7 @@ func (m *Manager) getSession(ctx context.Context, config ServerConfig) (*managed
 	}
 	m.mu.Unlock()
 
-	session, err := connect(ctx, config)
+	session, err := connect(m.ctx, config)
 	if err != nil {
 		return nil, err
 	}
@@ -178,16 +186,29 @@ func (m *Manager) getSession(ctx context.Context, config ServerConfig) (*managed
 	return session, nil
 }
 
-func connect(ctx context.Context, config ServerConfig) (*managedSession, error) {
+func connect(parent context.Context, config ServerConfig) (*managedSession, error) {
+	lifetime, cancel := context.WithCancel(parent)
+	timedOut := make(chan struct{})
+	timer := time.AfterFunc(config.Timeout, func() {
+		close(timedOut)
+		cancel()
+	})
+	failed := true
+	defer func() {
+		if failed {
+			cancel()
+		}
+	}()
 	client := mcp.NewClient(&mcp.Implementation{Name: "mosaid", Title: "Mosaid", Version: "0.1.0"}, nil)
 	var transport mcp.Transport
 	switch config.Transport {
 	case Stdio:
 		actual, err := fileSHA256(config.Stdio.Executable)
 		if err != nil || !strings.EqualFold(actual, config.Stdio.ChecksumSHA256) {
+			timer.Stop()
 			return nil, fmt.Errorf("%w: executable changed before launch", ErrInvalidConfig)
 		}
-		command := exec.CommandContext(ctx, config.Stdio.Executable, config.Stdio.Arguments...)
+		command := exec.CommandContext(lifetime, config.Stdio.Executable, config.Stdio.Arguments...)
 		command.Dir = config.Stdio.WorkingDir
 		command.Env = filteredEnvironment(config)
 		transport = &mcp.CommandTransport{Command: command, TerminateDuration: config.Timeout}
@@ -199,18 +220,34 @@ func connect(ctx context.Context, config ServerConfig) (*managedSession, error) 
 			DisableStandaloneSSE: config.HTTP.DisableStandaloneSSE,
 		}
 	default:
+		timer.Stop()
 		return nil, ErrInvalidConfig
 	}
-	session, err := client.Connect(ctx, transport, nil)
+	session, err := client.Connect(lifetime, transport, nil)
 	if err != nil {
+		timer.Stop()
+		select {
+		case <-timedOut:
+			return nil, context.DeadlineExceeded
+		default:
+		}
 		return nil, err
 	}
-	tools, err := discoverAllowedTools(ctx, session, config.ToolAllowlist)
+	tools, err := discoverAllowedTools(lifetime, session, config.ToolAllowlist)
+	if !timer.Stop() {
+		select {
+		case <-timedOut:
+			_ = session.Close()
+			return nil, context.DeadlineExceeded
+		default:
+		}
+	}
 	if err != nil {
 		_ = session.Close()
 		return nil, err
 	}
-	return &managedSession{client: client, session: session, tools: tools}, nil
+	failed = false
+	return &managedSession{client: client, session: session, tools: tools, cancel: cancel}, nil
 }
 
 func discoverAllowedTools(ctx context.Context, session *mcp.ClientSession, allowlist []string) (map[string]*mcp.Tool, error) {
@@ -265,9 +302,10 @@ func (m *Manager) Reset(serverID string) error {
 	delete(m.sessions, serverID)
 	m.mu.Unlock()
 	if session != nil {
+		session.cancel()
 		err := session.session.Close()
 		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+		if errors.As(err, &exitErr) || errors.Is(err, context.Canceled) {
 			return nil
 		}
 		return err
@@ -287,6 +325,7 @@ func (m *Manager) Close() error {
 	for _, id := range ids {
 		combined = errors.Join(combined, m.Reset(id))
 	}
+	m.cancel()
 	return combined
 }
 
