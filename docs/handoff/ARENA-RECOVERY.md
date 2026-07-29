@@ -8,9 +8,10 @@ Date: 2026-07-29
 - Branch: `build/mosaid-product-foundation-20260729`
 - Draft PR: `https://github.com/mohamedmasoud3030-tech/mosaid/pull/2`
 - Phase 13 implementation commit: `0dfba136981ff983ff5f180bef88314a26b01118`
-- Product CI on that commit:
-  - Push: `https://github.com/mohamedmasoud3030-tech/mosaid/actions/runs/30447913703`
-  - Draft PR: `https://github.com/mohamedmasoud3030-tech/mosaid/actions/runs/30447916090`
+- Hardened CI activation commit: `9376d77d2e1dfa387b5129e88446b441e8b48eef`
+- Expanded Product CI:
+  - Push: `https://github.com/mohamedmasoud3030-tech/mosaid/actions/runs/30452139545`
+  - Draft PR: `https://github.com/mohamedmasoud3030-tech/mosaid/actions/runs/30452138991`
 
 ## Completed
 
@@ -18,12 +19,9 @@ Phases 1–12 remain complete. Phase 13 software hardening is complete and pushe
 
 The final Phase 13 local run counted 140 passing tests and zero failures. Race, vet, staticcheck, and govulncheck passed; govulncheck reported no vulnerabilities.
 
-## Authorization blocker
+## Workflow authorization resolution
 
-The temporary GitHub credential can push normal repository content but GitHub rejected an update to `.github/workflows/product-ci.yml` because it lacks Workflows write permission. The active workflow was deliberately left unchanged. The desired pinned workflow and activation instructions are committed as:
-
-- `docs/handoff/PRODUCT-CI-HARDENING.pending.yml`
-- `docs/handoff/PHASE13-PUSH-BLOCKER.md`
+The first temporary credential lacked Workflows write permission, and GitHub correctly rejected that specific update. A replacement approved credential was then used to activate the reviewed workflow normally in `9376d77`. Both expanded CI runs passed. The temporary pending copy was removed; the active source of truth is `.github/workflows/product-ci.yml`.
 
 No force-push, bypass, or history rewrite was used.
 

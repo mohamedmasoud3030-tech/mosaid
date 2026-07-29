@@ -22,9 +22,7 @@ Migrations are numbered, transactional, and recorded only after their body succe
 
 ## Continuous verification
 
-The Phase 13 local gate ran formatting, `go mod verify`, 140 unit tests, race tests, vet, staticcheck, govulncheck, Linux/Android builds, checksums, secret scan, deterministic CycloneDX SBOM regeneration/verification, and license verification. The pre-existing Product CI subset passed on commit `0dfba13`.
-
-The expanded CI workflow could not be activated with the temporary token because GitHub requires Workflows write permission. Its exact definition is preserved at `docs/handoff/PRODUCT-CI-HARDENING.pending.yml` for a normal later commit with an approved credential.
+The Phase 13 gate runs formatting, `go mod verify`, 140 unit tests, race tests, vet, staticcheck, govulncheck, Linux/Android builds, checksums, secret scan, deterministic CycloneDX SBOM regeneration/verification, license verification, and clean-tree verification. The expanded Product CI was activated in `9376d77` and both its push and Draft PR runs passed. Build outputs and evidence are retained as short-lived GitHub Actions artifacts.
 
 Tracked evidence:
 
