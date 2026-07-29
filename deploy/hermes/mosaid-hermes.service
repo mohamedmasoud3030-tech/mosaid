@@ -40,6 +40,9 @@ AmbientCapabilities=
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 SystemCallArchitectures=native
 ReadOnlyPaths=/opt/mosaid
+ReadOnlyPaths=/var/lib/mosaid/hermes/SOUL.md
+ReadOnlyPaths=/var/lib/mosaid/hermes/.no-bundled-skills
+ReadOnlyPaths=/var/lib/mosaid/workspaces/.hermes.md
 ReadWritePaths=/var/lib/mosaid
 
 LimitNOFILE=4096
