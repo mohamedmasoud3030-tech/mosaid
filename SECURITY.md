@@ -37,7 +37,9 @@ Termux does **not** provide a strong sandbox between processes running under its
 
 ## Continuous controls
 
-Product CI verifies formatting, module checksums, unit/race tests, vet, staticcheck, govulncheck, Linux and Android builds, binary checksums, secret scan, deterministic CycloneDX SBOM, license classification, and a clean working tree. Tracked evidence is under [`security/`](security/).
+The Phase 13 local gate verified formatting, module checksums, 140 unit tests, race tests, vet, staticcheck, govulncheck, Linux and Android builds, binary checksums, secret scan, deterministic CycloneDX SBOM, and license classification. The existing Product CI also passed on the Phase 13 commit.
+
+Activation of the expanded CI definition is still pending because the temporary GitHub token lacked Workflows write permission. The exact reviewed workflow is preserved at [`docs/handoff/PRODUCT-CI-HARDENING.pending.yml`](docs/handoff/PRODUCT-CI-HARDENING.pending.yml); see the adjacent blocker note. Tracked SBOM/license evidence is under [`security/`](security/).
 
 Security scans are point-in-time evidence, not proof that the system is vulnerability-free.
 

@@ -22,7 +22,9 @@ Migrations are numbered, transactional, and recorded only after their body succe
 
 ## Continuous verification
 
-Product CI runs formatting, `go mod verify`, unit tests, race tests, vet, staticcheck, govulncheck, Linux/Android builds, checksums, secret scan, deterministic CycloneDX SBOM regeneration/verification, license verification, and a clean-tree check. Build outputs are retained as short-lived CI artifacts.
+The Phase 13 local gate ran formatting, `go mod verify`, 140 unit tests, race tests, vet, staticcheck, govulncheck, Linux/Android builds, checksums, secret scan, deterministic CycloneDX SBOM regeneration/verification, and license verification. The pre-existing Product CI subset passed on commit `0dfba13`.
+
+The expanded CI workflow could not be activated with the temporary token because GitHub requires Workflows write permission. Its exact definition is preserved at `docs/handoff/PRODUCT-CI-HARDENING.pending.yml` for a normal later commit with an approved credential.
 
 Tracked evidence:
 
