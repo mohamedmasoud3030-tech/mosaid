@@ -6,24 +6,44 @@ set -euo pipefail
 
 readonly EXPECTED_HERMES_REF="b8ceba97ed0b2bf0255cc5c8c61c9110a026cda4"
 readonly EXPECTED_REPOSITORY="https://github.com/NousResearch/hermes-agent.git"
+readonly EXPECTED_ROOT="/opt/mosaid"
+readonly EXPECTED_DATA="/var/lib/mosaid"
+readonly EXPECTED_HOME="/var/lib/mosaid/hermes"
 
 MOSAID_SOURCE="${MOSAID_SOURCE:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-MOSAID_ROOT="${MOSAID_ROOT:-/opt/mosaid}"
-MOSAID_DATA="${MOSAID_DATA:-/var/lib/mosaid}"
-HERMES_HOME="${HERMES_HOME:-${MOSAID_DATA}/hermes}"
+MOSAID_ROOT="${MOSAID_ROOT:-${EXPECTED_ROOT}}"
+MOSAID_DATA="${MOSAID_DATA:-${EXPECTED_DATA}}"
+HERMES_HOME="${HERMES_HOME:-${EXPECTED_HOME}}"
 HERMES_REF="${HERMES_REF:-${EXPECTED_HERMES_REF}}"
 HERMES_REPOSITORY="${HERMES_REPOSITORY:-${EXPECTED_REPOSITORY}}"
+
+release_dir=""
+temporary_dir=""
+created_release=false
 
 fail() {
   printf 'stage-release: %s\n' "$*" >&2
   exit 1
 }
 
+cleanup() {
+  local status=$?
+  [[ -z "${temporary_dir}" ]] || rm -rf "${temporary_dir}"
+  if [[ ${status} -ne 0 && "${created_release}" == true && -n "${release_dir}" ]]; then
+    rm -rf "${release_dir}"
+  fi
+  exit "${status}"
+}
+trap cleanup EXIT
+
 require_command() {
   command -v "$1" >/dev/null 2>&1 || fail "required command not found: $1"
 }
 
 [[ "${EUID}" -eq 0 ]] || fail "run as root on the Oracle instance"
+[[ "${MOSAID_ROOT}" == "${EXPECTED_ROOT}" ]] || fail "first gate requires MOSAID_ROOT=${EXPECTED_ROOT}"
+[[ "${MOSAID_DATA}" == "${EXPECTED_DATA}" ]] || fail "first gate requires MOSAID_DATA=${EXPECTED_DATA}"
+[[ "${HERMES_HOME}" == "${EXPECTED_HOME}" ]] || fail "first gate requires HERMES_HOME=${EXPECTED_HOME}"
 [[ "${HERMES_REF}" == "${EXPECTED_HERMES_REF}" ]] || fail "unreviewed Hermes ref: ${HERMES_REF}"
 [[ "${HERMES_REPOSITORY}" == "${EXPECTED_REPOSITORY}" ]] || fail "unexpected Hermes repository: ${HERMES_REPOSITORY}"
 [[ -f "${MOSAID_SOURCE}/product/hermes/SOUL.md" ]] || fail "Mosaid SOUL.md not found"
@@ -62,11 +82,16 @@ if [[ ! -d "${release_dir}/.git" ]]; then
   grep -q 'version = "0.19.0"' "${temporary_dir}/pyproject.toml" || fail "unexpected Hermes version"
   grep -q 'requires-python = ">=3.11,<3.14"' "${temporary_dir}/pyproject.toml" || fail "unexpected Hermes Python range"
 
-  uv sync --project "${temporary_dir}" --frozen --no-dev --extra messaging
+  # Move source before creating .venv; console-script shebangs contain absolute
+  # paths and would break if the completed virtual environment were moved.
   mv "${temporary_dir}" "${release_dir}"
+  temporary_dir=""
+  created_release=true
+  uv sync --project "${release_dir}" --frozen --no-dev --extra messaging
 else
   [[ "$(git -C "${release_dir}" rev-parse HEAD)" == "${HERMES_REF}" ]] || fail "existing release SHA mismatch"
   [[ "$(git -C "${release_dir}" remote get-url origin)" == "${HERMES_REPOSITORY}" ]] || fail "existing release origin mismatch"
+  [[ -x "${release_dir}/.venv/bin/hermes" ]] || fail "existing release is missing the Hermes console script"
 fi
 
 product_tmp="${MOSAID_ROOT}/product.tmp.$$"
@@ -92,6 +117,7 @@ install -m 0444 /dev/null "${HERMES_HOME}/.no-bundled-skills"
 
 ln -sfn "${release_dir}" "${MOSAID_ROOT}/current.new"
 mv -Tf "${MOSAID_ROOT}/current.new" "${MOSAID_ROOT}/current"
+created_release=false
 
 printf '%s\n' \
   "Staged Hermes ${HERMES_REF}" \
