@@ -54,6 +54,8 @@ require_command() {
 [[ -f "${MOSAID_SOURCE}/product/hermes/SOUL.md" ]] || fail "Mosaid SOUL.md not found"
 [[ -f "${MOSAID_SOURCE}/product/hermes/.hermes.md" ]] || fail "Mosaid .hermes.md not found"
 [[ -f "${MOSAID_SOURCE}/deploy/hermes/config.yaml.example" ]] || fail "Hermes config template not found"
+[[ -f "${MOSAID_SOURCE}/deploy/hermes/preflight.sh" ]] || fail "Hermes preflight not found"
+[[ -f "${MOSAID_SOURCE}/deploy/hermes/mosaid-hermes.service" ]] || fail "systemd unit not found"
 [[ -f "${MOSAID_SOURCE}/product/skills/research/SKILL.md" ]] || fail "Mosaid Skills not found"
 
 require_command git
@@ -73,7 +75,7 @@ PY
 release_dir="${MOSAID_ROOT}/releases/${HERMES_REF}"
 temporary_dir="${release_dir}.tmp.$$"
 
-install -d -o root -g root -m 0755 "${MOSAID_ROOT}/releases" "${MOSAID_ROOT}/bin"
+install -d -m 0755 "${MOSAID_ROOT}/releases" "${MOSAID_ROOT}/bin"
 install -d -o "${MOSAID_USER}" -g "${MOSAID_GROUP}" -m 0700 \
   "${HERMES_HOME}" "${HERMES_HOME}/memories" "${HERMES_HOME}/pending" "${HERMES_HOME}/skills"
 install -d -o "${MOSAID_USER}" -g "${MOSAID_GROUP}" -m 0750 \
@@ -121,6 +123,9 @@ product_tmp=""
 
 install -o root -g root -m 0444 "${MOSAID_ROOT}/product/hermes/SOUL.md" "${HERMES_HOME}/SOUL.md"
 install -o root -g root -m 0444 "${MOSAID_ROOT}/product/hermes/.hermes.md" "${MOSAID_DATA}/workspaces/.hermes.md"
+install -o root -g root -m 0555 "${MOSAID_SOURCE}/deploy/hermes/preflight.sh" "${MOSAID_ROOT}/bin/preflight-hermes"
+install -o root -g root -m 0444 "${MOSAID_SOURCE}/deploy/hermes/mosaid-hermes.service" \
+  "/etc/systemd/system/mosaid-hermes.service"
 
 if [[ ! -e "${HERMES_HOME}/config.yaml" ]]; then
   install -o "${MOSAID_USER}" -g "${MOSAID_GROUP}" -m 0600 \
@@ -140,5 +145,6 @@ printf '%s\n' \
   "Release: ${release_dir}" \
   "Product: ${MOSAID_ROOT}/product" \
   "Hermes home: ${HERMES_HOME}" \
-  "Service was not started." \
-  "Next: create ${HERMES_HOME}/.env with mode 0600, validate config, then install the systemd unit."
+  "Service unit: /etc/systemd/system/mosaid-hermes.service" \
+  "Service was not started or enabled." \
+  "Next: create ${HERMES_HOME}/.env with mode 0600, run the preflight, then explicitly enable the service."
