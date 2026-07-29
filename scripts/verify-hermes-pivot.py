@@ -17,6 +17,9 @@ REQUIRED = [
     "docs/pivot/ORACLE-DEPLOYMENT-PLAN.md",
     "deploy/hermes/config.yaml.example",
     "deploy/hermes/mosaid.env.example",
+    "deploy/hermes/stage-release.sh",
+    "deploy/hermes/preflight.sh",
+    "deploy/hermes/mosaid-hermes.service",
     "product/hermes/SOUL.md",
     "product/hermes/.hermes.md",
     "product/skills/research/SKILL.md",
@@ -133,6 +136,9 @@ def main() -> None:
     env = read("deploy/hermes/mosaid.env.example")
     pin_doc = read("docs/pivot/HERMES-UPSTREAM-PIN.md")
     config = read("deploy/hermes/config.yaml.example")
+    stage = read("deploy/hermes/stage-release.sh")
+    preflight = read("deploy/hermes/preflight.sh")
+    unit = read("deploy/hermes/mosaid-hermes.service")
     soul = read("product/hermes/SOUL.md")
     policy = read("product/hermes/.hermes.md")
     skill = read("product/skills/research/SKILL.md")
@@ -140,12 +146,28 @@ def main() -> None:
     env_pin = re.search(r"^HERMES_REF=([0-9a-f]{40})$", env, flags=re.MULTILINE)
     if not env_pin or env_pin.group(1) != PIN:
         fail("environment template does not pin the reviewed Hermes commit")
-    if PIN not in pin_doc:
-        fail("upstream pin document disagrees with environment template")
+    for label, text in {
+        "upstream pin document": pin_doc,
+        "stage script": stage,
+        "preflight": preflight,
+    }.items():
+        if PIN not in text:
+            fail(f"{label} disagrees with the reviewed Hermes commit")
     if "HERMES_REF=main" in env or "HERMES_REF=master" in env:
         fail("floating Hermes branch is forbidden")
     if re.search(r"^[A-Z0-9_]+_FILE=", env, flags=re.MULTILINE):
         fail("unsupported *_FILE variables found in Hermes environment template")
+
+    if re.search(r"\bsystemctl\s+(?:start|restart|enable|enable\s+--now)\b", stage):
+        fail("stage script must not start or enable the service")
+    for fragment in [
+        'uv sync --project "${release_dir}" --frozen --no-dev --extra messaging',
+        'mv "${temporary_dir}" "${release_dir}"',
+        'install -o root -g root -m 0555',
+        'system user \'${MOSAID_USER}\' does not exist',
+    ]:
+        if fragment not in stage:
+            fail(f"stage script missing invariant: {fragment}")
 
     required_config = [
         'provider: "custom"',
@@ -175,6 +197,24 @@ def main() -> None:
     missing_denials = DANGEROUS_TOOLSETS - disabled
     if missing_denials:
         fail(f"dangerous toolsets are not globally disabled: {sorted(missing_denials)}")
+
+    for fragment in [
+        "User=mosaid",
+        "Group=mosaid",
+        "ExecStartPre=/opt/mosaid/bin/preflight-hermes",
+        "ExecStart=/opt/mosaid/current/.venv/bin/hermes gateway",
+        "NoNewPrivileges=true",
+        "ProtectSystem=strict",
+        "ReadOnlyPaths=/opt/mosaid",
+        "ReadWritePaths=/var/lib/mosaid",
+    ]:
+        if fragment not in unit:
+            fail(f"systemd unit missing hardening: {fragment}")
+
+    if "MOSAID_MAX_SPEND_USD" not in preflight or "TELEGRAM_ALLOWED_USERS" not in preflight:
+        fail("preflight does not enforce billing and owner identity")
+    if "REPLACE_" not in env:
+        fail("environment example must contain explicit safe placeholders")
 
     if "مساعد" not in soul or "A model cannot approve" in soul:
         fail("SOUL.md identity is missing or unexpectedly replaced")
