@@ -87,6 +87,9 @@ type Manifest struct {
 	IntegrityHash       string          `json:"integrity_hash"`
 	Steps               []Step          `json:"steps,omitempty"`
 	MCP                 *MCPBinding     `json:"mcp,omitempty"`
+	// Agent-compatible fields (optional, backward-compatible)
+	AgentCompatible     bool            `json:"agent_compatible,omitempty"`
+	WorkPackRef         string          `json:"workpack_ref,omitempty"`
 }
 
 type Capabilities struct {
