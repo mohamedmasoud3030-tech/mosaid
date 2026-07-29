@@ -1,0 +1,8 @@
+Archive:  evidence/artifacts/picoclaw-android-universal.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  2026-07-03 07:12   arm64-v8a/
+ 37290337  2026-07-03 07:12   arm64-v8a/libpicoclaw.so
+ 24707425  2026-07-03 07:12   arm64-v8a/libpicoclaw-web.so
+---------                     -------
+ 61997762                     3 files

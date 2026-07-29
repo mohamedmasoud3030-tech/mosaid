@@ -1,0 +1,4 @@
+evidence/inspection/linux-arm64/LICENSE:           ASCII text
+evidence/inspection/linux-arm64/README.md:         HTML document, Unicode text, UTF-8 text, with very long lines (366)
+evidence/inspection/linux-arm64/picoclaw:          ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=7da086de2fb5e2ec6dc08e73062355ab0fae172a, stripped
+evidence/inspection/linux-arm64/picoclaw-launcher: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, BuildID[sha1]=e703644337f5f84aae6624c8942fa6a53851dc4d, stripped

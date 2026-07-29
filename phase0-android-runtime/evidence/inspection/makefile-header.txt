@@ -1,0 +1,120 @@
+.PHONY: all build install uninstall clean help test integration-test build-all lint-docs
+
+# Build variables
+BINARY_NAME=picoclaw
+BUILD_DIR=build
+CMD_DIR=cmd/$(BINARY_NAME)
+MAIN_GO=$(CMD_DIR)/main.go
+EXT=
+
+ifeq ($(OS),Windows_NT)
+	POWERSHELL=powershell -NoProfile -Command
+	WINDOWS_GOARCH_RAW:=$(strip $(shell go env GOARCH 2>NUL))
+endif
+
+# Version
+ifeq ($(OS),Windows_NT)
+	VERSION_RAW:=$(strip $(shell git describe --tags --always --dirty 2>NUL))
+	GIT_COMMIT_RAW:=$(strip $(shell git rev-parse --short=8 HEAD 2>NUL))
+	BUILD_TIME_RAW:=$(strip $(shell powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:ssK'"))
+	GO_VERSION_RAW:=$(strip $(shell go env GOVERSION 2>NUL))
+else
+	VERSION_RAW:=$(strip $(shell git describe --tags --always --dirty 2>/dev/null))
+	GIT_COMMIT_RAW:=$(strip $(shell git rev-parse --short=8 HEAD 2>/dev/null))
+	BUILD_TIME_RAW:=$(strip $(shell date +%FT%T%z))
+	GO_VERSION_RAW:=$(strip $(shell go env GOVERSION 2>/dev/null))
+endif
+VERSION?=$(if $(VERSION_RAW),$(VERSION_RAW),dev)
+GIT_COMMIT=$(if $(GIT_COMMIT_RAW),$(GIT_COMMIT_RAW),dev)
+BUILD_TIME=$(if $(BUILD_TIME_RAW),$(BUILD_TIME_RAW),dev)
+GO_VERSION=$(if $(GO_VERSION_RAW),$(firstword $(GO_VERSION_RAW)),unknown)
+CONFIG_PKG=github.com/sipeed/picoclaw/pkg/config
+LDFLAGS=-X $(CONFIG_PKG).Version=$(VERSION) -X $(CONFIG_PKG).GitCommit=$(GIT_COMMIT) -X $(CONFIG_PKG).BuildTime=$(BUILD_TIME) -X $(CONFIG_PKG).GoVersion=$(GO_VERSION) -s -w
+
+# Go variables
+GO?=go
+WEB_GO?=$(GO)
+CGO_ENABLED?=0
+GO_BUILD_TAGS?=goolm,stdjson
+GOFLAGS?=-v -tags $(GO_BUILD_TAGS)
+GOCACHE?=$(CURDIR)/.cache/go-build
+GOMODCACHE?=$(CURDIR)/.cache/go-mod
+GOTOOLCHAIN?=local
+export CGO_ENABLED
+export GOCACHE
+export GOMODCACHE
+export GOTOOLCHAIN
+comma:=,
+empty:=
+space:=$(empty) $(empty)
+GO_BUILD_TAGS_NO_GOOLM:=$(subst $(space),$(comma),$(strip $(filter-out goolm,$(subst $(comma),$(space),$(GO_BUILD_TAGS)))))
+GOFLAGS_NO_GOOLM?=-v -tags $(GO_BUILD_TAGS_NO_GOOLM)
+
+# Patch MIPS LE ELF e_flags (offset 36) for NaN2008-only kernels (e.g. Ingenic X2600).
+#
+# Bytes (octal): \004 \024 \000 \160  →  little-endian 0x70001404
+#   0x70000000  EF_MIPS_ARCH_32R2   MIPS32 Release 2
+#   0x00001000  EF_MIPS_ABI_O32     O32 ABI
+#   0x00000400  EF_MIPS_NAN2008     IEEE 754-2008 NaN encoding
+#   0x00000004  EF_MIPS_CPIC        PIC calling sequence
+#
+# Go's GOMIPS=softfloat emits no FP instructions, so the NaN mode is irrelevant
+# at runtime — this is purely an ELF metadata fix to satisfy the kernel's check.
+# patchelf cannot modify e_flags; dd at a fixed offset is the most portable way.
+#
+# Ref: https://codebrowser.dev/linux/linux/arch/mips/include/asm/elf.h.html
+define PATCH_MIPS_FLAGS
+	@if [ -f "$(1)" ]; then \
+		printf '\004\024\000\160' | dd of=$(1) bs=1 seek=36 count=4 conv=notrunc 2>/dev/null || \
+		{ echo "Error: failed to patch MIPS e_flags for $(1)"; exit 1; }; \
+	else \
+		echo "Error: $(1) not found, cannot patch MIPS e_flags"; exit 1; \
+	fi
+endef
+
+# Patch creack/pty for loong64 support (upstream doesn't have ztypes_loong64.go)
+PTY_PATCH_LOONG64=pty_dir=$$(go env GOMODCACHE)/github.com/creack/pty@v1.1.9; \
+	if [ -d "$$pty_dir" ] && [ ! -f "$$pty_dir/ztypes_loong64.go" ]; then \
+		chmod +w "$$pty_dir" 2>/dev/null || true; \
+		printf '//go:build linux && loong64\npackage pty\ntype (_C_int int32; _C_uint uint32)\n' > "$$pty_dir/ztypes_loong64.go"; \
+	fi
+
+# Golangci-lint
+GOLANGCI_LINT?=golangci-lint
+
+# Installation
+INSTALL_PREFIX?=$(HOME)/.local
+INSTALL_BIN_DIR=$(INSTALL_PREFIX)/bin
+INSTALL_MAN_DIR=$(INSTALL_PREFIX)/share/man/man1
+INSTALL_TMP_SUFFIX=.new
+
+# Workspace and Skills
+PICOCLAW_HOME?=$(HOME)/.picoclaw
+WORKSPACE_DIR?=$(PICOCLAW_HOME)/workspace
+WORKSPACE_SKILLS_DIR=$(WORKSPACE_DIR)/skills
+BUILTIN_SKILLS_DIR=$(CURDIR)/skills
+
+LNCMD=ln -sf
+
+# OS detection
+ifeq ($(OS),Windows_NT)
+	UNAME_S=Windows
+	ifeq ($(WINDOWS_GOARCH_RAW),amd64)
+		UNAME_M=x86_64
+	else ifeq ($(WINDOWS_GOARCH_RAW),arm64)
+		UNAME_M=arm64
+	else ifeq ($(WINDOWS_GOARCH_RAW),386)
+		UNAME_M=x86
+	else
+		UNAME_M=$(if $(WINDOWS_GOARCH_RAW),$(WINDOWS_GOARCH_RAW),x86_64)
+	endif
+else
+	UNAME_S?=$(shell uname -s)
+	UNAME_M?=$(shell uname -m)
+endif
+
+# Platform-specific settings
+ifeq ($(UNAME_S),Linux)
+	PLATFORM=linux
+	ifeq ($(UNAME_M),x86_64)
+		ARCH=amd64

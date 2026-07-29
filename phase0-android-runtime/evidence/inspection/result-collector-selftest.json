@@ -1,0 +1,40 @@
+{
+  "scenario": "synthetic",
+  "result": "PASS",
+  "generated_at": "2026-07-29T06:27:56Z",
+  "planned_duration_seconds": 119,
+  "health": {
+    "samples": 2,
+    "expected_samples": 1,
+    "coverage_percent": 200.00,
+    "max_gap_seconds": 60,
+    "restart_delta": 0
+  },
+  "resources": {
+    "avg_rss_kb": 50500.00,
+    "max_rss_kb": 51000.00,
+    "avg_cpu_percent": 1.10,
+    "max_cpu_percent": 1.20,
+    "temperature_samples": 2,
+    "avg_temperature_c": 35.50,
+    "max_temperature_c": 36.00,
+    "battery_samples": 2,
+    "battery_start": 80.00,
+    "battery_end": 79.00,
+    "battery_drain_percent_per_hour": 30.252
+  },
+  "telegram": {
+    "expected_echo": 2,
+    "total_echo_events": 2,
+    "unique_echo_message_ids": 2,
+    "duplicate_handling": 0,
+    "lost_or_zero_reply": 0,
+    "p95_echo_latency_ms": 70
+  },
+  "security": {
+    "secret_leaks": 0,
+    "panic_fatal_count": 0
+  },
+  "failures": [],
+  "incomplete": []
+}

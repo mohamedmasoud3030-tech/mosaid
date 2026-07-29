@@ -1,0 +1,3 @@
+repo_commit=246cb5e9b503a56b50b3c89b78f85f509943628c
+repo_tree=ed19889869562492785d89d073993c8789038777
+branch=phase0/android-runtime-qualification

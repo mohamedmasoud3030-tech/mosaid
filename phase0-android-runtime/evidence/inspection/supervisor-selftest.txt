@@ -1,0 +1,9 @@
+singleton_exit=73
+redaction=PASS
+cleanup=PASS
+VERIFY PASS: binary SHA-256 d1a7c5c4e5271cb8bc2ec2653a31479910b32e0d56db6094809d904fc70903ab
+VERIFY PASS: config and secrets permissions are 0600
+VERIFY PASS: one-owner private qualification configuration; tools, skills, MCP, cron, heartbeat and evolution are off
+{"timestamp":"2026-07-29T06:33:40Z","event":"agent_start","pid":28309,"restart_count":1}
+dummy token=[REDACTED] key=[REDACTED]
+{"timestamp":"2026-07-29T06:33:44Z","event":"agent_exit","exit_code":0,"runtime_seconds":4,"restart_count":1}

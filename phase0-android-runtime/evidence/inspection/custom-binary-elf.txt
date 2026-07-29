@@ -1,0 +1,4 @@
+  Class:                             ELF64
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+      [Requesting program interpreter: /system/bin/linker64]

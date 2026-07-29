@@ -1,0 +1,10 @@
+== evidence/inspection/linux-arm64/picoclaw ==
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Type:                              EXEC (Executable file)
+  Machine:                           AArch64
+== evidence/inspection/linux-arm64/picoclaw-launcher ==
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Type:                              EXEC (Executable file)
+  Machine:                           AArch64

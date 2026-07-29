@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "purpose": "Phase 0 Android runtime qualification",
+  "upstream_repository": "https://github.com/sipeed/picoclaw",
+  "upstream_tag": "v0.3.1",
+  "upstream_tag_object_sha": "9fba4cec050cbfe3d73dfcfe015d7960447b9c7f",
+  "upstream_commit_sha": "2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+  "upstream_tree_sha": "79530d185c4c5eb30719fd45cf323217d2a9f5c5",
+  "go_version": "go1.25.12",
+  "go_toolchain_archive_sha256": "234828b7a89e0e303d2556310ee549fbcf253d28de937bac3da13d6294262ac1",
+  "target": {
+    "goos": "android",
+    "goarch": "arm64",
+    "cgo_enabled": false,
+    "build_tags": ["stdjson"],
+    "trimpath": true,
+    "buildvcs": false,
+    "empty_build_id": true
+  },
+  "patches": {
+    "phase0-qualification.patch": "d61d3f336e644a7b9e4cc01b411314dce91768a2b67507371a9efee66dd396ed",
+    "phase0-security-overrides.patch": "bb21969231dda482579622e63cc16f8efdfc3893b19946933121a79ba8e6dd17"
+  },
+  "outputs": {
+    "android_binary_sha256": "b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f",
+    "phone_kit_sha256": "72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63",
+    "two_consecutive_builds_byte_identical": true,
+    "linked_module_count": 93
+  },
+  "vulnerability_scan": {
+    "scanner": "govulncheck v1.1.4",
+    "remaining_module_level_finding": "GO-2026-5932",
+    "openpgp_package_in_go_list_deps": false
+  },
+  "phone_execution_performed": false
+}

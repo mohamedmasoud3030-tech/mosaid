@@ -1,0 +1,320 @@
+pkg/agent/agent.go:99:	TurnProfile             config.EffectiveTurnProfile
+pkg/agent/agent.go:143:// registerSharedTools registers tools that are shared across all agents (web, message, spawn).
+pkg/agent/agent.go:535:	opts, err = resolveTurnProfileOptions(al.GetConfig(), opts)
+pkg/agent/agent_init.go:379:				// Also register the synchronous subagent tool
+pkg/agent/agent_inject.go:41:	// Propagate store to all registered tools that can emit media.
+pkg/agent/agent_mcp.go:156:						logger.DebugCF("agent", "Skipped MCP tool registration by agent mcpServers allowlist",
+pkg/agent/agent_mcp.go:180:					recordRegisteredMCPTool(registeredToolsByAgent, agentID, toolName)
+pkg/agent/agent_mcp.go:303:	registeredToolsByAgent[agentID][toolName] = struct{}{}
+pkg/agent/agent_mcp_test.go:153:		t.Fatalf("expected MCP prompt for registered tools, got %q", prompt)
+pkg/agent/agent_mcp_test.go:156:		t.Fatalf("expected actual registered tool count in prompt, got %q", prompt)
+pkg/agent/agent_mcp_test.go:168:		t.Fatal("expected hidden registered MCP tool to be included")
+pkg/agent/agent_message.go:197:	opts, err = resolveTurnProfileOptions(al.GetConfig(), opts)
+pkg/agent/agent_utils.go:485:	if turnProfileSkillsOff(opts.TurnProfile) {
+pkg/agent/agent_utils.go:516:	if turnProfileCustomSkills(opts.TurnProfile) {
+pkg/agent/agent_utils.go:517:		return filterNamesByTurnProfile(resolved, opts.TurnProfile.AllowedSkills)
+pkg/agent/context.go:59:				"Failed to register tool discovery prompt contributor",
+pkg/agent/context.go:876:			activeSkills = filterNamesByTurnProfile(activeSkills, req.AllowedSkills)
+pkg/agent/hooks.go:30:	HookActionRespond   HookAction = "respond" // Return result directly, skip tool execution. SECURITY: This bypasses ApproveTool checks, allowing hooks to return results for any tool (including sensitive ones like bash) without approval. Use with caution.
+pkg/agent/instance.go:99:		switch cfg.Tools.ReadFile.EffectiveMode() {
+pkg/agent/instance.go:101:			toolsRegistry.Register(tools.NewReadFileLinesTool(workspace, readRestrict, maxReadFileSize, allowReadPaths))
+pkg/agent/instance.go:103:			toolsRegistry.Register(tools.NewReadFileBytesTool(workspace, readRestrict, maxReadFileSize, allowReadPaths))
+pkg/agent/instance.go:107:		toolsRegistry.Register(tools.NewWriteFileTool(workspace, restrict, allowWritePaths))
+pkg/agent/instance.go:110:		toolsRegistry.Register(tools.NewListDirTool(workspace, readRestrict, allowReadPaths))
+pkg/agent/instance.go:113:		execTool, err := tools.NewExecToolWithConfig(workspace, restrict, cfg, allowReadPaths)
+pkg/agent/instance.go:123:		toolsRegistry.Register(tools.NewEditFileTool(workspace, restrict, allowWritePaths))
+pkg/agent/instance.go:126:		toolsRegistry.Register(tools.NewAppendFileTool(workspace, restrict, allowWritePaths))
+pkg/agent/instance_test.go:891:				t.Fatalf("agent tools = %v, want no registered tools", got)
+pkg/agent/pipeline_execute.go:134:		denyByTurnProfile := func() bool {
+pkg/agent/pipeline_execute.go:161:		if denyByTurnProfile() {
+pkg/agent/pipeline_execute.go:471:		if denyByTurnProfile() {
+pkg/agent/pipeline_llm.go:40:	exec.providerToolDefs = filterToolsByTurnProfile(exec.providerToolDefs, ts.profile)
+pkg/agent/pipeline_llm.go:100:				exec.providerToolDefs = filterToolsByTurnProfile(llmReq.Tools, ts.profile)
+pkg/agent/pipeline_setup.go:50:		toolDefs := filterToolsByTurnProfile(ts.agent.Tools.ToProviderDefs(), ts.profile)
+pkg/agent/prompt.go:60:	PromptSourceSubTurnProfile PromptSourceID = "subturn.profile"
+pkg/agent/prompt.go:244:			ID:              PromptSourceSubTurnProfile,
+pkg/agent/prompt_test.go:222:	writeTurnProfileSkill(
+pkg/agent/prompt_test.go:248:	writeTurnProfileSkill(
+pkg/agent/prompt_turn.go:50:	if ts.profile.Enabled && ts.profile.ToolsMode == config.TurnProfileModeCustom {
+pkg/agent/prompt_turn.go:58:	profile config.EffectiveTurnProfile,
+pkg/agent/prompt_turn.go:94:	profile := opts.TurnProfile
+pkg/agent/prompt_turn.go:113:	if profile.Enabled && profile.ToolsMode == config.TurnProfileModeCustom {
+pkg/agent/prompt_turn.go:127:			ID:      "instruction.subturn_profile",
+pkg/agent/prompt_turn.go:130:			Source:  PromptSource{ID: PromptSourceSubTurnProfile, Name: "subturn.profile"},
+pkg/agent/subturn.go:381:		TurnProfile:             parentTS.profile,
+pkg/agent/subturn.go:390:	if !opts.TurnProfile.Enabled {
+pkg/agent/subturn.go:391:		opts.TurnProfile = parentTS.opts.TurnProfile
+pkg/agent/tool_allowlist.go:42:		logger.WarnCF("agent", "AGENT.md declares unregistered tool names",
+pkg/agent/tool_allowlist.go:94:func registeredRuntimeToolNames(registry *tools.ToolRegistry) map[string]struct{} {
+pkg/agent/tool_allowlist_test.go:79:			name: "missing tools field allows all tools",
+pkg/agent/turn_coord.go:376:		resolved, err := resolveTurnProfileOptions(al.GetConfig(), *opts)
+pkg/agent/turn_profile_policy.go:10:func resolveTurnProfileOptions(cfg *config.Config, opts processOptions) (processOptions, error) {
+pkg/agent/turn_profile_policy.go:14:	profile, ok, err := cfg.Agents.Defaults.ResolveTurnProfile()
+pkg/agent/turn_profile_policy.go:21:	opts.TurnProfile = profile
+pkg/agent/turn_profile_policy.go:22:	if profile.HistoryMode == config.TurnProfileModeOff {
+pkg/agent/turn_profile_policy.go:29:func turnProfileSystemPromptOff(profile config.EffectiveTurnProfile) bool {
+pkg/agent/turn_profile_policy.go:30:	return profile.Enabled && profile.SystemPromptMode == config.TurnProfileModeOff
+pkg/agent/turn_profile_policy.go:33:func turnProfileSkillsOff(profile config.EffectiveTurnProfile) bool {
+pkg/agent/turn_profile_policy.go:34:	return profile.Enabled && profile.SkillsMode == config.TurnProfileModeOff
+pkg/agent/turn_profile_policy.go:37:func turnProfileCustomSkills(profile config.EffectiveTurnProfile) bool {
+pkg/agent/turn_profile_policy.go:38:	return profile.Enabled && profile.SkillsMode == config.TurnProfileModeCustom
+pkg/agent/turn_profile_policy.go:42:	profile config.EffectiveTurnProfile,
+pkg/agent/turn_profile_policy.go:48:	return len(filterToolsByTurnProfile(defs, profile)) > 0
+pkg/agent/turn_profile_policy.go:51:func turnProfileToolAllowed(profile config.EffectiveTurnProfile, name string) bool {
+pkg/agent/turn_profile_policy.go:55:	switch profile.ToolsMode {
+pkg/agent/turn_profile_policy.go:56:	case config.TurnProfileModeOff:
+pkg/agent/turn_profile_policy.go:58:	case config.TurnProfileModeCustom:
+pkg/agent/turn_profile_policy.go:74:func filterNamesByTurnProfile(names []string, allowed []string) []string {
+pkg/agent/turn_profile_policy.go:91:func filterToolsByTurnProfile(
+pkg/agent/turn_profile_policy.go:93:	profile config.EffectiveTurnProfile,
+pkg/agent/turn_profile_policy.go:98:	switch profile.ToolsMode {
+pkg/agent/turn_profile_policy.go:99:	case config.TurnProfileModeOff:
+pkg/agent/turn_profile_policy.go:101:	case config.TurnProfileModeCustom:
+pkg/agent/turn_profile_test.go:58:func newTurnProfileAgentLoop(
+pkg/agent/turn_profile_test.go:80:func writeTurnProfileSkill(t *testing.T, workspace, name, body string) {
+pkg/agent/turn_profile_test.go:91:func TestTurnProfile_DisabledPreservesDefaultHistoryAndPrompt(t *testing.T) {
+pkg/agent/turn_profile_test.go:95:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:97:					History: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:98:						Mode: config.TurnProfileModeOff,
+pkg/agent/turn_profile_test.go:105:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:143:func TestTurnProfile_HistoryOffSuppressesHistoryAndPersistence(t *testing.T) {
+pkg/agent/turn_profile_test.go:147:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:149:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:155:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:190:func TestTurnProfile_ProcessMessageUsesEnabledTurnProfile(t *testing.T) {
+pkg/agent/turn_profile_test.go:194:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:196:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:202:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:224:func TestTurnProfile_BtwCommandUsesEnabledTurnProfile(t *testing.T) {
+pkg/agent/turn_profile_test.go:233:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:235:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:236:					Tools:   config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:281:func TestTurnProfile_BtwCommandDoesNotAddToolFallbackWhenSystemPromptOff(t *testing.T) {
+pkg/agent/turn_profile_test.go:290:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:292:					History:      config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:293:					SystemPrompt: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:294:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:295:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:333:func TestTurnProfile_BtwHookCannotReenableNativeSearchWhenToolsOff(t *testing.T) {
+pkg/agent/turn_profile_test.go:341:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:343:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:344:					Tools:   config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:374:	if provider.lastOpts["turn_profile_test_hook"] != true {
+pkg/agent/turn_profile_test.go:382:func TestTurnProfile_SubTurnInheritsParentToolProfile(t *testing.T) {
+pkg/agent/turn_profile_test.go:390:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:392:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:393:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:394:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:402:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:406:	profile, ok, err := cfg.Agents.Defaults.ResolveTurnProfile()
+pkg/agent/turn_profile_test.go:408:		t.Fatalf("ResolveTurnProfile() error = %v", err)
+pkg/agent/turn_profile_test.go:411:		t.Fatal("ResolveTurnProfile() did not return enabled profile")
+pkg/agent/turn_profile_test.go:418:		TurnProfile: profile,
+pkg/agent/turn_profile_test.go:440:func TestTurnProfile_SystemPromptOffUsesExternalPromptOnly(t *testing.T) {
+pkg/agent/turn_profile_test.go:444:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:446:					History:      config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:447:					SystemPrompt: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:448:					Skills:       config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:449:					Tools:        config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:455:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:475:func TestTurnProfile_SystemPromptOffBlankTurnStillSendsMessage(t *testing.T) {
+pkg/agent/turn_profile_test.go:479:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:481:					History:      config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:482:					SystemPrompt: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:483:					Skills:       config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:484:					Tools:        config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:490:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:512:func TestTurnProfile_SystemPromptOffAddsToolFallbackWhenToolsVisible(t *testing.T) {
+pkg/agent/turn_profile_test.go:516:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:518:					History:      config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:519:					SystemPrompt: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:520:					Skills:       config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:521:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:522:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:530:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:547:func TestTurnProfile_SkillsOffAndCustomControlCatalogAndActiveSkills(t *testing.T) {
+pkg/agent/turn_profile_test.go:549:	writeTurnProfileSkill(
+pkg/agent/turn_profile_test.go:555:	writeTurnProfileSkill(
+pkg/agent/turn_profile_test.go:566:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:568:					History: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:569:						Mode: config.TurnProfileModeOff,
+pkg/agent/turn_profile_test.go:571:					Skills: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:572:						Mode: config.TurnProfileModeOff,
+pkg/agent/turn_profile_test.go:579:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:597:	cfg.Agents.Defaults.TurnProfile.Skills = config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:598:		Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:602:	al = newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:653:	next.Options["turn_profile_test_hook"] = true
+pkg/agent/turn_profile_test.go:715:func TestTurnProfile_ToolsCustomFiltersProviderToolsAndHookAdditions(t *testing.T) {
+pkg/agent/turn_profile_test.go:719:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:721:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:722:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:723:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:731:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:758:func TestTurnProfile_ToolsOffDisablesProviderAndNativeSearchTools(t *testing.T) {
+pkg/agent/turn_profile_test.go:768:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:770:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:771:					Tools:   config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:800:func TestTurnProfile_ToolsOffSuppressesToolUsePromptRule(t *testing.T) {
+pkg/agent/turn_profile_test.go:804:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:806:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:807:					Tools:   config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:813:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:840:func TestTurnProfile_ToolsCustomMissingToolSuppressesToolUsePromptRule(t *testing.T) {
+pkg/agent/turn_profile_test.go:844:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:846:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:847:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:848:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:856:	al := newTurnProfileAgentLoop(t, cfg, provider)
+pkg/agent/turn_profile_test.go:883:func TestTurnProfile_ToolsCustomAllowsNativeWebSearch(t *testing.T) {
+pkg/agent/turn_profile_test.go:897:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:899:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:900:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:901:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:928:func TestTurnProfile_SystemPromptOffAddsToolFallbackForNativeWebSearch(t *testing.T) {
+pkg/agent/turn_profile_test.go:942:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:944:					History:      config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:945:					SystemPrompt: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:946:					Skills:       config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:947:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:948:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:978:func TestTurnProfile_BeforeLLMHookCannotReenableNativeSearchWhenToolsOff(t *testing.T) {
+pkg/agent/turn_profile_test.go:992:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:994:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:995:					Tools:   config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:1023:func TestTurnProfile_BeforeLLMHookCannotReenableNativeSearchWhenCustomToolsResolveEmpty(
+pkg/agent/turn_profile_test.go:1039:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:1041:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:1042:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:1043:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:1076:func TestTurnProfile_ToolExecutionRejectsDisallowedToolCalls(t *testing.T) {
+pkg/agent/turn_profile_test.go:1080:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:1082:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:1083:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:1084:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_profile_test.go:1127:func TestTurnProfile_BeforeToolRespondCannotBypassDisallowedTool(t *testing.T) {
+pkg/agent/turn_profile_test.go:1131:				TurnProfile: config.TurnProfileConfig{
+pkg/agent/turn_profile_test.go:1133:					History: config.TurnProfileBlock{Mode: config.TurnProfileModeOff},
+pkg/agent/turn_profile_test.go:1134:					Tools: config.TurnProfileBlock{
+pkg/agent/turn_profile_test.go:1135:						Mode:  config.TurnProfileModeCustom,
+pkg/agent/turn_state.go:187:	profile config.EffectiveTurnProfile
+pkg/agent/turn_state.go:260:		profile:      opts.TurnProfile,
+pkg/tools/cron.go:56:		execTool, err = NewExecToolWithConfig(workspace, restrict, config)
+pkg/tools/cron.go:117:				"description": "Optional explicit confirmation flag for scheduling a shell command. Command execution must also be enabled via tools.cron.allow_command.",
+pkg/tools/fs_facade.go:29:	return fstools.NewReadFileTool(workspace, restrict, maxReadFileSize, allowPaths...)
+pkg/tools/fs_facade.go:38:	return fstools.NewReadFileBytesTool(workspace, restrict, maxReadFileSize, allowPaths...)
+pkg/tools/fs_facade.go:47:	return fstools.NewReadFileLinesTool(workspace, restrict, maxReadFileSize, allowPaths...)
+pkg/tools/fs_facade.go:55:	return fstools.NewWriteFileTool(workspace, restrict, allowPaths...)
+pkg/tools/fs_facade.go:63:	return fstools.NewListDirTool(workspace, restrict, allowPaths...)
+pkg/tools/fs_facade.go:71:	return fstools.NewEditFileTool(workspace, restrict, allowPaths...)
+pkg/tools/fs_facade.go:79:	return fstools.NewAppendFileTool(workspace, restrict, allowPaths...)
+pkg/tools/fs_facade.go:89:	return fstools.NewLoadImageTool(workspace, restrict, maxFileSize, store, allowPaths...)
+pkg/tools/fs_facade.go:99:	return fstools.NewSendFileTool(workspace, restrict, maxFileSize, store, allowPaths...)
+pkg/tools/integration/web.go:1524:		GeminiModel:           cfg.Tools.Web.Gemini.Model,
+pkg/tools/integration/message.go:295:		resolved, err := fstools.ValidatePathWithAllowPaths(item.Path, t.workspace, t.restrict, t.allowPaths)
+pkg/tools/registry.go:70:			"Skipped core tool registration by agent allowlist",
+pkg/tools/registry.go:99:			"Skipped hidden tool registration by agent allowlist",
+pkg/tools/registry.go:120:// SetMediaStore injects a MediaStore into all registered tools that can
+pkg/tools/registry.go:459:// List returns a list of all registered tool names.
+pkg/tools/registry.go:496:// Count returns the number of registered tools.
+pkg/tools/registry.go:503:// GetSummaries returns human-readable summaries of all registered tools.
+pkg/tools/registry.go:526:// GetAll returns all registered tools (both core and non-core with TTL > 0).
+pkg/tools/registry_test.go:104:		t.Fatal("expected to find registered tool")
+pkg/tools/registry_test.go:115:	r.Register(newMockTool("allowed_tool", "allowed"))
+pkg/tools/registry_test.go:142:		t.Fatal("expected BM25 discovery tool to bypass allowlist filtering")
+pkg/tools/registry_test.go:145:		t.Fatal("expected regex discovery tool to bypass allowlist filtering")
+pkg/tools/registry_test.go:178:		t.Error("expected ok=false for unregistered tool")
+pkg/tools/registry_test.go:808:		t.Fatal("expected newly registered tool to inherit media store")
+pkg/tools/shell.go:139:func NewExecTool(workingDir string, restrict bool, allowPaths ...[]*regexp.Regexp) (*ExecTool, error) {
+pkg/tools/shell.go:140:	return NewExecToolWithConfig(workingDir, restrict, nil, allowPaths...)
+pkg/tools/shell.go:143:func NewExecToolWithConfig(
+pkg/tools/shell.go:180:			logger.WarnCF("tools", "deny patterns are disabled, all commands will be allowed", nil)
+pkg/tools/shell_test.go:20:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:51:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:82:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:115:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:140:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:164:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:186:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:204:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:228:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:260:	tool, err := NewExecTool(workspace, true)
+pkg/tools/shell_test.go:299:	tool, err := NewExecTool(workspace, true)
+pkg/tools/shell_test.go:324:	tool, err := NewExecToolWithConfig("", false, cfg)
+pkg/tools/shell_test.go:326:		t.Fatalf("NewExecToolWithConfig() error: %v", err)
+pkg/tools/shell_test.go:345:	tool, err := NewExecToolWithConfig("", false, cfg)
+pkg/tools/shell_test.go:347:		t.Fatalf("NewExecToolWithConfig() error: %v", err)
+pkg/tools/shell_test.go:366:	tool, err := NewExecToolWithConfig("", false, cfg)
+pkg/tools/shell_test.go:368:		t.Fatalf("NewExecToolWithConfig() error: %v", err)
+pkg/tools/shell_test.go:385:	tool, err := NewExecToolWithConfig("", false, cfg)
+pkg/tools/shell_test.go:387:		t.Fatalf("NewExecToolWithConfig() error: %v", err)
+pkg/tools/shell_test.go:400:	tool, err := NewExecTool(tmpDir, false)
+pkg/tools/shell_test.go:442:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:462:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:498:	tool, err := NewExecTool(workspace, true)
+pkg/tools/shell_test.go:516:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:540:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:571:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:593:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:627:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:668:	tool, err := NewExecToolWithConfig("", false, cfg)
+pkg/tools/shell_test.go:694:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:725:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:769:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:798:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:832:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:877:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_test.go:898:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:970:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:990:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1006:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1046:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1081:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1121:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1157:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1217:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1271:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1317:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1371:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1440:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1501:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1554:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1595:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1640:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1685:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1702:	tool, err := NewExecTool("", false)
+pkg/tools/shell_test.go:1902:	tool, err := NewExecTool(tmpDir, true)
+pkg/tools/shell_timeout_unix_test.go:25:	tool, err := NewExecTool(t.TempDir(), false)
+pkg/tools/subagent.go:129:// RegisterTool registers a tool for subagent execution.
+pkg/config/config.go:447:	TurnProfile               TurnProfileConfig  `json:"turn_profile,omitempty"`
+pkg/config/config.go:1501:	if err = cfg.ValidateTurnProfile(); err != nil {
+pkg/config/config_test.go:163:func TestTurnProfileConfig_ParseAndResolve(t *testing.T) {
+pkg/config/config_test.go:167:				"turn_profile": {
+pkg/config/config_test.go:185:	if err := cfg.ValidateTurnProfile(); err != nil {
+pkg/config/config_test.go:186:		t.Fatalf("ValidateTurnProfile() error = %v", err)
+pkg/config/config_test.go:189:	profile, ok, err := cfg.Agents.Defaults.ResolveTurnProfile()
+pkg/config/config_test.go:191:		t.Fatalf("ResolveTurnProfile() error = %v", err)
+pkg/config/config_test.go:194:		t.Fatal("ResolveTurnProfile() ok = false, want true")
+pkg/config/config_test.go:196:	if profile.HistoryMode != TurnProfileModeOff ||
+pkg/config/config_test.go:197:		profile.SystemPromptMode != TurnProfileModeOff ||
+pkg/config/config_test.go:198:		profile.SkillsMode != TurnProfileModeOff ||
+pkg/config/config_test.go:199:		profile.ToolsMode != TurnProfileModeCustom {
+pkg/config/config_test.go:205:func TestTurnProfileConfig_DisabledOrMissingIsNoop(t *testing.T) {
+pkg/config/config_test.go:208:	profile, ok, err := cfg.Agents.Defaults.ResolveTurnProfile()
+pkg/config/config_test.go:210:		t.Fatalf("ResolveTurnProfile(missing) error = %v", err)
+pkg/config/config_test.go:213:		t.Fatal("ResolveTurnProfile(missing) ok = true, want false")
+pkg/config/config_test.go:216:		t.Fatalf("ResolveTurnProfile(missing) profile.Enabled = true, want false")
+pkg/config/config_test.go:219:	cfg.Agents.Defaults.TurnProfile = TurnProfileConfig{
+pkg/config/config_test.go:221:		History: TurnProfileBlock{
+pkg/config/config_test.go:222:			Mode: TurnProfileModeOff,
+pkg/config/config_test.go:225:	profile, ok, err = cfg.Agents.Defaults.ResolveTurnProfile()
+pkg/config/config_test.go:227:		t.Fatalf("ResolveTurnProfile(disabled) error = %v", err)
+pkg/config/config_test.go:233:	cfg.Agents.Defaults.TurnProfile = TurnProfileConfig{
+pkg/config/config_test.go:235:		History: TurnProfileBlock{
+pkg/config/config_test.go:236:			Mode: TurnProfileModeCustom,
+pkg/config/config_test.go:238:		Tools: TurnProfileBlock{
+pkg/config/config_test.go:239:			Mode: TurnProfileMode("sometimes"),
+pkg/config/config_test.go:242:	if err := cfg.ValidateTurnProfile(); err != nil {
+pkg/config/config_test.go:243:		t.Fatalf("ValidateTurnProfile(disabled unsupported modes) error = %v, want nil", err)
+pkg/config/config_test.go:247:func TestTurnProfileConfig_ValidationRejectsUnsupportedModes(t *testing.T) {
+pkg/config/config_test.go:255:			raw:  `{"agents":{"defaults":{"turn_profile":{"enabled":true,"history":{"mode":"custom"}}}}}`,

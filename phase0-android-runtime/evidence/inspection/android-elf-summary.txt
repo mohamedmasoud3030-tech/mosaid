@@ -1,0 +1,14 @@
+== libpicoclaw.so ==
+  Class:                             ELF64
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+      [Requesting program interpreter: /system/bin/linker64]
+  [18] .go.buildinfo     PROGBITS         0000000002290000  02280000
+  [27] .note.go.buildid  NOTE             0000000000010f60  00000f60
+== libpicoclaw-web.so ==
+  Class:                             ELF64
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+      [Requesting program interpreter: /system/bin/linker64]
+  [18] .go.buildinfo     PROGBITS         0000000001720000  01710000
+  [27] .note.go.buildid  NOTE             0000000000010f60  00000f60

@@ -1,0 +1,10 @@
+{
+  "ref": "refs/tags/v0.3.1",
+  "node_id": "REF_kwDORIcl97ByZWZzL3RhZ3MvdjAuMy4x",
+  "url": "https://api.github.com/repos/sipeed/picoclaw/git/refs/tags/v0.3.1",
+  "object": {
+    "sha": "9fba4cec050cbfe3d73dfcfe015d7960447b9c7f",
+    "type": "tag",
+    "url": "https://api.github.com/repos/sipeed/picoclaw/git/tags/9fba4cec050cbfe3d73dfcfe015d7960447b9c7f"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "sha": "2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+  "commit": {
+    "author": {
+      "name": "LC",
+      "email": "lclc6464@outlook.com",
+      "date": "2026-06-30T09:42:07Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-06-30T09:42:07Z"
+    },
+    "message": "fix(providers): surface friendly auth error messages (#3198)",
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqQ49vCRC1aQ7uu5UhlAAA0IMQAB5KJ91ux+n7PpiXsdn9GxnV\noEW89bGbEcHGqrsTtuD5nfkai+Q2I8Idm6xb6m4Pl45F19isbusxuaXixgqgVrFb\nXcD6iyIK6U8vjz546E2xXQkaPkLUaxrf+RpLPHb2QSlH+Fe5piQh9jy9K5oOEeBq\n2loEAP4FYm+EFk59xCrjReR9/1hSdX867Cc9Th8qTmpdTscQnJkKAK071XekWLQ5\nldROSwX/UFJHPJqwCNcggB0eyOS+REKXaYheBDlCTPylVaYtibS26lcYBDemKvio\nVgtavzGYq7gKv8Jpd86yP3/T1XlJPw+0yBkUaAY7kbmTDUwYuCTcIVjOnBwZRlwi\nZWtKi5cWxt7Oi+IkDOvF/WzjMcKt/WVq8uTvgYnOh0EpQP8BoWrctqxPsUjw6TGe\nZTTk5yTPTsx8JfD0lKa26a+BOFPa1vjbr8msGaiBikcyxvEZB55Gg7qUMY0d3tUq\nkjztxtEDSH3Fm+1YB8r7923oCmaGRcM8yzoJ7dcL0LqNKf0hFRdF6jwOkvAqyVtP\nNVzBX67UERMYl1UpC5GAGyWl8Sb2rETU8m7h0E61h/9i0I/b04hw5uLbaCgl/ovA\nBOBl1MZ0uLqrkJoIXWGOhul4izCvaVWlDoICjtObwB00pNxtJKzArvuDP6duXNkj\nq/maVxulIZzvJtZ3e0ZC\n=zDjQ\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 79530d185c4c5eb30719fd45cf323217d2a9f5c5\nparent 52320f48755852e53b8b6b10b1414a32c3f0a8a8\nauthor LC <lclc6464@outlook.com> 1782812527 +0800\ncommitter GitHub <noreply@github.com> 1782812527 +0800\n\nfix(providers): surface friendly auth error messages (#3198)",
+      "verified_at": "2026-06-30T09:42:08Z"
+    }
+  }
+}

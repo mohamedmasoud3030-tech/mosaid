@@ -1,0 +1,3 @@
+VERIFY PASS: binary SHA-256 18a75ea4a5c4159fa4d719376515b460ec819d6a60f221ad38bab03222d8c979
+VERIFY PASS: config and secrets permissions are 0600
+VERIFY PASS: one-owner private qualification configuration; tools, skills, MCP, cron, heartbeat and evolution are off

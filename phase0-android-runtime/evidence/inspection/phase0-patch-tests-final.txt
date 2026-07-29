@@ -1,0 +1,17 @@
+ok  	github.com/sipeed/picoclaw/pkg/channels/telegram	(cached)
+ok  	github.com/sipeed/picoclaw/pkg/agent	66.823s
+05:49:26 WRN tool mcp_tool.go:485 > Failed to persist large MCP text artifact error="mkdir /tmp/TestMCPTool_Execute_LargeTextArtifactFailureStillOmitsContext3523514512/001/not-a-directory: not a directory" chars=27199 server=test_server tool=dump_payload
+2026/07/29 05:49:26 WARN invalid skill from workspace name=bad_skill error="skill name must be alphanumeric with hyphens"
+05:49:26 ERR tool skills_install.go:212 > Failed to write origin metadata error="assert.AnError general error for testing" registry=clawhub slug=rollback-skill target=/tmp/TestInstallSkillToolRollsBackOnOriginMetadataWriteFailure3044818866/001/skills/rollback-skill tool=install_skill version=test
+05:49:26 ERR tool skills_install.go:212 > Failed to write origin metadata error="assert.AnError general error for testing" registry=clawhub slug=existing-skill target=/tmp/TestInstallSkillToolForceReinstallRestoresPreviousSkillAfterMeta657979446/001/skills/existing-skill tool=install_skill version=test
+--- FAIL: TestWebTool_KagiSearch_SuccessRequestAndParsing (0.00s)
+    web_test.go:1366: expected success, got search failed: Kagi search is disabled in Phase 0 qualification mode
+--- FAIL: TestWebTool_KagiSearch_AuthErrorDoesNotLeakKey (0.00s)
+    web_test.go:1422: unexpected error message: search failed: Kagi search is disabled in Phase 0 qualification mode
+--- FAIL: TestWebTool_KagiSearch_Non200Response (0.00s)
+    web_test.go:1452: unexpected error message: search failed: Kagi search is disabled in Phase 0 qualification mode
+--- FAIL: TestWebTool_KagiSearch_SkipsUnsupportedAndMalformedResults (0.00s)
+    web_test.go:1486: expected success, got search failed: Kagi search is disabled in Phase 0 qualification mode
+FAIL
+FAIL	github.com/sipeed/picoclaw/pkg/tools/integration	0.142s
+FAIL

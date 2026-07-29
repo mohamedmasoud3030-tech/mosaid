@@ -1,0 +1,31 @@
+Govulncheck reports known vulnerabilities in dependencies.
+
+Usage:
+
+	govulncheck [flags] [patterns]
+	govulncheck -mode=binary [flags] [binary]
+
+  -C dir
+    	change to dir before running govulncheck
+  -db url
+    	vulnerability database url (default "https://vuln.go.dev")
+  -format value
+    	specify format output
+    	The supported values are 'text', 'json', 'sarif', and 'openvex' (default 'text')
+  -json
+    	output JSON (Go compatible legacy flag, see format flag)
+  -mode value
+    	supports 'source', 'binary', and 'extract' (default 'source')
+  -scan value
+    	set the scanning level desired, one of 'module', 'package', or 'symbol' (default 'symbol')
+  -show list
+    	enable display of additional information specified by the comma separated list
+    	The supported values are 'traces','color', 'version', and 'verbose'
+  -tags list
+    	comma-separated list of build tags
+  -test
+    	analyze test files (only valid for source mode, default false)
+  -version
+    	print the version information
+
+For details, see https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck.

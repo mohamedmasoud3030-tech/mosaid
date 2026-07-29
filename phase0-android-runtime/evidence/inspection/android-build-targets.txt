@@ -1,0 +1,132 @@
+259-	@echo "Building for linux/arm (GOARM=7)..."
+260-	@mkdir -p $(BUILD_DIR)
+261-	GOOS=linux GOARCH=arm GOARM=7 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm ./$(CMD_DIR)
+262-	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)-linux-arm"
+263-
+264-## build-linux-arm64: Build for Linux ARM64 (e.g. Raspberry Pi Zero 2 W 64-bit)
+265-build-linux-arm64: generate
+266-	@echo "Building for linux/arm64..."
+267-	@mkdir -p $(BUILD_DIR)
+268-	GOOS=linux GOARCH=arm64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64 ./$(CMD_DIR)
+269-	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64"
+270-
+271-## build-linux-mipsle: Build for Linux MIPS32 LE
+272-build-linux-mipsle: generate
+273-	@echo "Building for linux/mipsle (softfloat)..."
+274-	@mkdir -p $(BUILD_DIR)
+275-	GOOS=linux GOARCH=mipsle GOMIPS=softfloat $(GO) build $(GOFLAGS_NO_GOOLM) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-mipsle ./$(CMD_DIR)
+276-	$(call PATCH_MIPS_FLAGS,$(BUILD_DIR)/$(BINARY_NAME)-linux-mipsle)
+277-	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)-linux-mipsle"
+278-
+279:## build-android-arm64: Build core for Android ARM64
+280:build-android-arm64: generate
+281-	@echo "Building for android/arm64..."
+282-	@mkdir -p $(BUILD_DIR)
+283:	GOOS=android GOARCH=arm64 $(GO) build -tags stdjson -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-android-arm64 ./$(CMD_DIR)
+284-	@echo "Build complete: $(BUILD_DIR)/$(BINARY_NAME)-android-arm64"
+285-
+286-## build-launcher-android-arm64: Build launcher for Android ARM64
+287-build-launcher-android-arm64:
+288-	@echo "Building picoclaw-launcher for android/arm64..."
+289-	@mkdir -p $(BUILD_DIR)
+290:	@$(MAKE) -C web build-android-arm64 \
+291-		OUTPUT_ANDROID_ARM64="$(CURDIR)/$(BUILD_DIR)/picoclaw-launcher-android-arm64" \
+292-		GO='$(GO)' \
+293-		LDFLAGS='$(LDFLAGS)'
+294-	@echo "Build complete: $(BUILD_DIR)/picoclaw-launcher-android-arm64"
+295-
+296:## build-android-bundle: Build core and launcher for all Android architectures and package as universal zip
+297:build-android-bundle: generate
+298-	@echo "Building core for all Android architectures..."
+299-	@mkdir -p $(BUILD_DIR)
+300:	GOOS=android GOARCH=arm64 $(GO) build -tags stdjson -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-android-arm64 ./$(CMD_DIR)
+301-	@echo "Building launcher for Android arm64..."
+302-	@$(MAKE) build-launcher-android-arm64
+303-	@echo "Staging JNI libs..."
+304-	@rm -rf $(BUILD_DIR)/android-staging
+305-	@mkdir -p $(BUILD_DIR)/android-staging/arm64-v8a
+306-	@cp $(BUILD_DIR)/$(BINARY_NAME)-android-arm64 $(BUILD_DIR)/android-staging/arm64-v8a/libpicoclaw.so
+307-	@cp $(BUILD_DIR)/picoclaw-launcher-android-arm64 $(BUILD_DIR)/android-staging/arm64-v8a/libpicoclaw-web.so
+308:	@cd $(BUILD_DIR)/android-staging && zip -r ../picoclaw-android-universal.zip .
+309-	@rm -rf $(BUILD_DIR)/android-staging
+310:	@echo "All Android builds complete: $(BUILD_DIR)/picoclaw-android-universal.zip"
+311-
+312-## build-pi-zero: Build for Raspberry Pi Zero 2 W (32-bit and 64-bit)
+313-build-pi-zero: build-linux-arm build-linux-arm64
+314-	@echo "Pi Zero 2 W builds: $(BUILD_DIR)/$(BINARY_NAME)-linux-arm (32-bit), $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64 (64-bit)"
+315-
+316-## build-all: Build the picoclaw core binary for all Makefile-managed platforms
+317-build-all: generate
+318-	@echo "Building for multiple platforms..."
+319-	@mkdir -p $(BUILD_DIR)
+320-	GOOS=linux GOARCH=amd64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64 ./$(CMD_DIR)
+321-	GOOS=linux GOARCH=arm GOARM=7 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm ./$(CMD_DIR)
+322-	GOOS=linux GOARCH=arm64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64 ./$(CMD_DIR)
+323-	@$(PTY_PATCH_LOONG64)
+324-	GOOS=linux GOARCH=loong64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-loong64 ./$(CMD_DIR)
+325-	GOOS=linux GOARCH=riscv64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-riscv64 ./$(CMD_DIR)
+326-	GOOS=linux GOARCH=mipsle GOMIPS=softfloat $(GO) build $(GOFLAGS_NO_GOOLM) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-mipsle ./$(CMD_DIR)
+327-	$(call PATCH_MIPS_FLAGS,$(BUILD_DIR)/$(BINARY_NAME)-linux-mipsle)
+328-	GOOS=linux GOARCH=arm GOARM=7 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-linux-armv7 ./$(CMD_DIR)
+329-	GOOS=darwin GOARCH=arm64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-arm64 ./$(CMD_DIR)
+330-	GOOS=windows GOARCH=amd64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe ./$(CMD_DIR)
+331-	GOOS=netbsd GOARCH=amd64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-netbsd-amd64 ./$(CMD_DIR)
+332-	GOOS=netbsd GOARCH=arm64 $(GO) build $(GOFLAGS) -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)-netbsd-arm64 ./$(CMD_DIR)
+333-	@echo "Core builds complete"
+334-
+335-## install: Install picoclaw to system and copy builtin skills
+336-install: build
+337-	@echo "Installing $(BINARY_NAME)..."
+338-	@mkdir -p $(INSTALL_BIN_DIR)
+339-	# Copy binary with temporary suffix to ensure atomic update
+340-	@cp $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_BIN_DIR)/$(BINARY_NAME)$(INSTALL_TMP_SUFFIX)
+341-	@chmod +x $(INSTALL_BIN_DIR)/$(BINARY_NAME)$(INSTALL_TMP_SUFFIX)
+342-	@mv -f $(INSTALL_BIN_DIR)/$(BINARY_NAME)$(INSTALL_TMP_SUFFIX) $(INSTALL_BIN_DIR)/$(BINARY_NAME)
+343-	@echo "Installed binary to $(INSTALL_BIN_DIR)/$(BINARY_NAME)"
+344-	@echo "Installation complete!"
+345-
+346-## uninstall: Remove picoclaw from system
+347-uninstall:
+348-	@echo "Uninstalling $(BINARY_NAME)..."
+349-	@rm -f $(INSTALL_BIN_DIR)/$(BINARY_NAME)
+350-	@echo "Removed binary from $(INSTALL_BIN_DIR)/$(BINARY_NAME)"
+351-	@echo "Note: Only the executable file has been deleted."
+352-	@echo "If you need to delete all configurations (config.json, workspace, etc.), run 'make uninstall-all'"
+353-
+354-## uninstall-all: Remove picoclaw and all data
+355-uninstall-all:
+356-	@echo "Removing workspace and skills..."
+357-	@rm -rf $(PICOCLAW_HOME)
+358-	@echo "Removed workspace: $(PICOCLAW_HOME)"
+359-	@echo "Complete uninstallation done!"
+360-
+361-## clean: Remove build artifacts
+362-clean:
+363-	@echo "Cleaning build artifacts..."
+364-ifeq ($(OS),Windows_NT)
+365-	@$(POWERSHELL) "if (Test-Path -LiteralPath '$(BUILD_DIR)') { Remove-Item -LiteralPath '$(BUILD_DIR)' -Recurse -Force }"
+366-else
+367-	@rm -rf $(BUILD_DIR)
+368-endif
+369-	@echo "Clean complete"
+370-
+371-## vet: Run go vet for static analysis
+372-vet: generate
+373-	@packages="$$($(GO) list $(GOFLAGS) ./...)" && \
+374-		$(GO) vet $(GOFLAGS) $$(printf '%s\n' "$$packages" | grep -v '^github.com/sipeed/picoclaw/web/')
+375-	@cd web/backend && $(WEB_GO) vet ./...
+376-
+377-## test: Test Go code
+378-test: generate
+379-	@$(GO) test $(GOFLAGS) $$($(GO) list $(GOFLAGS) ./... | grep -v github.com/sipeed/picoclaw/web/)
+380-	@cd web && make test
+381-
+382-## integration-test: Run Docker-backed integration test suites
+383-integration-test:
+384-	@bash ./scripts/run-integration-tests.sh
+385-
+386-## fmt: Format Go code
+387-fmt:
+388-	@$(GOLANGCI_LINT) fmt
+389-
+390-## lint-docs: Check common documentation layout and naming conventions

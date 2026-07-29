@@ -1,0 +1,1 @@
+The govulncheck JSON event stream includes advisory database/config records as well as findings; raw GO-* grep output is not a finding list. The human-readable binary scan is the canonical finding summary for this Phase 0 evidence and reports only GO-2026-5932 after security overrides.

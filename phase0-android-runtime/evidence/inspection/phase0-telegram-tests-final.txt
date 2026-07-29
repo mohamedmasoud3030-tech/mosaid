@@ -1,0 +1,1 @@
+ok  	github.com/sipeed/picoclaw/pkg/channels/telegram	0.428s

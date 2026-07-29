@@ -1,0 +1,29 @@
+
+[1;38;2;62;93;185m██████╗ ██╗ ██████╗ ██████╗ [1;38;2;213;70;70m ██████╗██╗      █████╗ ██╗    ██╗
+[1;38;2;62;93;185m██╔══██╗██║██╔════╝██╔═══██╗[1;38;2;213;70;70m██╔════╝██║     ██╔══██╗██║    ██║
+[1;38;2;62;93;185m██████╔╝██║██║     ██║   ██║[1;38;2;213;70;70m██║     ██║     ███████║██║ █╗ ██║
+[1;38;2;62;93;185m██╔═══╝ ██║██║     ██║   ██║[1;38;2;213;70;70m██║     ██║     ██╔══██║██║███╗██║
+[1;38;2;62;93;185m██║     ██║╚██████╗╚██████╔╝[1;38;2;213;70;70m╚██████╗███████╗██║  ██║╚███╔███╔╝
+[1;38;2;62;93;185m╚═╝     ╚═╝ ╚═════╝ ╚═════╝ [1;38;2;213;70;70m ╚═════╝╚══════╝╚═╝  ╚═╝ ╚══╝╚══╝
+ [0m
+🦞 picoclaw Status
+Version: v0.3.1-phase0.1 (git: 2cf030d2fd3b871d7ec17e3be34c24688aac76da)
+Build: 2026-06-30T09:42:07Z
+
+Config: /home/user/.cache/phase0/phone-script-test/config.json ✓
+Workspace: /home/user/.cache/phase0/phone-script-test/workspace ✓
+Model: phase0-model
+OpenRouter API: not set
+Anthropic API: not set
+OpenAI API: ✓
+Gemini API: not set
+Zhipu API: not set
+Qwen API: not set
+Groq API: not set
+Moonshot API: not set
+DeepSeek API: not set
+VolcEngine API: not set
+Nvidia API: not set
+vLLM / local: not set
+Ollama: not set
+native_config_load=PASS exit=0

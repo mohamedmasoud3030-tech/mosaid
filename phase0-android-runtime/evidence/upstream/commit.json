@@ -1,0 +1,185 @@
+{
+  "sha": "2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+  "node_id": "C_kwDORIcl99oAKDJjZjAzMGQyZmQzYjg3MWQ3ZWMxN2UzYmUzNGMyNDY4OGFhYzc2ZGE",
+  "commit": {
+    "author": {
+      "name": "LC",
+      "email": "lclc6464@outlook.com",
+      "date": "2026-06-30T09:42:07Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-06-30T09:42:07Z"
+    },
+    "message": "fix(providers): surface friendly auth error messages (#3198)",
+    "tree": {
+      "sha": "79530d185c4c5eb30719fd45cf323217d2a9f5c5",
+      "url": "https://api.github.com/repos/sipeed/picoclaw/git/trees/79530d185c4c5eb30719fd45cf323217d2a9f5c5"
+    },
+    "url": "https://api.github.com/repos/sipeed/picoclaw/git/commits/2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqQ49vCRC1aQ7uu5UhlAAA0IMQAB5KJ91ux+n7PpiXsdn9GxnV\noEW89bGbEcHGqrsTtuD5nfkai+Q2I8Idm6xb6m4Pl45F19isbusxuaXixgqgVrFb\nXcD6iyIK6U8vjz546E2xXQkaPkLUaxrf+RpLPHb2QSlH+Fe5piQh9jy9K5oOEeBq\n2loEAP4FYm+EFk59xCrjReR9/1hSdX867Cc9Th8qTmpdTscQnJkKAK071XekWLQ5\nldROSwX/UFJHPJqwCNcggB0eyOS+REKXaYheBDlCTPylVaYtibS26lcYBDemKvio\nVgtavzGYq7gKv8Jpd86yP3/T1XlJPw+0yBkUaAY7kbmTDUwYuCTcIVjOnBwZRlwi\nZWtKi5cWxt7Oi+IkDOvF/WzjMcKt/WVq8uTvgYnOh0EpQP8BoWrctqxPsUjw6TGe\nZTTk5yTPTsx8JfD0lKa26a+BOFPa1vjbr8msGaiBikcyxvEZB55Gg7qUMY0d3tUq\nkjztxtEDSH3Fm+1YB8r7923oCmaGRcM8yzoJ7dcL0LqNKf0hFRdF6jwOkvAqyVtP\nNVzBX67UERMYl1UpC5GAGyWl8Sb2rETU8m7h0E61h/9i0I/b04hw5uLbaCgl/ovA\nBOBl1MZ0uLqrkJoIXWGOhul4izCvaVWlDoICjtObwB00pNxtJKzArvuDP6duXNkj\nq/maVxulIZzvJtZ3e0ZC\n=zDjQ\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 79530d185c4c5eb30719fd45cf323217d2a9f5c5\nparent 52320f48755852e53b8b6b10b1414a32c3f0a8a8\nauthor LC <lclc6464@outlook.com> 1782812527 +0800\ncommitter GitHub <noreply@github.com> 1782812527 +0800\n\nfix(providers): surface friendly auth error messages (#3198)",
+      "verified_at": "2026-06-30T09:42:08Z"
+    }
+  },
+  "url": "https://api.github.com/repos/sipeed/picoclaw/commits/2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+  "html_url": "https://github.com/sipeed/picoclaw/commit/2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+  "comments_url": "https://api.github.com/repos/sipeed/picoclaw/commits/2cf030d2fd3b871d7ec17e3be34c24688aac76da/comments",
+  "author": {
+    "login": "lc6464",
+    "id": 64722907,
+    "node_id": "MDQ6VXNlcjY0NzIyOTA3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/64722907?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lc6464",
+    "html_url": "https://github.com/lc6464",
+    "followers_url": "https://api.github.com/users/lc6464/followers",
+    "following_url": "https://api.github.com/users/lc6464/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lc6464/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lc6464/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lc6464/subscriptions",
+    "organizations_url": "https://api.github.com/users/lc6464/orgs",
+    "repos_url": "https://api.github.com/users/lc6464/repos",
+    "events_url": "https://api.github.com/users/lc6464/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lc6464/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "52320f48755852e53b8b6b10b1414a32c3f0a8a8",
+      "url": "https://api.github.com/repos/sipeed/picoclaw/commits/52320f48755852e53b8b6b10b1414a32c3f0a8a8",
+      "html_url": "https://github.com/sipeed/picoclaw/commit/52320f48755852e53b8b6b10b1414a32c3f0a8a8"
+    }
+  ],
+  "stats": {
+    "total": 497,
+    "additions": 482,
+    "deletions": 15
+  },
+  "files": [
+    {
+      "sha": "b19ea75aea4c08067a8f1caef798a719a7db3e54",
+      "filename": "pkg/agent/agent_outbound.go",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 2,
+      "changes": 3,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fagent%2Fagent_outbound.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fagent%2Fagent_outbound.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fagent%2Fagent_outbound.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -6,7 +6,6 @@ import (\n \t\"context\"\n \t\"encoding/json\"\n \t\"errors\"\n-\t\"fmt\"\n \t\"strings\"\n \t\"time\"\n \n@@ -21,7 +20,7 @@ func (al *AgentLoop) maybePublishError(ctx context.Context, channel, chatID, ses\n \tif errors.Is(err, context.Canceled) {\n \t\treturn false\n \t}\n-\tal.PublishResponseIfNeeded(ctx, channel, chatID, sessionKey, fmt.Sprintf(\"Error processing message: %v\", err))\n+\tal.PublishResponseIfNeeded(ctx, channel, chatID, sessionKey, formatProcessingError(err))\n \treturn true\n }\n "
+    },
+    {
+      "sha": "0d01060601e49d0acf33beb997898f97ca1c2cf9",
+      "filename": "pkg/agent/error_format.go",
+      "status": "added",
+      "additions": 36,
+      "deletions": 0,
+      "changes": 36,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fagent%2Ferror_format.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fagent%2Ferror_format.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fagent%2Ferror_format.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -0,0 +1,36 @@\n+package agent\n+\n+import (\n+\t\"fmt\"\n+\n+\t\"github.com/sipeed/picoclaw/pkg/providers\"\n+)\n+\n+func formatProcessingError(err error) string {\n+\tif err == nil {\n+\t\treturn \"\"\n+\t}\n+\n+\tif kind, ok := providers.ClassifyAuthError(err); ok {\n+\t\treturn fmt.Sprintf(\n+\t\t\t\"Error processing message: %s\\n\\nOriginal error:\\n%s\",\n+\t\t\tauthErrorFriendlyMessage(kind),\n+\t\t\terr.Error(),\n+\t\t)\n+\t}\n+\n+\treturn fmt.Sprintf(\"Error processing message: %v\", err)\n+}\n+\n+func authErrorFriendlyMessage(kind providers.AuthErrorKind) string {\n+\tswitch kind {\n+\tcase providers.AuthErrorInvalidAPIKey:\n+\t\treturn \"Authentication failed: the API key appears to be invalid. Check the API key configured for this model or provider.\"\n+\tcase providers.AuthErrorMissingAPIKey:\n+\t\treturn \"Authentication failed: no API key is configured for this model or provider. Add an API key in the model settings or config.\"\n+\tcase providers.AuthErrorExpiredToken:\n+\t\treturn \"Authentication failed: the saved login or token appears to be expired. Re-authenticate the provider.\"\n+\tdefault:\n+\t\treturn \"Authentication failed: check the API key, token, OAuth login, or provider permissions for this model.\"\n+\t}\n+}"
+    },
+    {
+      "sha": "531f9ebb04126282fc8ad0ebdc4722d8a6ec12f7",
+      "filename": "pkg/agent/error_format_test.go",
+      "status": "added",
+      "additions": 52,
+      "deletions": 0,
+      "changes": 52,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fagent%2Ferror_format_test.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fagent%2Ferror_format_test.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fagent%2Ferror_format_test.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -0,0 +1,52 @@\n+package agent\n+\n+import (\n+\t\"errors\"\n+\t\"strings\"\n+\t\"testing\"\n+\n+\t\"github.com/sipeed/picoclaw/pkg/providers/common\"\n+)\n+\n+func TestFormatProcessingError_InvalidAPIKey(t *testing.T) {\n+\terr := errors.New(\n+\t\t`LLM call failed after retries: API request failed: Status: 401 Body: {\"error\":{\"message\":\"Incorrect API key provided\"}}`,\n+\t)\n+\n+\tgot := formatProcessingError(err)\n+\tif !strings.Contains(got, \"API key appears to be invalid\") {\n+\t\tt.Fatalf(\"formatted error missing friendly API key hint: %q\", got)\n+\t}\n+\tif !strings.Contains(got, \"Original error:\") {\n+\t\tt.Fatalf(\"formatted error missing original error label: %q\", got)\n+\t}\n+\tif !strings.Contains(got, err.Error()) {\n+\t\tt.Fatalf(\"formatted error missing original error: %q\", got)\n+\t}\n+}\n+\n+func TestFormatProcessingError_GenericAuthHTTPError(t *testing.T) {\n+\terr := &common.HTTPError{\n+\t\tStatusCode:  401,\n+\t\tBodyPreview: `{\"error\":\"unauthorized\"}`,\n+\t\tContentType: \"application/json\",\n+\t\tAPIBase:     \"https://api.example.com\",\n+\t}\n+\n+\tgot := formatProcessingError(err)\n+\tif !strings.Contains(got, \"check the API key, token, OAuth login, or provider permissions\") {\n+\t\tt.Fatalf(\"formatted error missing generic auth hint: %q\", got)\n+\t}\n+\tif !strings.Contains(got, \"Original error:\") {\n+\t\tt.Fatalf(\"formatted error missing original error: %q\", got)\n+\t}\n+}\n+\n+func TestFormatProcessingError_NonAuth(t *testing.T) {\n+\terr := errors.New(\"connection reset by peer\")\n+\tgot := formatProcessingError(err)\n+\twant := \"Error processing message: connection reset by peer\"\n+\tif got != want {\n+\t\tt.Fatalf(\"formatted error = %q, want %q\", got, want)\n+\t}\n+}"
+    },
+    {
+      "sha": "92a79da60bbf17ec757b26f4aed4b37e53361365",
+      "filename": "pkg/providers/auth_error.go",
+      "status": "added",
+      "additions": 142,
+      "deletions": 0,
+      "changes": 142,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fauth_error.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fauth_error.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fproviders%2Fauth_error.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -0,0 +1,142 @@\n+package providers\n+\n+import (\n+\t\"errors\"\n+\t\"regexp\"\n+\t\"strings\"\n+\n+\t\"github.com/sipeed/picoclaw/pkg/providers/common\"\n+)\n+\n+type AuthErrorKind string\n+\n+const (\n+\tAuthErrorInvalidAPIKey AuthErrorKind = \"invalid_api_key\"\n+\tAuthErrorMissingAPIKey AuthErrorKind = \"missing_api_key\"\n+\tAuthErrorExpiredToken  AuthErrorKind = \"expired_token\"\n+\tAuthErrorGeneric       AuthErrorKind = \"auth\"\n+)\n+\n+var (\n+\tinvalidAPIKeyPattern = regexp.MustCompile(\n+\t\t`(?i)\\b(?:invalid|incorrect|malformed|wrong)[-_\\s]+(?:api[-_\\s]*)?key\\b|\\b(?:api[-_\\s]*)?key[-_\\s]+(?:is[-_\\s]+)?(?:invalid|incorrect|malformed|wrong)\\b|\\binvalid[-_]?api[-_]?key\\b`,\n+\t)\n+\tmissingAPIKeyPattern = regexp.MustCompile(\n+\t\t`(?i)\\b(?:missing|no|not[-_\\s]+configured)[-_\\s]+(?:api[-_\\s]*)?key\\b|\\bno[-_\\s]+credentials[-_\\s]+found\\b|\\bapi[-_\\s]+key[-_\\s]+not[-_\\s]+configured\\b`,\n+\t)\n+\texpiredTokenPattern = regexp.MustCompile(\n+\t\t`(?i)\\b(?:oauth[-_\\s]+token[-_\\s]+refresh[-_\\s]+failed|re-authenticate|token[-_\\s]+(?:has[-_\\s]+)?expired|expired[-_\\s]+token)\\b`,\n+\t)\n+\tgenericAuthPattern = regexp.MustCompile(\n+\t\t`(?i)\\b(?:unauthorized|forbidden|authentication[-_\\s]+(?:failed|required)|access[-_\\s]+denied)\\b`,\n+\t)\n+)\n+\n+func ClassifyAuthError(err error) (AuthErrorKind, bool) {\n+\tif err == nil {\n+\t\treturn \"\", false\n+\t}\n+\n+\tvar exhausted *FallbackExhaustedError\n+\tif errors.As(err, &exhausted) && exhausted != nil {\n+\t\treturn classifyFallbackExhaustedAuthError(exhausted)\n+\t}\n+\n+\tmsg := authErrorText(err)\n+\tif missingAPIKeyPattern.MatchString(msg) {\n+\t\treturn AuthErrorMissingAPIKey, true\n+\t}\n+\tif expiredTokenPattern.MatchString(msg) {\n+\t\treturn AuthErrorExpiredToken, true\n+\t}\n+\tif invalidAPIKeyPattern.MatchString(msg) {\n+\t\treturn AuthErrorInvalidAPIKey, true\n+\t}\n+\n+\tif hasStructuredAuthError(err) || genericAuthPattern.MatchString(msg) {\n+\t\treturn AuthErrorGeneric, true\n+\t}\n+\treturn \"\", false\n+}\n+\n+func authErrorText(err error) string {\n+\tvar parts []string\n+\tif err != nil {\n+\t\tparts = append(parts, err.Error())\n+\t}\n+\n+\tvar httpErr *common.HTTPError\n+\tif errors.As(err, &httpErr) && httpErr != nil {\n+\t\tparts = append(parts, httpErr.BodyPreview)\n+\t}\n+\n+\treturn strings.Join(parts, \"\\n\")\n+}\n+\n+func hasStructuredAuthError(err error) bool {\n+\tvar failErr *FailoverError\n+\tif errors.As(err, &failErr) && failErr != nil && failErr.Reason == FailoverAuth {\n+\t\treturn true\n+\t}\n+\n+\tvar httpErr *common.HTTPError\n+\tif errors.As(err, &httpErr) && httpErr != nil {\n+\t\treturn httpErr.StatusCode == 401 || httpErr.StatusCode == 403\n+\t}\n+\n+\treturn false\n+}\n+\n+func classifyFallbackExhaustedAuthError(err *FallbackExhaustedError) (AuthErrorKind, bool) {\n+\tif err == nil {\n+\t\treturn \"\", false\n+\t}\n+\n+\tvar authMessages []string\n+\tnonSkipped := 0\n+\tfor _, attempt := range err.Attempts {\n+\t\tif attempt.Skipped {\n+\t\t\tcontinue\n+\t\t}\n+\t\tnonSkipped++\n+\t\tif !attemptIsAuthFailure(attempt) {\n+\t\t\treturn \"\", false\n+\t\t}\n+\t\tif attempt.Error != nil {\n+\t\t\tauthMessages = append(authMessages, authErrorText(attempt.Error))\n+\t\t}\n+\t}\n+\tif nonSkipped == 0 {\n+\t\treturn \"\", false\n+\t}\n+\n+\tmsg := strings.Join(authMessages, \"\\n\")\n+\tif missingAPIKeyPattern.MatchString(msg) {\n+\t\treturn AuthErrorMissingAPIKey, true\n+\t}\n+\tif expiredTokenPattern.MatchString(msg) {\n+\t\treturn AuthErrorExpiredToken, true\n+\t}\n+\tif invalidAPIKeyPattern.MatchString(msg) {\n+\t\treturn AuthErrorInvalidAPIKey, true\n+\t}\n+\treturn AuthErrorGeneric, true\n+}\n+\n+func attemptIsAuthFailure(attempt FallbackAttempt) bool {\n+\tif attempt.Reason == FailoverAuth {\n+\t\treturn true\n+\t}\n+\tif attempt.Error == nil {\n+\t\treturn false\n+\t}\n+\tvar failErr *FailoverError\n+\tif errors.As(attempt.Error, &failErr) && failErr != nil && failErr.Reason == FailoverAuth {\n+\t\treturn true\n+\t}\n+\tvar httpErr *common.HTTPError\n+\tif errors.As(attempt.Error, &httpErr) && httpErr != nil {\n+\t\treturn httpErr.StatusCode == 401 || httpErr.StatusCode == 403\n+\t}\n+\treturn false\n+}"
+    },
+    {
+      "sha": "09f53cd139e1a316b34a8fb1aa3c577ae47e6623",
+      "filename": "pkg/providers/auth_error_test.go",
+      "status": "added",
+      "additions": 133,
+      "deletions": 0,
+      "changes": 133,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fauth_error_test.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fauth_error_test.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fproviders%2Fauth_error_test.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -0,0 +1,133 @@\n+package providers\n+\n+import (\n+\t\"errors\"\n+\t\"fmt\"\n+\t\"testing\"\n+\n+\t\"github.com/sipeed/picoclaw/pkg/providers/common\"\n+)\n+\n+func TestClassifyError_HTTPErrorStatus(t *testing.T) {\n+\terr := fmt.Errorf(\"provider request: %w\", &common.HTTPError{\n+\t\tStatusCode:  httpStatusUnauthorized,\n+\t\tBodyPreview: `{\"error\":\"unauthorized\"}`,\n+\t\tContentType: \"application/json\",\n+\t\tAPIBase:     \"https://api.example.com\",\n+\t})\n+\n+\tresult := ClassifyError(err, \"openai\", \"gpt-4\")\n+\tif result == nil {\n+\t\tt.Fatal(\"expected classified error\")\n+\t}\n+\tif result.Reason != FailoverAuth {\n+\t\tt.Fatalf(\"reason = %q, want %q\", result.Reason, FailoverAuth)\n+\t}\n+\tif result.Status != httpStatusUnauthorized {\n+\t\tt.Fatalf(\"status = %d, want %d\", result.Status, httpStatusUnauthorized)\n+\t}\n+}\n+\n+func TestClassifyAuthError(t *testing.T) {\n+\ttests := []struct {\n+\t\tname string\n+\t\terr  error\n+\t\twant AuthErrorKind\n+\t}{\n+\t\t{\n+\t\t\tname: \"invalid api key\",\n+\t\t\terr: errors.New(\n+\t\t\t\t`API request failed: Status: 401 Body: {\"error\":{\"message\":\"Incorrect API key provided\"}}`,\n+\t\t\t),\n+\t\t\twant: AuthErrorInvalidAPIKey,\n+\t\t},\n+\t\t{\n+\t\t\tname: \"missing api key\",\n+\t\t\terr:  errors.New(\"API key not configured\"),\n+\t\t\twant: AuthErrorMissingAPIKey,\n+\t\t},\n+\t\t{\n+\t\t\tname: \"expired token\",\n+\t\t\terr:  errors.New(\"oauth token refresh failed: token has expired\"),\n+\t\t\twant: AuthErrorExpiredToken,\n+\t\t},\n+\t\t{\n+\t\t\tname: \"structured generic auth\",\n+\t\t\terr: &common.HTTPError{\n+\t\t\t\tStatusCode:  httpStatusUnauthorized,\n+\t\t\t\tBodyPreview: `{\"error\":\"unauthorized\"}`,\n+\t\t\t\tContentType: \"application/json\",\n+\t\t\t\tAPIBase:     \"https://api.example.com\",\n+\t\t\t},\n+\t\t\twant: AuthErrorGeneric,\n+\t\t},\n+\t}\n+\n+\tfor _, tt := range tests {\n+\t\tt.Run(tt.name, func(t *testing.T) {\n+\t\t\tgot, ok := ClassifyAuthError(tt.err)\n+\t\t\tif !ok {\n+\t\t\t\tt.Fatal(\"expected auth classification\")\n+\t\t\t}\n+\t\t\tif got != tt.want {\n+\t\t\t\tt.Fatalf(\"kind = %q, want %q\", got, tt.want)\n+\t\t\t}\n+\t\t})\n+\t}\n+}\n+\n+func TestClassifyAuthError_FallbackExhaustedAllAuth(t *testing.T) {\n+\terr := &FallbackExhaustedError{\n+\t\tAttempts: []FallbackAttempt{\n+\t\t\t{\n+\t\t\t\tReason: FailoverAuth,\n+\t\t\t\tError: &FailoverError{\n+\t\t\t\t\tReason:  FailoverAuth,\n+\t\t\t\t\tWrapped: errors.New(\"invalid api key\"),\n+\t\t\t\t},\n+\t\t\t},\n+\t\t\t{\n+\t\t\t\tReason: FailoverAuth,\n+\t\t\t\tError: &FailoverError{\n+\t\t\t\t\tReason:  FailoverAuth,\n+\t\t\t\t\tWrapped: errors.New(\"unauthorized\"),\n+\t\t\t\t},\n+\t\t\t},\n+\t\t},\n+\t}\n+\n+\tgot, ok := ClassifyAuthError(err)\n+\tif !ok {\n+\t\tt.Fatal(\"expected auth classification\")\n+\t}\n+\tif got != AuthErrorInvalidAPIKey {\n+\t\tt.Fatalf(\"kind = %q, want %q\", got, AuthErrorInvalidAPIKey)\n+\t}\n+}\n+\n+func TestClassifyAuthError_FallbackExhaustedMixedFailures(t *testing.T) {\n+\terr := &FallbackExhaustedError{\n+\t\tAttempts: []FallbackAttempt{\n+\t\t\t{\n+\t\t\t\tReason: FailoverAuth,\n+\t\t\t\tError: &FailoverError{\n+\t\t\t\t\tReason:  FailoverAuth,\n+\t\t\t\t\tWrapped: errors.New(\"invalid api key\"),\n+\t\t\t\t},\n+\t\t\t},\n+\t\t\t{\n+\t\t\t\tReason: FailoverRateLimit,\n+\t\t\t\tError: &FailoverError{\n+\t\t\t\t\tReason:  FailoverRateLimit,\n+\t\t\t\t\tWrapped: errors.New(\"rate limit exceeded\"),\n+\t\t\t\t},\n+\t\t\t},\n+\t\t},\n+\t}\n+\n+\tif got, ok := ClassifyAuthError(err); ok {\n+\t\tt.Fatalf(\"kind = %q, want no auth classification for mixed failures\", got)\n+\t}\n+}\n+\n+const httpStatusUnauthorized = 401"
+    },
+    {
+      "sha": "10bdddd358c037d627e60da62b88753efb80651b",
+      "filename": "pkg/providers/common/common.go",
+      "status": "modified",
+      "additions": 43,
+      "deletions": 13,
+      "changes": 56,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fcommon%2Fcommon.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fcommon%2Fcommon.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fproviders%2Fcommon%2Fcommon.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -371,6 +371,36 @@ func DecodeToolCallArguments(raw json.RawMessage, name string) map[string]any {\n \n // --- HTTP response helpers ---\n \n+// HTTPError captures structured details for non-OK provider HTTP responses.\n+// Error preserves the previous user/log-facing text format for compatibility.\n+type HTTPError struct {\n+\tStatusCode  int\n+\tBodyPreview string\n+\tContentType string\n+\tAPIBase     string\n+\tIsHTML      bool\n+}\n+\n+func (e *HTTPError) Error() string {\n+\tif e == nil {\n+\t\treturn \"API request failed\"\n+\t}\n+\tif e.IsHTML {\n+\t\treturn fmt.Sprintf(\n+\t\t\t\"API request failed: %s returned HTML instead of JSON (content-type: %s); check api_base or proxy configuration.\\n  Status: %d\\n  Body:   %s\",\n+\t\t\te.APIBase,\n+\t\t\te.ContentType,\n+\t\t\te.StatusCode,\n+\t\t\te.BodyPreview,\n+\t\t)\n+\t}\n+\treturn fmt.Sprintf(\n+\t\t\"API request failed:\\n  Status: %d\\n  Body:   %s\",\n+\t\te.StatusCode,\n+\t\te.BodyPreview,\n+\t)\n+}\n+\n // HandleErrorResponse reads a non-200 response body and returns an appropriate error.\n func HandleErrorResponse(resp *http.Response, apiBase string) error {\n \tcontentType := resp.Header.Get(\"Content-Type\")\n@@ -381,11 +411,12 @@ func HandleErrorResponse(resp *http.Response, apiBase string) error {\n \tif LooksLikeHTML(body, contentType) {\n \t\treturn WrapHTMLResponseError(resp.StatusCode, body, contentType, apiBase)\n \t}\n-\treturn fmt.Errorf(\n-\t\t\"API request failed:\\n  Status: %d\\n  Body:   %s\",\n-\t\tresp.StatusCode,\n-\t\tResponsePreview(body, 128),\n-\t)\n+\treturn &HTTPError{\n+\t\tStatusCode:  resp.StatusCode,\n+\t\tBodyPreview: ResponsePreview(body, 128),\n+\t\tContentType: contentType,\n+\t\tAPIBase:     apiBase,\n+\t}\n }\n \n // ReadAndParseResponse peeks at the response body to detect HTML errors,\n@@ -422,14 +453,13 @@ func LooksLikeHTML(body []byte, contentType string) bool {\n \n // WrapHTMLResponseError creates a descriptive error for HTML responses.\n func WrapHTMLResponseError(statusCode int, body []byte, contentType, apiBase string) error {\n-\trespPreview := ResponsePreview(body, 128)\n-\treturn fmt.Errorf(\n-\t\t\"API request failed: %s returned HTML instead of JSON (content-type: %s); check api_base or proxy configuration.\\n  Status: %d\\n  Body:   %s\",\n-\t\tapiBase,\n-\t\tcontentType,\n-\t\tstatusCode,\n-\t\trespPreview,\n-\t)\n+\treturn &HTTPError{\n+\t\tStatusCode:  statusCode,\n+\t\tBodyPreview: ResponsePreview(body, 128),\n+\t\tContentType: contentType,\n+\t\tAPIBase:     apiBase,\n+\t\tIsHTML:      true,\n+\t}\n }\n \n // ResponsePreview returns a truncated preview of response body for error messages."
+    },
+    {
+      "sha": "96be6662c264b7ca52373600bb4e69b34383dd55",
+      "filename": "pkg/providers/common/http_error_test.go",
+      "status": "added",
+      "additions": 59,
+      "deletions": 0,
+      "changes": 59,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fcommon%2Fhttp_error_test.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Fcommon%2Fhttp_error_test.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fproviders%2Fcommon%2Fhttp_error_test.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -0,0 +1,59 @@\n+package common\n+\n+import (\n+\t\"errors\"\n+\t\"net/http\"\n+\t\"net/http/httptest\"\n+\t\"strings\"\n+\t\"testing\"\n+)\n+\n+func TestHandleErrorResponse_ReturnsHTTPError(t *testing.T) {\n+\tserver := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n+\t\tw.Header().Set(\"Content-Type\", \"application/json\")\n+\t\tw.WriteHeader(http.StatusUnauthorized)\n+\t\t_, _ = w.Write([]byte(`{\"error\":\"unauthorized\"}`))\n+\t}))\n+\tdefer server.Close()\n+\n+\tresp, err := http.Get(server.URL)\n+\tif err != nil {\n+\t\tt.Fatalf(\"http.Get() error = %v\", err)\n+\t}\n+\tdefer resp.Body.Close()\n+\n+\terr = HandleErrorResponse(resp, server.URL)\n+\tvar httpErr *HTTPError\n+\tif !errors.As(err, &httpErr) {\n+\t\tt.Fatalf(\"HandleErrorResponse() error = %T, want *HTTPError\", err)\n+\t}\n+\tif httpErr.StatusCode != http.StatusUnauthorized {\n+\t\tt.Fatalf(\"StatusCode = %d, want %d\", httpErr.StatusCode, http.StatusUnauthorized)\n+\t}\n+\tif httpErr.BodyPreview != `{\"error\":\"unauthorized\"}` {\n+\t\tt.Fatalf(\"BodyPreview = %q\", httpErr.BodyPreview)\n+\t}\n+\tif !strings.Contains(err.Error(), \"Status: 401\") {\n+\t\tt.Fatalf(\"Error() should preserve status text, got %q\", err.Error())\n+\t}\n+}\n+\n+func TestWrapHTMLResponseError_ReturnsHTTPError(t *testing.T) {\n+\terr := WrapHTMLResponseError(\n+\t\thttp.StatusBadGateway,\n+\t\t[]byte(\"<html>bad</html>\"),\n+\t\t\"text/html\",\n+\t\t\"https://api.example.com\",\n+\t)\n+\n+\tvar httpErr *HTTPError\n+\tif !errors.As(err, &httpErr) {\n+\t\tt.Fatalf(\"WrapHTMLResponseError() error = %T, want *HTTPError\", err)\n+\t}\n+\tif !httpErr.IsHTML {\n+\t\tt.Fatal(\"expected IsHTML\")\n+\t}\n+\tif !strings.Contains(err.Error(), \"HTML instead of JSON\") {\n+\t\tt.Fatalf(\"Error() should preserve HTML message, got %q\", err.Error())\n+\t}\n+}"
+    },
+    {
+      "sha": "31e7b1cb61d0ec7541e0fa07f0c1f02079243d30",
+      "filename": "pkg/providers/error_classifier.go",
+      "status": "modified",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "blob_url": "https://github.com/sipeed/picoclaw/blob/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Ferror_classifier.go",
+      "raw_url": "https://github.com/sipeed/picoclaw/raw/2cf030d2fd3b871d7ec17e3be34c24688aac76da/pkg%2Fproviders%2Ferror_classifier.go",
+      "contents_url": "https://api.github.com/repos/sipeed/picoclaw/contents/pkg%2Fproviders%2Ferror_classifier.go?ref=2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+      "patch": "@@ -8,6 +8,8 @@ import (\n \t\"regexp\"\n \t\"strings\"\n \t\"syscall\"\n+\n+\t\"github.com/sipeed/picoclaw/pkg/providers/common\"\n )\n \n // Common patterns in Go HTTP error messages\n@@ -88,6 +90,8 @@ var (\n \t}\n \n \tauthPatterns = []errorPattern{\n+\t\trxp(`\\b(?:invalid|incorrect|malformed|wrong)[-_\\s]+(?:api[-_\\s]*)?key\\b`),\n+\t\trxp(`\\b(?:api[-_\\s]*)?key[-_\\s]+(?:is[-_\\s]+)?(?:invalid|incorrect|malformed|wrong)\\b`),\n \t\trxp(`invalid[_ ]?api[_ ]?key`),\n \t\tsubstr(\"incorrect api key\"),\n \t\tsubstr(\"invalid token\"),\n@@ -188,6 +192,18 @@ func ClassifyError(err error, provider, model string) *FailoverError {\n \t}\n \n \t// Try HTTP status code extraction first.\n+\tvar httpErr *common.HTTPError\n+\tif errors.As(err, &httpErr) && httpErr != nil {\n+\t\tif reason := classifyByStatus(httpErr.StatusCode); reason != \"\" {\n+\t\t\treturn &FailoverError{\n+\t\t\t\tReason:   reason,\n+\t\t\t\tProvider: provider,\n+\t\t\t\tModel:    model,\n+\t\t\t\tStatus:   httpErr.StatusCode,\n+\t\t\t\tWrapped:  err,\n+\t\t\t}\n+\t\t}\n+\t}\n \tif status := extractHTTPStatus(msg); status > 0 {\n \t\tif reason := classifyByStatus(status); reason != \"\" {\n \t\t\treturn &FailoverError{"
+    }
+  ]
+}

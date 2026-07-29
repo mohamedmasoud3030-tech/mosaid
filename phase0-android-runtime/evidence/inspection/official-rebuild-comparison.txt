@@ -1,0 +1,10 @@
+official_inner_sha256=7a1ab761530422e778b1807923fc4c3eaeee007e94f23559dfeaca2dfd4cb789
+independent_rebuild_sha256=1c45ef862334d36d342075a6f28b57ed5bce16e09c1a4598c62a77a38dafa6cf
+byte_identical=no
+/home/user/.cache/phase0/official-rebuild-android: go1.25.11
+	build	-ldflags="-X github.com/sipeed/picoclaw/pkg/config.Version=nightly -X github.com/sipeed/picoclaw/pkg/config.GitCommit=2cf030d2 -X github.com/sipeed/picoclaw/pkg/config.BuildTime=2026-07-03T07:11:21+0000 -X github.com/sipeed/picoclaw/pkg/config.GoVersion=go1.25.11 -s -w"
+
+with_git_rebuild_sha256=ad2f1991ea93c51bf721c55c8815bd2a422272d06c2cb8169b624fe0677901a6
+with_git_byte_identical=no
+/home/user/.cache/phase0/official-rebuild-git-android: go1.25.11
+	build	-ldflags="-X github.com/sipeed/picoclaw/pkg/config.Version=nightly -X github.com/sipeed/picoclaw/pkg/config.GitCommit=2cf030d2 -X github.com/sipeed/picoclaw/pkg/config.BuildTime=2026-07-03T07:11:21+0000 -X github.com/sipeed/picoclaw/pkg/config.GoVersion=go1.25.11 -s -w"

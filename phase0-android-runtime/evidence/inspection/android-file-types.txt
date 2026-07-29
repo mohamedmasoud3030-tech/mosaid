@@ -1,0 +1,2 @@
+evidence/inspection/android/arm64-v8a/libpicoclaw-web.so: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /system/bin/linker64, BuildID[sha1]=3f2b11d728be1b44470a0b5c3f13dce64da1f4dd, stripped
+evidence/inspection/android/arm64-v8a/libpicoclaw.so:     ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /system/bin/linker64, BuildID[sha1]=1462a00ae827ed12a2151d8f3afb5bcc161c2b07, stripped

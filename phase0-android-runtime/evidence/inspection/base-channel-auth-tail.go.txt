@@ -1,0 +1,111 @@
+		}
+		// Strip leading "@" from allowed value for username matching
+		trimmed := strings.TrimPrefix(allowed, "@")
+		allowedID := trimmed
+		allowedUser := ""
+		if idx := strings.Index(trimmed, "|"); idx > 0 {
+			allowedID = trimmed[:idx]
+			allowedUser = trimmed[idx+1:]
+		}
+
+		// Support either side using "id|username" compound form.
+		// This keeps backward compatibility with legacy Telegram allowlist entries.
+		if senderID == allowed ||
+			idPart == allowed ||
+			senderID == trimmed ||
+			idPart == trimmed ||
+			idPart == allowedID ||
+			(allowedUser != "" && senderID == allowedUser) ||
+			(userPart != "" && (userPart == allowed || userPart == trimmed || userPart == allowedUser)) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// IsAllowedSender checks whether a structured SenderInfo is permitted by the allow-list.
+// It delegates to identity.MatchAllowed for each entry, providing unified matching
+// across all legacy formats and the new canonical "platform:id" format.
+func (c *BaseChannel) IsAllowedSender(sender bus.SenderInfo) bool {
+	if len(c.allowList) == 0 {
+		return true
+	}
+
+	for _, allowed := range c.allowList {
+		if allowed == "*" || identity.MatchAllowed(sender, allowed) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (c *BaseChannel) HandleMessageWithContext(
+	ctx context.Context,
+	deliveryChatID, content string,
+	media []string,
+	inboundCtx bus.InboundContext,
+	senderOpts ...bus.SenderInfo,
+) {
+	// Use SenderInfo-based allow check when available, else fall back to string
+	var sender bus.SenderInfo
+	if len(senderOpts) > 0 {
+		sender = senderOpts[0]
+	}
+	senderID := strings.TrimSpace(inboundCtx.SenderID)
+	if sender.CanonicalID != "" || sender.PlatformID != "" {
+		if !c.IsAllowedSender(sender) {
+			return
+		}
+	} else {
+		if !c.IsAllowed(senderID) {
+			return
+		}
+	}
+
+	// Set SenderID to canonical if available, otherwise keep the raw senderID
+	resolvedSenderID := senderID
+	if sender.CanonicalID != "" {
+		resolvedSenderID = sender.CanonicalID
+	}
+
+	if resolvedSenderID == "" {
+		resolvedSenderID = senderID
+	}
+
+	inboundCtx.Channel = c.name
+	if inboundCtx.ChatID == "" {
+		inboundCtx.ChatID = deliveryChatID
+	}
+	if inboundCtx.SenderID == "" {
+		inboundCtx.SenderID = resolvedSenderID
+	}
+
+	scope := BuildMediaScope(c.name, deliveryChatID, inboundCtx.MessageID)
+
+	msg := bus.InboundMessage{
+		Context:    inboundCtx,
+		Sender:     sender,
+		Content:    content,
+		Media:      media,
+		MediaScope: scope,
+	}
+	msg = bus.NormalizeInboundMessage(msg)
+
+	// Auto-trigger typing indicator, message reaction, and placeholder before publishing.
+	// Each capability is independent — all three may fire for the same message.
+	// Note: even when streaming is available, we still show typing + placeholder on inbound.
+	// If streaming actually activates, preSend will skip the placeholder edit (streamActive map)
+	// and the typing stop will still be called. This avoids the problem of compile-time interface
+	// checks incorrectly skipping indicators when streaming may not work at runtime.
+	if c.owner != nil && c.placeholderRecorder != nil {
+		// Typing
+		if tc, ok := c.owner.(TypingCapable); ok {
+			if stop, err := tc.StartTyping(ctx, deliveryChatID); err == nil {
+				c.placeholderRecorder.RecordTypingStop(c.name, deliveryChatID, stop)
+			}
+		}
+		// Reaction
+		if rc, ok := c.owner.(ReactionCapable); ok && msg.MessageID != "" {
+			if undo, err := rc.ReactToMessage(ctx, deliveryChatID, msg.MessageID); err == nil {

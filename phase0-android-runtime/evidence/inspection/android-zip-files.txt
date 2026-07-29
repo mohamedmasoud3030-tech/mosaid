@@ -1,0 +1,3 @@
+arm64-v8a/
+arm64-v8a/libpicoclaw.so
+arm64-v8a/libpicoclaw-web.so

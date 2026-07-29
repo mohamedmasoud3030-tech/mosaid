@@ -1,0 +1,22 @@
+{
+  "sha": "9fba4cec050cbfe3d73dfcfe015d7960447b9c7f",
+  "tag": "v0.3.1",
+  "object": {
+    "sha": "2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+    "type": "commit",
+    "url": "https://api.github.com/repos/sipeed/picoclaw/git/commits/2cf030d2fd3b871d7ec17e3be34c24688aac76da"
+  },
+  "tagger": {
+    "name": "github-actions[bot]",
+    "email": "github-actions[bot]@users.noreply.github.com",
+    "date": "2026-06-30T09:42:55Z"
+  },
+  "message": "Release v0.3.1\n",
+  "verification": {
+    "verified": false,
+    "reason": "unsigned",
+    "signature": null,
+    "payload": null,
+    "verified_at": null
+  }
+}

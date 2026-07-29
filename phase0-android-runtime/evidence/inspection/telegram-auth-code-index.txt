@@ -1,0 +1,280 @@
+pkg/channels/telegram/telegram.go:125:		bc.AllowFrom,
+pkg/channels/telegram/telegram.go:172:	bh.HandleMessage(func(ctx *th.Context, message telego.Message) error {
+pkg/channels/telegram/telegram.go:173:		return c.handleMessage(ctx, &message)
+pkg/channels/telegram/telegram.go:656:		groupIDs, err := c.sendImageMediaGroups(ctx, chatID, threadID, store, msg.Parts)
+pkg/channels/telegram/telegram.go:658:			logger.ErrorCF("telegram", "Failed to send media group", map[string]any{
+pkg/channels/telegram/telegram.go:662:			return nil, fmt.Errorf("telegram send media group: %w", channels.ErrTemporary)
+pkg/channels/telegram/telegram.go:664:		if len(groupIDs) > 0 {
+pkg/channels/telegram/telegram.go:665:			messageIDs = append(messageIDs, groupIDs...)
+pkg/channels/telegram/telegram.go:803:		groupIDs, err := c.sendSingleImageMediaGroup(ctx, chatID, threadID, store, parts[start:end])
+pkg/channels/telegram/telegram.go:807:		messageIDs = append(messageIDs, groupIDs...)
+pkg/channels/telegram/telegram.go:830:			logger.ErrorCF("telegram", "Failed to resolve media ref for media group", map[string]any{
+pkg/channels/telegram/telegram.go:839:			logger.ErrorCF("telegram", "Failed to open media file for media group", map[string]any{
+pkg/channels/telegram/telegram.go:924:func (c *TelegramChannel) handleMessage(ctx context.Context, message *telego.Message) error {
+pkg/channels/telegram/telegram.go:928:	return c.handleMessages(ctx, []*telego.Message{message})
+pkg/channels/telegram/telegram.go:935:	groupID := strings.TrimSpace(message.MediaGroupID)
+pkg/channels/telegram/telegram.go:936:	if groupID == "" {
+pkg/channels/telegram/telegram.go:937:		return c.handleMessages(ctx, []*telego.Message{message})
+pkg/channels/telegram/telegram.go:942:	key := fmt.Sprintf("%d:%s", message.Chat.ID, groupID)
+pkg/channels/telegram/telegram.go:948:	group := c.mediaGroups[key]
+pkg/channels/telegram/telegram.go:949:	if group == nil {
+pkg/channels/telegram/telegram.go:950:		group = &telegramMediaGroup{}
+pkg/channels/telegram/telegram.go:951:		c.mediaGroups[key] = group
+pkg/channels/telegram/telegram.go:953:	group.messages = append(group.messages, &msgCopy)
+pkg/channels/telegram/telegram.go:954:	group.generation++
+pkg/channels/telegram/telegram.go:955:	generation := group.generation
+pkg/channels/telegram/telegram.go:956:	if group.timer != nil {
+pkg/channels/telegram/telegram.go:957:		group.timer.Stop()
+pkg/channels/telegram/telegram.go:963:	group.timer = time.AfterFunc(delay, func() {
+pkg/channels/telegram/telegram.go:968:	logger.DebugCF("telegram", "Buffered media group message", map[string]any{
+pkg/channels/telegram/telegram.go:970:		"media_group_id": groupID,
+pkg/channels/telegram/telegram.go:979:	for key, group := range c.mediaGroups {
+pkg/channels/telegram/telegram.go:980:		if group.timer != nil {
+pkg/channels/telegram/telegram.go:981:			group.timer.Stop()
+pkg/channels/telegram/telegram.go:994:	group := c.mediaGroups[key]
+pkg/channels/telegram/telegram.go:995:	if group == nil {
+pkg/channels/telegram/telegram.go:999:	if generation != 0 && group.generation != generation {
+pkg/channels/telegram/telegram.go:1004:	if group.timer != nil {
+pkg/channels/telegram/telegram.go:1005:		group.timer.Stop()
+pkg/channels/telegram/telegram.go:1007:	messages := append([]*telego.Message(nil), group.messages...)
+pkg/channels/telegram/telegram.go:1028:	if err := c.handleMessages(ctx, messages); err != nil {
+pkg/channels/telegram/telegram.go:1029:		logger.ErrorCF("telegram", "Failed to handle media group", map[string]any{
+pkg/channels/telegram/telegram.go:1036:func (c *TelegramChannel) handleMessages(ctx context.Context, messages []*telego.Message) error {
+pkg/channels/telegram/telegram.go:1069:	if !c.IsAllowedSender(sender) {
+pkg/channels/telegram/telegram.go:1125:	// In group chats, apply unified group trigger filtering
+pkg/channels/telegram/telegram.go:1127:	if message.Chat.Type != "private" {
+pkg/channels/telegram/telegram.go:1158:	// Only forum groups (IsForum) are handled; regular group reply threads
+pkg/channels/telegram/telegram.go:1159:	// must share one session per group.
+pkg/channels/telegram/telegram.go:1174:	if message.Chat.Type != "private" {
+pkg/channels/telegram/telegram.go:1175:		peerKind = "group"
+pkg/channels/telegram/telegram.go:1183:		"is_group":   fmt.Sprintf("%t", message.Chat.Type != "private"),
+pkg/channels/telegram/telegram.go:1189:		ChatType:  peerKind,
+pkg/channels/telegram/telegram.go:1202:	c.HandleMessageWithContext(
+pkg/channels/telegram/telegram_dispatch_test.go:13:func TestHandleMessage_DoesNotConsumeGenericCommandsLocally(t *testing.T) {
+pkg/channels/telegram/telegram_dispatch_test.go:26:			Type: "private",
+pkg/channels/telegram/telegram_dispatch_test.go:34:	if err := ch.handleMessage(context.Background(), msg); err != nil {
+pkg/channels/telegram/telegram_dispatch_test.go:35:		t.Fatalf("handleMessage error: %v", err)
+pkg/channels/telegram/telegram_group_command_filter_test.go:59:func TestHandleMessage_GroupMentionOnly_BotCommandEntity(t *testing.T) {
+pkg/channels/telegram/telegram_group_command_filter_test.go:99:					Type: "group",
+pkg/channels/telegram/telegram_group_command_filter_test.go:107:			if err := ch.handleMessage(context.Background(), msg); err != nil {
+pkg/channels/telegram/telegram_group_command_filter_test.go:108:				t.Fatalf("handleMessage error: %v", err)
+pkg/channels/telegram/telegram_test.go:497:				callOrder = append(callOrder, "group")
+pkg/channels/telegram/telegram_test.go:547:	assert.Equal(t, []string{"text", "group", "group"}, callOrder)
+pkg/channels/telegram/telegram_test.go:1215:func TestHandleMessage_ForumTopic_SetsMetadata(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1229:			Type:    "supergroup",
+pkg/channels/telegram/telegram_test.go:1238:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1247:	assert.Equal(t, "group", inbound.Context.ChatType)
+pkg/channels/telegram/telegram_test.go:1251:func TestHandleMessage_NoForum_NoThreadMetadata(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1260:		Text:      "regular group message",
+pkg/channels/telegram/telegram_test.go:1264:			Type: "group",
+pkg/channels/telegram/telegram_test.go:1272:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1281:	assert.Equal(t, "group", inbound.Context.ChatType)
+pkg/channels/telegram/telegram_test.go:1285:func TestHandleMessage_ReplyThread_NonForum_NoIsolation(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1293:	// In regular groups, reply threads set MessageThreadID to the original
+pkg/channels/telegram/telegram_test.go:1301:			Type:    "supergroup",
+pkg/channels/telegram/telegram_test.go:1310:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1316:	// chatID should NOT include thread suffix for non-forum groups
+pkg/channels/telegram/telegram_test.go:1319:	assert.Equal(t, "group", inbound.Context.ChatType)
+pkg/channels/telegram/telegram_test.go:1323:func assertHandleMessageQuotedUserReply(
+pkg/channels/telegram/telegram_test.go:1351:			Type: "private",
+pkg/channels/telegram/telegram_test.go:1368:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1377:func TestHandleMessage_ReplyToMessage_PrependsQuotedTextAndMetadata(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1378:	assertHandleMessageQuotedUserReply(
+pkg/channels/telegram/telegram_test.go:1394:func TestHandleMessage_ReplyToMessage_UsesCaptionWhenQuotedTextMissing(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1395:	assertHandleMessageQuotedUserReply(
+pkg/channels/telegram/telegram_test.go:1411:func TestHandleMessage_ReplyToOwnBotMessage_UsesAssistantRole(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1436:			Type: "private",
+pkg/channels/telegram/telegram_test.go:1454:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1498:func TestHandleMessage_EmptyContent_Ignored(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1511:			Type: "group",
+pkg/channels/telegram/telegram_test.go:1519:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1530:func TestHandleMessage_LocationForwardedAsText(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1546:			Type: "private",
+pkg/channels/telegram/telegram_test.go:1554:	err := ch.handleMessage(context.Background(), msg)
+pkg/channels/telegram/telegram_test.go:1566:func TestHandleMessage_MediaGroupCombinesCaptionMessages(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1575:	require.NoError(t, ch.handleMessage(context.Background(), &first))
+pkg/channels/telegram/telegram_test.go:1576:	require.NoError(t, ch.handleMessage(context.Background(), &second))
+pkg/channels/telegram/telegram_test.go:1583:		t.Fatal("timed out waiting for combined media group message")
+pkg/channels/telegram/telegram_test.go:1587:func TestHandleMessage_MediaGroupWaitsForStaggeredMessages(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1597:	require.NoError(t, ch.handleMessage(context.Background(), &first))
+pkg/channels/telegram/telegram_test.go:1599:	require.NoError(t, ch.handleMessage(context.Background(), &second))
+pkg/channels/telegram/telegram_test.go:1603:		t.Fatalf("media group flushed before idle delay reset: %#v", inbound)
+pkg/channels/telegram/telegram_test.go:1612:		t.Fatal("timed out waiting for staggered media group message")
+pkg/channels/telegram/telegram_test.go:1638:		t.Fatalf("stale media group generation flushed unexpectedly: %#v", inbound)
+pkg/channels/telegram/telegram_test.go:1654:		t.Fatal("timed out waiting for current generation media group flush")
+pkg/channels/telegram/telegram_test.go:1658:func TestHandleMessage_MediaGroupAfterDelayStartsNewBatch(t *testing.T) {
+pkg/channels/telegram/telegram_test.go:1668:	require.NoError(t, ch.handleMessage(context.Background(), &first))
+pkg/channels/telegram/telegram_test.go:1674:		t.Fatal("timed out waiting for first media group batch")
+pkg/channels/telegram/telegram_test.go:1677:	require.NoError(t, ch.handleMessage(context.Background(), &second))
+pkg/channels/telegram/telegram_test.go:1683:		t.Fatal("timed out waiting for second media group batch")
+pkg/channels/telegram/telegram_test.go:1694:	require.NoError(t, ch.handleMessage(context.Background(), &msg))
+pkg/channels/telegram/telegram_test.go:1702:		t.Fatal("timed out waiting for pending media group flush on stop")
+pkg/channels/telegram/telegram_test.go:1743:			Type: "private",
+pkg/channels/README.md:210:        allowList: cfg.Channels.Telegram.AllowFrom,
+pkg/channels/README.md:221:        cfg.Channels.Telegram.AllowFrom, // Allow list
+pkg/channels/README.md:290:        "peer_kind": "group",     // Routing info buried in metadata
+pkg/channels/README.md:297:// New code: use BaseChannel.HandleMessage with structured fields
+pkg/channels/README.md:307:    Kind: "group",    // or "direct"
+pkg/channels/README.md:311:// HandleMessage internally calls IsAllowedSender for permission checks, builds MediaScope, and publishes to bus
+pkg/channels/README.md:312:c.HandleMessage(ctx, peer, messageID, senderID, chatID, content, mediaRefs, metadata, sender)
+pkg/channels/README.md:374:if !c.isAllowed(senderID) { return }
+pkg/channels/README.md:377:if !c.IsAllowedSender(sender) { return }
+pkg/channels/README.md:379:if !c.IsAllowed(senderID) { return }
+pkg/channels/README.md:382:`BaseChannel.HandleMessage` already handles this logic internally — no need to duplicate the check in your channel.
+pkg/channels/README.md:394:| No Typing/Placeholder management | Unified preSend handles Typing stop + Reaction undo + Placeholder edit; inbound-side BaseChannel.HandleMessage auto-orchestrates Typing/Reaction/Placeholder |
+pkg/channels/README.md:478:        matrixCfg.AllowFrom,                // Allow list
+pkg/channels/README.md:548:    // 2. Determine Peer type (direct vs group)
+pkg/channels/README.md:550:        Kind: "group",    // or "direct"
+pkg/channels/README.md:555:    isGroup := peer.Kind == "group"
+pkg/channels/README.md:573:    // 5. Call HandleMessage to publish to bus
+pkg/channels/README.md:574:    //    HandleMessage internally will:
+pkg/channels/README.md:575:    //    - Check IsAllowedSender/IsAllowed
+pkg/channels/README.md:578:    c.HandleMessage(
+pkg/channels/README.md:743:`BaseChannel.HandleMessage` automatically detects whether the channel implements `TypingCapable`, `ReactionCapable`, and/or `PlaceholderCapable` **before** publishing the inbound message, and triggers the corresponding indicators. The three pipelines are completely independent and do not interfere with each other:
+pkg/channels/README.md:746:// Automatically executed inside BaseChannel.HandleMessage (no manual calls needed):
+pkg/channels/README.md:770:- Channels implementing `TypingCapable` (Telegram, Discord, LINE, Pico) do not need to manually call `StartTyping` + `RecordTypingStop` in `handleMessage`
+pkg/channels/README.md:771:- Channels implementing `ReactionCapable` (Slack, OneBot) do not need to manually call `AddReaction` + `RecordTypingStop` in `handleMessage`
+pkg/channels/README.md:772:- Channels implementing `PlaceholderCapable` (Telegram, Discord, Pico) do not need to manually send placeholder messages and call `RecordPlaceholder` in `handleMessage`
+pkg/channels/README.md:773:- Channels only need to implement the corresponding interface; `HandleMessage` handles orchestration automatically
+pkg/channels/README.md:789:Each channel entry stores common fields (`enabled`, `type`, `allow_from`, etc.) at
+pkg/channels/README.md:798:      "allow_from": ["@user:example.com"],
+pkg/channels/README.md:892:    Kind string `json:"kind"`  // "direct" | "group" | "channel" | ""
+pkg/channels/README.md:957:| `IsAllowed(senderID string) bool` | Legacy allow-list check (supports `"id\|username"` and `"@username"` formats) |
+pkg/channels/README.md:958:| `IsAllowedSender(sender SenderInfo) bool` | New allow-list check (delegates to `identity.MatchAllowed`) |
+pkg/channels/README.md:959:| `ShouldRespondInGroup(isMentioned, content) (bool, string)` | Unified group chat trigger filtering logic |
+pkg/channels/README.md:960:| `HandleMessage(...)` | Unified inbound message handling: permission check → build MediaScope → auto-trigger Typing/Reaction/Placeholder → publish to Bus |
+pkg/channels/README.md:963:| `SetOwner(ch)` | Concrete channel reference injected by Manager (used for Typing/Reaction/Placeholder type assertions in HandleMessage) |
+pkg/channels/README.md:969:channels.WithGroupTrigger(groupTriggerCfg) // Set group trigger configuration
+pkg/channels/README.md:1112:// Inbound side: BaseChannel.HandleMessage auto-orchestrates
+pkg/channels/README.md:1113:// BaseChannel.HandleMessage, before PublishInbound, auto-triggers via owner type assertions:
+pkg/channels/README.md:1231:3. **HandleMessage includes permission checks**: Do not perform your own permission checks before calling `HandleMessage` (unless you need platform-specific preprocessing before the check). `HandleMessage` already calls `IsAllowedSender`/`IsAllowed` internally.
+pkg/channels/README.md:1235:5. **Typing/Reaction/Placeholder is handled by BaseChannel + Manager automatically**: A channel's `Send` method does not need to manage Typing stop, Reaction undo, or Placeholder editing. `BaseChannel.HandleMessage` auto-triggers `TypingCapable`, `ReactionCapable`, and `PlaceholderCapable` on the inbound side (via `owner` type assertions); Manager's `preSend` auto-stops Typing, undoes Reaction, and edits Placeholder on the outbound side. Channels only need to implement the corresponding interfaces.
+pkg/channels/README.md:1283:| `pkg/channels/base.go` | BaseChannel struct, Channel interface, MessageLengthProvider, BaseChannelOption, HandleMessage |
+pkg/channels/README.md:1326:    IsAllowed(senderID string) bool
+pkg/channels/README.md:1327:    IsAllowedSender(sender bus.SenderInfo) bool
+pkg/channels/README.zh.md:210:        allowList: cfg.Channels.Telegram.AllowFrom,
+pkg/channels/README.zh.md:221:        cfg.Channels.Telegram.AllowFrom, // 允许列表
+pkg/channels/README.zh.md:290:        "peer_kind": "group",     // 路由信息埋在 metadata
+pkg/channels/README.zh.md:297:// 新代码：使用 BaseChannel.HandleMessage，传入结构化字段
+pkg/channels/README.zh.md:307:    Kind: "group",    // 或 "direct"
+pkg/channels/README.zh.md:311:// HandleMessage 内部调用 IsAllowedSender 检查权限，构建 MediaScope，发布到 bus
+pkg/channels/README.zh.md:312:c.HandleMessage(ctx, peer, messageID, senderID, chatID, content, mediaRefs, metadata, sender)
+pkg/channels/README.zh.md:374:if !c.isAllowed(senderID) { return }
+pkg/channels/README.zh.md:377:if !c.IsAllowedSender(sender) { return }
+pkg/channels/README.zh.md:379:if !c.IsAllowed(senderID) { return }
+pkg/channels/README.zh.md:382:`BaseChannel.HandleMessage` 方法内部已经处理了这个逻辑，无需在 channel 中重复检查。
+pkg/channels/README.zh.md:394:| 无 Typing/Placeholder 管理 | 统一 preSend 处理 Typing 停止 + Reaction 撤销 + Placeholder 编辑；入站侧 BaseChannel.HandleMessage 自动编排 Typing/Reaction/Placeholder |
+pkg/channels/README.zh.md:478:        matrixCfg.AllowFrom,                // 允许列表
+pkg/channels/README.zh.md:550:        Kind: "group",    // 或 "direct"
+pkg/channels/README.zh.md:555:    isGroup := peer.Kind == "group"
+pkg/channels/README.zh.md:573:    // 5. 调用 HandleMessage 发布到 bus
+pkg/channels/README.zh.md:574:    //    HandleMessage 内部会：
+pkg/channels/README.zh.md:575:    //    - 检查 IsAllowedSender/IsAllowed
+pkg/channels/README.zh.md:578:    c.HandleMessage(
+pkg/channels/README.zh.md:742:`BaseChannel.HandleMessage` 在发布入站消息**之前**，自动检测 channel 是否实现了 `TypingCapable`、`ReactionCapable` 和/或 `PlaceholderCapable`，并触发相应的指示器。三条管道完全独立，互不干扰：
+pkg/channels/README.zh.md:745:// BaseChannel.HandleMessage 内部自动执行（无需 channel 手动调用）：
+pkg/channels/README.zh.md:769:- 实现 `TypingCapable` 的 channel（Telegram、Discord、LINE、Pico）无需在 `handleMessage` 中手动调用 `StartTyping` + `RecordTypingStop`
+pkg/channels/README.zh.md:770:- 实现 `ReactionCapable` 的 channel（Slack、OneBot）无需在 `handleMessage` 中手动调用 `AddReaction` + `RecordTypingStop`
+pkg/channels/README.zh.md:771:- 实现 `PlaceholderCapable` 的 channel（Telegram、Discord、Pico）无需在 `handleMessage` 中手动发送占位消息并调用 `RecordPlaceholder`
+pkg/channels/README.zh.md:772:- Channel 只需实现对应接口，`HandleMessage` 会自动完成编排
+pkg/channels/README.zh.md:788:每个 channel 条目将通用字段（`enabled`、`type`、`allow_from` 等）放在顶层，
+pkg/channels/README.zh.md:797:      "allow_from": ["@user:example.com"],
+pkg/channels/README.zh.md:890:    Kind string `json:"kind"`  // "direct" | "group" | "channel" | ""
+pkg/channels/README.zh.md:955:| `IsAllowed(senderID string) bool` | 旧格式允许列表检查（支持 `"id\|username"` 和 `"@username"` 格式） |
+pkg/channels/README.zh.md:956:| `IsAllowedSender(sender SenderInfo) bool` | 新格式允许列表检查（委托给 `identity.MatchAllowed`） |
+pkg/channels/README.zh.md:958:| `HandleMessage(...)` | 统一入站消息处理：权限检查 → 构建 MediaScope → 自动触发 Typing/Reaction/Placeholder → 发布到 Bus |
+pkg/channels/README.zh.md:961:| `SetOwner(ch) ` | Manager 注入的具体 channel 引用（用于 HandleMessage 内部的 Typing/Reaction/Placeholder 类型断言） |
+pkg/channels/README.zh.md:967:channels.WithGroupTrigger(groupTriggerCfg) // 设置群聊触发配置
+pkg/channels/README.zh.md:1110:// 入站侧：BaseChannel.HandleMessage 自动编排
+pkg/channels/README.zh.md:1111:// BaseChannel.HandleMessage 在 PublishInbound 之前，通过 owner 类型断言自动触发：
+pkg/channels/README.zh.md:1229:3. **HandleMessage 包含权限检查**：不要在调用 `HandleMessage` 之前自行进行权限检查（除非你需要在检查前做平台特定的预处理）。`HandleMessage` 内部已经调用 `IsAllowedSender`/`IsAllowed`。
+pkg/channels/README.zh.md:1233:5. **Typing/Reaction/Placeholder 由 BaseChannel + Manager 自动处理**：Channel 的 `Send` 方法不需要管理 Typing 停止、Reaction 撤销或 Placeholder 编辑。`BaseChannel.HandleMessage` 在入站侧自动触发 `TypingCapable`、`ReactionCapable` 和 `PlaceholderCapable`（通过 `owner` 类型断言）；Manager 的 `preSend` 在出站侧自动停止 Typing、撤销 Reaction、编辑 Placeholder。Channel 只需实现对应接口即可。
+pkg/channels/README.zh.md:1281:| `pkg/channels/base.go` | BaseChannel 结构体、Channel 接口、MessageLengthProvider、BaseChannelOption、HandleMessage |
+pkg/channels/README.zh.md:1324:    IsAllowed(senderID string) bool
+pkg/channels/README.zh.md:1325:    IsAllowedSender(sender bus.SenderInfo) bool
+pkg/channels/base.go:53:	IsAllowed(senderID string) bool
+pkg/channels/base.go:54:	IsAllowedSender(sender bus.SenderInfo) bool
+pkg/channels/base.go:68:// WithGroupTrigger sets the group trigger configuration for a channel.
+pkg/channels/base.go:70:	return func(c *BaseChannel) { c.groupTrigger = gt }
+pkg/channels/base.go:92:	groupTrigger        config.GroupTriggerConfig
+pkg/channels/base.go:127:	// PicoClaw aims to be secure-by-default. If allow_from is empty, the bot
+pkg/channels/base.go:131:		logger.WarnCF("channels", "SECURITY: Channel allows EVERYONE (allow_from is empty)", map[string]any{
+pkg/channels/base.go:133:			"hint":    "Set allow_from to your ID, or use '*' to explicitly acknowledge open access.",
+pkg/channels/base.go:146:// ShouldRespondInGroup determines whether the bot should respond in a group chat.
+pkg/channels/base.go:150://  3. Calling this method to get the group response decision
+pkg/channels/base.go:157://   - Otherwise (no group_trigger configured) → respond to all (permissive default)
+pkg/channels/base.go:159:	gt := c.groupTrigger
+pkg/channels/base.go:182:	// No group_trigger configured → permissive (respond to all)
+pkg/channels/base.go:204:func (c *BaseChannel) IsAllowed(senderID string) bool {
+pkg/channels/base.go:246:// IsAllowedSender checks whether a structured SenderInfo is permitted by the allow-list.
+pkg/channels/base.go:249:func (c *BaseChannel) IsAllowedSender(sender bus.SenderInfo) bool {
+pkg/channels/base.go:263:func (c *BaseChannel) HandleMessageWithContext(
+pkg/channels/base.go:277:		if !c.IsAllowedSender(sender) {
+pkg/channels/base.go:281:		if !c.IsAllowed(senderID) {
+pkg/channels/base.go:365:	c.HandleMessageWithContext(ctx, deliveryChatID, content, media, inboundCtx, senderOpts...)
+pkg/channels/base.go:389:// This allows HandleMessage to auto-trigger TypingCapable / ReactionCapable / PlaceholderCapable.
+pkg/channels/base_test.go:11:func TestBaseChannelIsAllowed(t *testing.T) {
+pkg/channels/base_test.go:53:			if got := ch.IsAllowed(tt.senderID); got != tt.want {
+pkg/channels/base_test.go:54:				t.Fatalf("IsAllowed(%q) = %v, want %v", tt.senderID, got, tt.want)
+pkg/channels/base_test.go:181:func TestIsAllowedSender(t *testing.T) {
+pkg/channels/base_test.go:261:			if got := ch.IsAllowedSender(tt.sender); got != tt.want {
+pkg/channels/base_test.go:262:				t.Fatalf("IsAllowedSender(%+v) = %v, want %v", tt.sender, got, tt.want)
+pkg/channels/base_test.go:280:				ChatType:  "direct",
+pkg/channels/base_test.go:288:			name: "group uses chat as peer",
+pkg/channels/base_test.go:291:				ChatID:    "group-1",
+pkg/channels/base_test.go:292:				ChatType:  "group",
+pkg/channels/base_test.go:296:			wantChat:   "group-1",
+pkg/channels/base_test.go:316:			if msg.Context.ChatType != tt.inbound.ChatType {
+pkg/channels/base_test.go:317:				t.Fatalf("ChatType = %q, want %q", msg.Context.ChatType, tt.inbound.ChatType)
+pkg/channels/dingtalk/dingtalk.go:51:	base := channels.NewBaseChannel("dingtalk", cfg, messageBus, bc.AllowFrom,
+pkg/channels/dingtalk/dingtalk.go:195:		chatType = "group"
+pkg/channels/dingtalk/dingtalk.go:200:		// In group chats, apply unified group trigger filtering
+pkg/channels/dingtalk/dingtalk.go:230:	if !c.IsAllowedSender(sender) {
+pkg/channels/dingtalk/dingtalk.go:237:		ChatType:  chatType,
+pkg/channels/dingtalk/dingtalk_test.go:63:		ConversationId:   "group-abc",
+pkg/channels/dingtalk/dingtalk_test.go:75:	if inbound.ChatID != "group-abc" {
+pkg/channels/dingtalk/dingtalk_test.go:78:	if inbound.Context.ChatType != "group" {
+pkg/channels/dingtalk/dingtalk_test.go:79:		t.Fatalf("chat_type=%q", inbound.Context.ChatType)
+pkg/channels/dingtalk/dingtalk_test.go:106:	if inbound.Context.ChatType != "direct" {
+pkg/channels/dingtalk/dingtalk_test.go:107:		t.Fatalf("chat_type=%q", inbound.Context.ChatType)
+pkg/channels/discord/discord.go:85:	base := channels.NewBaseChannel("discord", cfg, bus, bc.AllowFrom,
+pkg/channels/discord/discord.go:119:	c.session.AddHandler(c.handleMessage)
+pkg/channels/discord/discord.go:524:func (c *DiscordChannel) handleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
+pkg/channels/discord/discord.go:547:	if !c.IsAllowedSender(sender) {
+pkg/channels/discord/discord.go:560:	// In guild (group) channels, apply unified group trigger filtering
+pkg/channels/discord/discord.go:573:			logger.DebugCF("discord", "Group message ignored by group trigger", map[string]any{
+pkg/channels/discord/discord.go:670:		ChatType:  peerKind,
+pkg/channels/discord/voice.go:278:			if !c.IsAllowedSender(sender) {
+pkg/channels/events.go:193:		ChatType:  ctx.ChatType,
+pkg/channels/feishu/feishu_64.go:65:	base := channels.NewBaseChannel("feishu", cfg, bus, bc.AllowFrom,
+pkg/channels/feishu/feishu_64.go:103:		OnP2MessageReceiveV1(c.handleMessageReceive)
+pkg/channels/feishu/feishu_64.go:583:func (c *FeishuChannel) handleMessageReceive(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
+pkg/channels/feishu/feishu_64.go:606:	// BaseChannel.HandleMessage will check again, but this avoids wasted network I/O.
+pkg/channels/feishu/feishu_64.go:612:	if !c.IsAllowedSender(senderInfo) {
+pkg/channels/feishu/feishu_64.go:640:	chatType := stringValue(message.ChatType)
+pkg/channels/feishu/feishu_64.go:644:		inboundChatType string
+pkg/channels/feishu/feishu_64.go:648:		inboundChatType = "direct"
+pkg/channels/feishu/feishu_64.go:650:		inboundChatType = "group"
+pkg/channels/feishu/feishu_64.go:655:		// Strip mention placeholders from content before group trigger check
+pkg/channels/feishu/feishu_64.go:660:		// In group chats, apply unified group trigger filtering
+pkg/channels/feishu/feishu_64.go:691:		ChatType:  inboundChatType,
+pkg/channels/feishu/feishu_reply.go:193:	chatType := stringValue(message.ChatType)
+pkg/channels/feishu/feishu_reply_test.go:19:			ChatType:    strPtr("group"),
+pkg/channels/feishu/feishu_reply_test.go:34:		if got["chat_type"] != "group" {
+pkg/channels/feishu/feishu_reply_test.go:35:			t.Fatalf("chat_type = %q, want %q", got["chat_type"], "group")
+pkg/channels/irc/handler.go:69:	if !c.IsAllowedSender(sender) {
+pkg/channels/irc/handler.go:75:	// For channel messages, check group trigger (mention detection)
+pkg/channels/irc/handler.go:111:		inboundCtx.ChatType = "direct"
+pkg/channels/irc/handler.go:113:		inboundCtx.ChatType = "group"
+pkg/channels/irc/irc.go:37:	base := channels.NewBaseChannel("irc", cfg, messageBus, bc.AllowFrom,
+pkg/channels/line/line.go:72:	base := channels.NewBaseChannel("line", cfg, messageBus, bc.AllowFrom,
+pkg/channels/line/line.go:188:	isGroup := sourceType == "group" || sourceType == "room"
+pkg/channels/line/line.go:228:		// Strip bot mention from text in group chats
+pkg/channels/line/line.go:288:	// In group chats, apply unified group trigger filtering
+pkg/channels/line/line.go:292:			logger.DebugCF("line", "Ignoring group message by group trigger", map[string]any{
+pkg/channels/line/line.go:309:		"is_group":     isGroup,
+pkg/channels/line/line.go:319:	if !c.IsAllowedSender(sender) {
+pkg/channels/line/line.go:326:		ChatType:  map[bool]string{true: "group", false: "direct"}[isGroup],
+pkg/channels/line/line.go:445:		return src.UserId, src.GroupId, "group"
+pkg/channels/maixcam/maixcam.go:44:		bc.AllowFrom,
+pkg/channels/maixcam/maixcam.go:199:	if !c.IsAllowedSender(sender) {

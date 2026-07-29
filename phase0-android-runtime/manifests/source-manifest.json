@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "generated_at": "2026-07-29T00:00:00+04:00",
+  "purpose": "Phase 0 Android Runtime Qualification only",
+  "upstream": {
+    "repository": "https://github.com/sipeed/picoclaw",
+    "tag": "v0.3.1",
+    "tag_object_sha": "9fba4cec050cbfe3d73dfcfe015d7960447b9c7f",
+    "tag_signed": false,
+    "peeled_commit_sha": "2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+    "commit_tree_sha": "79530d185c4c5eb30719fd45cf323217d2a9f5c5",
+    "commit_date_utc": "2026-06-30T09:42:07Z",
+    "github_commit_verification": "verified-valid",
+    "release_published_utc": "2026-07-03T07:37:06Z",
+    "release_mutability_reported_by_api": "immutable=false",
+    "original_go_mod_directive": "1.25.11",
+    "license": "MIT"
+  },
+  "official_release_artifacts": {
+    "android_bundle": {
+      "name": "picoclaw-android-universal.zip",
+      "size_bytes": 20457217,
+      "sha256_from_github_asset_digest": "fdfc0dbf52af7dfa82022629c902796fb479cc62a483b86cb86d2919b8f191ee",
+      "sha256_locally_verified": "fdfc0dbf52af7dfa82022629c902796fb479cc62a483b86cb86d2919b8f191ee",
+      "included_in_official_checksums_txt": false,
+      "contents": [
+        {
+          "path": "arm64-v8a/libpicoclaw.so",
+          "sha256": "7a1ab761530422e778b1807923fc4c3eaeee007e94f23559dfeaca2dfd4cb789",
+          "format": "ELF64 Android PIE aarch64",
+          "interpreter": "/system/bin/linker64",
+          "go_version": "go1.25.11",
+          "embedded_vcs_revision": "2cf030d2fd3b871d7ec17e3be34c24688aac76da"
+        },
+        {
+          "path": "arm64-v8a/libpicoclaw-web.so",
+          "sha256": "9794b4f78e0dd250d031470d6b7d6921496cd5755574425aea99cbf87c711ce0",
+          "format": "ELF64 Android PIE aarch64",
+          "interpreter": "/system/bin/linker64"
+        }
+      ]
+    },
+    "linux_arm64_archive": {
+      "name": "picoclaw_Linux_arm64.tar.gz",
+      "sha256": "e78ab0de05d000698ff8b32458e71cb3134e52e9eaf540e3323a72e9914de060",
+      "official_checksum_verified": true,
+      "core_binary_sha256": "d0c5cff9d012072b2dd5ad48411939a9aa43310ff0fbf793766ffbd89603cf07",
+      "core_binary_format": "ELF64 statically linked Linux aarch64",
+      "go_version": "go1.25.11"
+    },
+    "checksums_file": {
+      "name": "picoclaw_0.3.1_checksums.txt",
+      "sha256": "a60e0242f72508f5fbd8ab5976661d0d183c76d8f7863a383e60f3262e976acf"
+    }
+  },
+  "qualification_derivative": {
+    "base_commit_sha": "2cf030d2fd3b871d7ec17e3be34c24688aac76da",
+    "pinned_source_archive_sha256": "623a422dad0ecee456d87b67bab650218232f5436a404ee43e1db921bcc06157",
+    "qualification_patch_sha256": "d61d3f336e644a7b9e4cc01b411314dce91768a2b67507371a9efee66dd396ed",
+    "security_overrides_patch_sha256": "bb21969231dda482579622e63cc16f8efdfc3893b19946933121a79ba8e6dd17",
+    "build_go_version": "go1.25.12",
+    "go_toolchain_archive_sha256": "234828b7a89e0e303d2556310ee549fbcf253d28de937bac3da13d6294262ac1",
+    "goos": "android",
+    "goarch": "arm64",
+    "cgo_enabled": false,
+    "build_tags": ["stdjson"],
+    "trimpath": true,
+    "buildvcs": false,
+    "empty_build_id": true,
+    "binary_name": "picoclaw-phase0-v0.3.1-android-arm64",
+    "binary_sha256": "b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f",
+    "two_independent_local_builds_match": true,
+    "linked_module_count": 93,
+    "unlicensed_kagi_client_linked": false,
+    "phone_kit_sha256": "72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63"
+  },
+  "vulnerability_scan": {
+    "scanner": "govulncheck v1.1.4",
+    "database_updated_utc": "2026-07-27T20:14:16Z",
+    "remaining_findings": ["GO-2026-5932"],
+    "exception_note": "The finding is module-level for x/crypto/openpgp. go list -deps for cmd/picoclaw confirms that golang.org/x/crypto/openpgp is not imported. The exception is acceptable for qualification only, not an assertion of zero risk."
+  },
+  "limitations": [
+    "The upstream tag object is unsigned and the GitHub release is not API-immutable.",
+    "The official checksums text file omits the Android bundle; its GitHub asset digest and a local SHA-256 were recorded instead.",
+    "The official build is not byte-for-byte reproducible because its build time, VCS metadata, and GoReleaser environment differ.",
+    "The qualification binary still links 93 modules because Phase 0 does not perform product-level pruning.",
+    "No claim of physical Android execution is made until diagnostics are returned from the phone."
+  ]
+}
