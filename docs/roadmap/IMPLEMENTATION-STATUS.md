@@ -11,8 +11,8 @@
 | 6 | COMPLETE | `d5d79d0` | FTS5 lifecycle and secret-rejection tests, race, vet | Model summarization quality pending | Explicit/provenance memory without vector DB |
 | 7 | COMPLETE | `074e61b` | 18 scheduler tests plus migration, unit, race, vet, Linux/Android builds, secret scan | Physical-phone scheduler validation pending | Durable one-time/recurring jobs, missed-run policy, retries, locks, recovery, cancellation, policy-bound execution; reconstructed from remote after the prior local-only loss |
 | 8 | COMPLETE | `8ecf5f9` | strict loader, integrity/schema/version/scope/malicious-manifest tests, race, vet, Linux/Android builds, secret scan | Provider-backed example Skills await their later integration phases | Declarative, builtin Go, and explicit MCP-backed contracts; all tool calls route through the core registry |
-| 9 | IN PROGRESS | — | — | External MCP server identity/configuration pending | MCP |
-| 10 | PLANNED | — | — | Search credentials optional | Web/documents |
+| 9 | COMPLETE | `33fc32b` | official SDK stdio/Streamable HTTP mocks, allowlist/schema/timeout/output/env/path/restart/policy/audit tests, race, vet, Linux/Android builds, secret scan | Real MCP server identity/configuration pending | Official Go SDK v1.7.0; no discovery/download/run, shell launcher, inherited environment, or unpinned identity |
+| 10 | IN PROGRESS | — | — | Search credentials optional | Web/documents |
 | 11 | PLANNED | — | — | Image provider credentials pending | Images |
 | 12 | PLANNED | — | — | Meta credentials/account pending | Instagram |
 | 13 | PLANNED | — | — | — | Hardening |
