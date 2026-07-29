@@ -1,0 +1,26 @@
+# Never commit runtime secrets or generated local configuration.
+.env
+.env.*
+!.env.example
+.security.yml
+config.json
+*.key
+*.pem
+
+# Built binaries and downloaded upstream artifacts are evidence outputs, not source.
+evidence/artifacts/
+evidence/inspection/
+release/
+build/
+build-*/
+*.apk
+*.so
+
+# Phone-returned private diagnostics and tests.
+phone-results/
+phase0-diagnostics-*.tar.gz*
+
+# Local tooling.
+.cache/
+__pycache__/
+*.pyc

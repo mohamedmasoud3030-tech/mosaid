@@ -1,0 +1,2281 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "pkg:golang/aead.dev/minisign@v0.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "aead.dev/minisign",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:kAWrq/hBRu4AARY6AlciO83xhNnW9UaC8YipS2uhLPk="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/aead.dev/minisign@v0.2.0",
+      "type": "library",
+      "version": "v0.2.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/SevereCloud/vksdk/v3@v3.3.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/SevereCloud/vksdk/v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:O86zsp5LQnHE+O5acvuXM/s6S1LyxzVTkF6+Lup0Jyg="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/SevereCloud/vksdk/v3@v3.3.1",
+      "type": "library",
+      "version": "v3.3.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/adhocore/gronx@v1.20.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/adhocore/gronx",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:PD13Mo0wekkZ7ZZR9yb1TqeqTfybs7/K3ez9DmjQwEs="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/adhocore/gronx@v1.20.0",
+      "type": "library",
+      "version": "v1.20.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/andybalholm/brotli@v1.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/andybalholm/brotli",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:R+f5xP285VArJDRgowrfb9DqL18yVK0gKAW/F+eTWro="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/andybalholm/brotli@v1.2.1",
+      "type": "library",
+      "version": "v1.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/anthropics/anthropic-sdk-go@v1.50.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/anthropics/anthropic-sdk-go",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:K+YJWWzeN2h5MAbh9xeUWY8yAB2oOMp2xLLAODrVBXA="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/anthropics/anthropic-sdk-go@v1.50.2",
+      "type": "library",
+      "version": "v1.50.2"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/atc0005/go-teams-notify/v2@v2.14.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/atc0005/go-teams-notify/v2",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:7N+xw+COnYANLREaAveQ65rsNQ12nIZJED9nMLyscCo="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/atc0005/go-teams-notify/v2@v2.14.0",
+      "type": "library",
+      "version": "v2.14.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/aymanbagabas/go-osc52/v2@v2.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/aymanbagabas/go-osc52/v2",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/aymanbagabas/go-osc52/v2@v2.0.1",
+      "type": "library",
+      "version": "v2.0.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/bahlo/generic-list-go@v0.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/bahlo/generic-list-go",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:5sz/EEAK+ls5wF+NeqDpk5+iNdMDXrh3z3nPnH1Wvgk="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/bahlo/generic-list-go@v0.2.0",
+      "type": "library",
+      "version": "v0.2.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/buger/jsonparser@v1.1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/buger/jsonparser",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:frqHqw7otoVbk5M8LlE/L7HTnIq2v9RX6EJ48i9AxJk="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/buger/jsonparser@v1.1.2",
+      "type": "library",
+      "version": "v1.1.2"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/bwmarrin/discordgo@v0.29.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/bwmarrin/discordgo",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": ""
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/bwmarrin/discordgo@v0.29.0",
+      "type": "library",
+      "version": "v0.29.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/caarlos0/env/v11@v11.4.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/caarlos0/env/v11",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:fYwH0sWEsBSMPG7t4e/PEfTFzrWrpjyygXyUnWiSwEw="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/caarlos0/env/v11@v11.4.1",
+      "type": "library",
+      "version": "v11.4.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/charmbracelet/colorprofile@v0.2.3-0.20250311203215-f60798e515dc",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/charmbracelet/colorprofile",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:4pZI35227imm7yK2bGPcfpFEmuY1gc2YSTShr4iJBfs="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/charmbracelet/colorprofile@v0.2.3-0.20250311203215-f60798e515dc",
+      "type": "library",
+      "version": "v0.2.3-0.20250311203215-f60798e515dc"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/charmbracelet/lipgloss@v1.1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/charmbracelet/lipgloss",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:vYXsiLHVkK7fp74RkV7b2kq9+zDLoEU4MZoFqR/noCY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/charmbracelet/lipgloss@v1.1.0",
+      "type": "library",
+      "version": "v1.1.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/charmbracelet/x/ansi@v0.8.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/charmbracelet/x/ansi",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:9GTq3xq9caJW8ZrBTe0LIe2fvfLR/bYXKTx2llXn7xE="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/charmbracelet/x/ansi@v0.8.0",
+      "type": "library",
+      "version": "v0.8.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/charmbracelet/x/cellbuf@v0.0.13-0.20250311204145-2c3ea96c31dd",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/charmbracelet/x/cellbuf",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:vy0GVL4jeHEwG5YOXDmi86oYw2yuYUGqz6a8sLwg0X8="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/charmbracelet/x/cellbuf@v0.0.13-0.20250311204145-2c3ea96c31dd",
+      "type": "library",
+      "version": "v0.0.13-0.20250311204145-2c3ea96c31dd"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/charmbracelet/x/term@v0.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/charmbracelet/x/term",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:AQeHeLZ1OqSXhrAWpYUtZyX1T3zVxfpZuEQMIQaGIAQ="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/charmbracelet/x/term@v0.2.1",
+      "type": "library",
+      "version": "v0.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/cloudflare/circl@v1.6.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/cloudflare/circl",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:9GPOhQGF9MCYUeXyMYlqTR6a5gTrgR/fBLXvUgtVcg8="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/cloudflare/circl@v1.6.3",
+      "type": "library",
+      "version": "v1.6.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/creack/pty@v1.1.24",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/creack/pty",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:bJrF4RRfyJnbTJqzRLHzcGaZK1NeM5kTC9jGgovnR1s="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/creack/pty@v1.1.24",
+      "type": "library",
+      "version": "v1.1.24"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/dustin/go-humanize@v1.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/dustin/go-humanize",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/dustin/go-humanize@v1.0.1",
+      "type": "library",
+      "version": "v1.0.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/eclipse/paho.mqtt.golang@v1.5.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "EPL-2.0 OR EDL-1.0"
+          }
+        }
+      ],
+      "name": "github.com/eclipse/paho.mqtt.golang",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:/VSOv3oDLlpqR2Epjn1Q7b2bSTplJIeV2ISgCl2W7nE="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "EPL-2.0 OR EDL-1.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/eclipse/paho.mqtt.golang@v1.5.1",
+      "type": "library",
+      "version": "v1.5.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/ergochat/irc-go@v0.6.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC"
+          }
+        }
+      ],
+      "name": "github.com/ergochat/irc-go",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:Y0AGV76aeihJfCtLaQh+OyJKFiKGrYC0VTkeMZ6XW28="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "ISC"
+        }
+      ],
+      "purl": "pkg:golang/github.com/ergochat/irc-go@v0.6.0",
+      "type": "library",
+      "version": "v0.6.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/ergochat/readline@v0.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/ergochat/readline",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:/DytGTmwdUJcLAe3k3VJgowh5vNnsdifYT6uVaf4pSo="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/ergochat/readline@v0.1.3",
+      "type": "library",
+      "version": "v0.1.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/github/copilot-sdk/go@v0.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/github/copilot-sdk/go",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:RnrIIirmtp4wGgqSQFJ2k9phbeveIxOtYZqDogoNEa0="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/github/copilot-sdk/go@v0.2.0",
+      "type": "library",
+      "version": "v0.2.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/go-logr/logr@v1.4.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/go-logr/logr",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:CjnDlHq8ikf6E492q6eKboGOC0T8CDaOvkHCIg8idEI="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/go-logr/logr@v1.4.3",
+      "type": "library",
+      "version": "v1.4.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/go-logr/stdr@v1.2.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/go-logr/stdr",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/go-logr/stdr@v1.2.2",
+      "type": "library",
+      "version": "v1.2.2"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/go-resty/resty/v2@v2.17.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/go-resty/resty/v2",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:x3aMpHK1YM9e4va/TMDRlusDDoZiQ+ViDu/WpA6xTM4="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/go-resty/resty/v2@v2.17.1",
+      "type": "library",
+      "version": "v2.17.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/gogo/protobuf@v1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/gogo/protobuf",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/gogo/protobuf@v1.3.2",
+      "type": "library",
+      "version": "v1.3.2"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/gomarkdown/markdown@v0.0.0-20260411013819-759bbc3e3207",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "name": "github.com/gomarkdown/markdown",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:p7t34F7K4OCRQblcDhNJnP46Uaarz3z2cLcvOZYxWn8="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-2-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/gomarkdown/markdown@v0.0.0-20260411013819-759bbc3e3207",
+      "type": "library",
+      "version": "v0.0.0-20260411013819-759bbc3e3207"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/jsonschema-go@v0.4.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/google/jsonschema-go",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:/DBOLZTfDow7pe2GmaJNhltueGTtDKICi8V8p+DQPd0="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/google/jsonschema-go@v0.4.3",
+      "type": "library",
+      "version": "v0.4.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/google/uuid",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "type": "library",
+      "version": "v1.6.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/gorilla/websocket@v1.5.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "name": "github.com/gorilla/websocket",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-2-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/gorilla/websocket@v1.5.3",
+      "type": "library",
+      "version": "v1.5.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/h2non/filetype@v1.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/h2non/filetype",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:FKkx9QbD7HR/zjK1Ia5XiBsq9zdLi5Kf3zGyFTAFkGg="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/h2non/filetype@v1.1.3",
+      "type": "library",
+      "version": "v1.1.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/invopop/jsonschema@v0.14.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/invopop/jsonschema",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:MHQqLhvpNUZfw+hM3AZDYK7jxO8FZoQeQM77g8iyZjg="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/invopop/jsonschema@v0.14.0",
+      "type": "library",
+      "version": "v0.14.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/klauspost/compress@v1.18.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/klauspost/compress",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:aUyZsS4kH3QTKurYhAOwAHxllVPnOthb3vPfnF1Ehjw="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/klauspost/compress@v1.18.7",
+      "type": "library",
+      "version": "v1.18.7"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/larksuite/oapi-sdk-go/v3@v3.9.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/larksuite/oapi-sdk-go/v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:oMgcY7NBjJv1QXJqFAfcoN/TbScCkCuRZfbb1mCwZmI="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/larksuite/oapi-sdk-go/v3@v3.9.4",
+      "type": "library",
+      "version": "v3.9.4"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/line/line-bot-sdk-go/v8@v8.20.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/line/line-bot-sdk-go/v8",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:OE7qwJbuZPz9MGOHHNI0E6rQNtIU7ENHyFXpvbVLwII="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/line/line-bot-sdk-go/v8@v8.20.1",
+      "type": "library",
+      "version": "v8.20.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/lucasb-eyer/go-colorful@v1.3.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/lucasb-eyer/go-colorful",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:2/yBRLdWBZKrf7gB40FoiKfAWYQ0lqNcbuQwVHXptag="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/lucasb-eyer/go-colorful@v1.3.0",
+      "type": "library",
+      "version": "v1.3.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mattn/go-colorable@v0.1.14",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/mattn/go-colorable",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:9A9LHSqF/7dyVVX6g0U9cwm9pG3kP9gSzcuIPHPsaIE="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/mattn/go-colorable@v0.1.14",
+      "type": "library",
+      "version": "v0.1.14"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mattn/go-isatty@v0.0.20",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/mattn/go-isatty",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/mattn/go-isatty@v0.0.20",
+      "type": "library",
+      "version": "v0.0.20"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mattn/go-runewidth@v0.0.16",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/mattn/go-runewidth",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:E5ScNMtiwvlvB5paMFdw9p4kSQzbXFikJ5SQO6TULQc="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/mattn/go-runewidth@v0.0.16",
+      "type": "library",
+      "version": "v0.0.16"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mdp/qrterminal/v3@v3.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/mdp/qrterminal/v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:6+yQjiiOsSuXT5n9/m60E54vdgFsw0zhADHhHLrFet4="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/mdp/qrterminal/v3@v3.2.1",
+      "type": "library",
+      "version": "v3.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/minio/selfupdate@v0.6.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/minio/selfupdate",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:i76PgT0K5xO9+hjzKcacQtO7+MjJ4JKA8Ak8XQ9DDwU="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/minio/selfupdate@v0.6.0",
+      "type": "library",
+      "version": "v0.6.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/modelcontextprotocol/go-sdk@v1.6.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/modelcontextprotocol/go-sdk",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:0zOSupjKUxPKSocPT1Wtago+mUHU2/uZ4xSOY0FGReU="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/modelcontextprotocol/go-sdk@v1.6.1",
+      "type": "library",
+      "version": "v1.6.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/muesli/termenv@v0.16.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/muesli/termenv",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:S5AlUN9dENB57rsbnkPyfdGuWIlkmzJjbFf0Tf5FWUc="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/muesli/termenv@v0.16.0",
+      "type": "library",
+      "version": "v0.16.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mymmrac/telego@v1.10.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/mymmrac/telego",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:Upe0TqYyiK+yE5RFXXuQWVHGfLZnqvUfj4KZVjTcgWE="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/mymmrac/telego@v1.10.0",
+      "type": "library",
+      "version": "v1.10.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/open-dingtalk/dingtalk-stream-sdk-go@v0.9.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/open-dingtalk/dingtalk-stream-sdk-go",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:Lb/Uzkiw2Ugt2Xf03J5wmv81PdkYOiWbI8CNBi1boC8="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/open-dingtalk/dingtalk-stream-sdk-go@v0.9.1",
+      "type": "library",
+      "version": "v0.9.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/openai/openai-go/v3@v3.22.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/openai/openai-go/v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:6MEoNoV8sbjOVmXdvhmuX3BjVbVdcExbVyGixiyJ8ys="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/openai/openai-go/v3@v3.22.0",
+      "type": "library",
+      "version": "v3.22.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pb33f/ordered-map/v2@v2.3.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/pb33f/ordered-map/v2",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:5319HDO0aw4DA4gzi+zv4FXU9UlSs3xGZ40wcP1nBjY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/pb33f/ordered-map/v2@v2.3.1",
+      "type": "library",
+      "version": "v2.3.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pion/randutil@v0.1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/pion/randutil",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:CFG1UdESneORglEsnimhUjf33Rwjubwj6xfiOXBa3mA="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/pion/randutil@v0.1.0",
+      "type": "library",
+      "version": "v0.1.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pion/rtp@v1.10.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/pion/rtp",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:l+f6tTDcAH6xwepaAoW791ddhuYsJlqRATOzirO04Mo="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/pion/rtp@v1.10.2",
+      "type": "library",
+      "version": "v1.10.2"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pion/webrtc/v3@v3.3.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/pion/webrtc/v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:7XAh4RPtlY1Vul6/GmZrv7z+NnxKA6If0KStXBI2ZLE="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/pion/webrtc/v3@v3.3.6",
+      "type": "library",
+      "version": "v3.3.6"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pmezard/go-difflib@v1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "name": "github.com/pmezard/go-difflib",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-2-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/pmezard/go-difflib@v1.0.0",
+      "type": "library",
+      "version": "v1.0.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/remyoudompheng/bigfft@v0.0.0-20230129092748-24d4a6f8daec",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/remyoudompheng/bigfft",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/remyoudompheng/bigfft@v0.0.0-20230129092748-24d4a6f8daec",
+      "type": "library",
+      "version": "v0.0.0-20230129092748-24d4a6f8daec"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/rivo/uniseg@v0.4.7",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/rivo/uniseg",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:WUdvkW8uEhrYfLC4ZzdpI2ztxP1I582+49Oc5Mq64VQ="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/rivo/uniseg@v0.4.7",
+      "type": "library",
+      "version": "v0.4.7"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/rs/zerolog@v1.35.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/rs/zerolog",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:m7xQeoiLIiV0BCEY4Hs+j2NG4Gp2o2KPKmhnnLiazKI="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/rs/zerolog@v1.35.1",
+      "type": "library",
+      "version": "v1.35.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/segmentio/asm@v1.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/segmentio/asm",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:WM03sfUOENvvKexOLp+pCqgb/WDjsi7EK8gIsICtzhc="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/segmentio/asm@v1.1.3",
+      "type": "library",
+      "version": "v1.1.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/segmentio/encoding@v0.5.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/segmentio/encoding",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:OW1VRern8Nw6ITAtwSZ7Idrl3MXCFwXHPgqESYfvNt0="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/segmentio/encoding@v0.5.4",
+      "type": "library",
+      "version": "v0.5.4"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/slack-go/slack@v0.23.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "name": "github.com/slack-go/slack",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:ZS5B96wxxYQRwvJ3/vJFtqtUZi3tXhsZCyT44Nv7M80="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-2-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/slack-go/slack@v0.23.1",
+      "type": "library",
+      "version": "v0.23.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/spf13/cobra@v1.10.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/spf13/cobra",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:DMTTonx5m65Ic0GOoRY2c16WCbHxOOw6xxezuLaBpcU="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/spf13/cobra@v1.10.2",
+      "type": "library",
+      "version": "v1.10.2"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/spf13/pflag@v1.0.10",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/spf13/pflag",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:4EBh2KAYBwaONj6b2Ye1GiHfwjqyROoF4RwYO+vPwFk="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/spf13/pflag@v1.0.10",
+      "type": "library",
+      "version": "v1.0.10"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/standard-webhooks/standard-webhooks/libraries@v0.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/standard-webhooks/standard-webhooks/libraries",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:uOfcYT+3QungH6tIGSVCR/Y3KJmgJiHcojJbMTPDZAI="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/standard-webhooks/standard-webhooks/libraries@v0.0.1",
+      "type": "library",
+      "version": "v0.0.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/tencent-connect/botgo@v0.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "github.com/tencent-connect/botgo",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:+BrTt9Zh+awL28GWC4g5Na3nQaGRWb0N5IctS8WqBCk="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/github.com/tencent-connect/botgo@v0.2.1",
+      "type": "library",
+      "version": "v0.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/tidwall/gjson@v1.18.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/tidwall/gjson",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:FIDeeyB800efLX89e5a8Y0BNH+LOngJyGrIWxG2FKQY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/tidwall/gjson@v1.18.0",
+      "type": "library",
+      "version": "v1.18.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/tidwall/match@v1.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/tidwall/match",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:0pt8FlkOwjN2fPt4bIl4BoNxb98gGHN2ObFEDkrfZnM="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/tidwall/match@v1.2.0",
+      "type": "library",
+      "version": "v1.2.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/tidwall/pretty@v1.2.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/tidwall/pretty",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:qjsOFOWWQl+N3RsoF5/ssm1pHmJJwhjlSbZ51I6wMl4="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/tidwall/pretty@v1.2.1",
+      "type": "library",
+      "version": "v1.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/tidwall/sjson@v1.2.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/tidwall/sjson",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:kLy8mja+1c9jlljvWTlSazM7cKDRfJuR/bOJhcY5NcY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/tidwall/sjson@v1.2.5",
+      "type": "library",
+      "version": "v1.2.5"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/valyala/bytebufferpool@v1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/valyala/bytebufferpool",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/valyala/bytebufferpool@v1.0.0",
+      "type": "library",
+      "version": "v1.0.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/valyala/fasthttp@v1.71.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/valyala/fasthttp",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:tepR7H+Guh9VUqxxcPggYi8R3lGUu2Rsdh+z7/FCY3k="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/valyala/fasthttp@v1.71.0",
+      "type": "library",
+      "version": "v1.71.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/valyala/fastjson@v1.6.10",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/valyala/fastjson",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:/yjJg8jaVQdYR3arGxPE2X5z89xrlhS0eGXdv+ADTh4="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/valyala/fastjson@v1.6.10",
+      "type": "library",
+      "version": "v1.6.10"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/vmihailenco/msgpack/v5@v5.4.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "name": "github.com/vmihailenco/msgpack/v5",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:cQriyiUvjTwOHg8QZaPihLWeRAAVoCpE00IUPn0Bjt8="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-2-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/vmihailenco/msgpack/v5@v5.4.1",
+      "type": "library",
+      "version": "v5.4.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/vmihailenco/tagparser/v2@v2.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-2-Clause"
+          }
+        }
+      ],
+      "name": "github.com/vmihailenco/tagparser/v2",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:y09buUbR+b5aycVFQs/g70pqKVZNBmxwAhO7/IwNM9g="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-2-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/vmihailenco/tagparser/v2@v2.0.0",
+      "type": "library",
+      "version": "v2.0.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/xo/terminfo@v0.0.0-20220910002029-abceb7e1c41e",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "github.com/xo/terminfo",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:JVG44RsyaB9T2KIHavMF/ppJZNG9ZpyihvCd0w101no="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MIT"
+        }
+      ],
+      "purl": "pkg:golang/github.com/xo/terminfo@v0.0.0-20220910002029-abceb7e1c41e",
+      "type": "library",
+      "version": "v0.0.0-20220910002029-abceb7e1c41e"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/yosida95/uritemplate/v3@v3.0.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "github.com/yosida95/uritemplate/v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:Ed3Oyj9yrmi9087+NczuL5BwkIc4wvTb5zIM+UJPGz4="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/github.com/yosida95/uritemplate/v3@v3.0.2",
+      "type": "library",
+      "version": "v3.0.2"
+    },
+    {
+      "bom-ref": "pkg:golang/go.mau.fi/util@v0.9.8",
+      "licenses": [
+        {
+          "license": {
+            "id": "MPL-2.0"
+          }
+        }
+      ],
+      "name": "go.mau.fi/util",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:+/jf8eM2dAT2wx9UidmaneH28r/CSCKCniCyby1qWz8="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "MPL-2.0"
+        }
+      ],
+      "purl": "pkg:golang/go.mau.fi/util@v0.9.8",
+      "type": "library",
+      "version": "v0.9.8"
+    },
+    {
+      "bom-ref": "pkg:golang/go.opentelemetry.io/auto/sdk@v1.1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "go.opentelemetry.io/auto/sdk",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:cH53jehLUN6UFLY71z+NDOiNJqDdPRaXzTel0sJySYA="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/go.opentelemetry.io/auto/sdk@v1.1.0",
+      "type": "library",
+      "version": "v1.1.0"
+    },
+    {
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel@v1.35.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "go.opentelemetry.io/otel",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:xKWKPxrxB6OtMCbmMY021CqC45J+3Onta9MqjhnusiQ="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/go.opentelemetry.io/otel@v1.35.0",
+      "type": "library",
+      "version": "v1.35.0"
+    },
+    {
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/metric@v1.35.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "go.opentelemetry.io/otel/metric",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:0znxYu2SNyuMSQT4Y9WDWej0VpcsxkuklLa4/siN90M="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/go.opentelemetry.io/otel/metric@v1.35.0",
+      "type": "library",
+      "version": "v1.35.0"
+    },
+    {
+      "bom-ref": "pkg:golang/go.opentelemetry.io/otel/trace@v1.35.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "go.opentelemetry.io/otel/trace",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:dPpEfJu1sDIqruz7BHFG3c7528f6ddfSWfFDVt/xgMs="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/go.opentelemetry.io/otel/trace@v1.35.0",
+      "type": "library",
+      "version": "v1.35.0"
+    },
+    {
+      "bom-ref": "pkg:golang/go.yaml.in/yaml/v4@v4.0.0-rc.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "go.yaml.in/yaml/v4",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:/FrI8D64VSr4HtGIlUtlFMGsm7H7pWTbj6vOLVZcA6s="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/go.yaml.in/yaml/v4@v4.0.0-rc.2",
+      "type": "library",
+      "version": "v4.0.0-rc.2"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/crypto@v0.53.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/crypto",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:QZ4Muo8THX6CizN2vPPd5fBGHyogrdK9fG4wLPFUsto="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/crypto@v0.53.0",
+      "type": "library",
+      "version": "v0.53.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/net@v0.56.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/net",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:Rw8j/hFzGvJUZwNBXnAtf5sVDVt+65SK2C7IxCxZt5o="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/net@v0.56.0",
+      "type": "library",
+      "version": "v0.56.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/oauth2@v0.36.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/oauth2",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:peZ/1z27fi9hUOFCAZaHyrpWG5lwe0RJEEEeH0ThlIs="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/oauth2@v0.36.0",
+      "type": "library",
+      "version": "v0.36.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/sync@v0.21.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/sync",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:HLII4xRRTtCRkxYp4HNFF0Js/Og6q2i++KXbg0gHCwM="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/sync@v0.21.0",
+      "type": "library",
+      "version": "v0.21.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/sys@v0.46.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/sys",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:noSf2Fq6F8DBgS+LysIkx7rIExoNHJsxOAtPp4rthXw="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/sys@v0.46.0",
+      "type": "library",
+      "version": "v0.46.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/term@v0.44.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/term",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:0rLvDRCtNj0gZkyIXhCyOb2OAzEhLVqc4B+hrsBhrmc="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/term@v0.44.0",
+      "type": "library",
+      "version": "v0.44.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/text@v0.39.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/text",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:UbZz4pLOvn600D6Oh6GGEI6VAmndrEBLv8/6BEXzyus="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/text@v0.39.0",
+      "type": "library",
+      "version": "v0.39.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/time@v0.15.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "golang.org/x/time",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:bbrp8t3bGUeFOx08pvsMYRTCVSMk89u4tKbNOZbp88U="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/time@v0.15.0",
+      "type": "library",
+      "version": "v0.15.0"
+    },
+    {
+      "bom-ref": "pkg:golang/gopkg.in/yaml.v3@v3.0.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "gopkg.in/yaml.v3",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "Apache-2.0"
+        }
+      ],
+      "purl": "pkg:golang/gopkg.in/yaml.v3@v3.0.1",
+      "type": "library",
+      "version": "v3.0.1"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/libc@v1.73.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "modernc.org/libc",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:+ra4Ui8ngyt8HDcO1FTDPWlkAh6yOdaO2yAoh8MddQA="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/libc@v1.73.4",
+      "type": "library",
+      "version": "v1.73.4"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/mathutil@v1.7.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "modernc.org/mathutil",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/mathutil@v1.7.1",
+      "type": "library",
+      "version": "v1.7.1"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/memory@v1.11.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "modernc.org/memory",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:o4QC8aMQzmcwCK3t3Ux/ZHmwFPzE6hf2Y5LbkRs+hbI="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/memory@v1.11.0",
+      "type": "library",
+      "version": "v1.11.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/sqlite@v1.53.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "modernc.org/sqlite",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:20WG8N9q4ji/dEqGk4uiI0c6OPjSeLTNYGFCc3+7c1M="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/sqlite@v1.53.0",
+      "type": "library",
+      "version": "v1.53.0"
+    },
+    {
+      "bom-ref": "pkg:golang/rsc.io/qr@v0.2.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "name": "rsc.io/qr",
+      "properties": [
+        {
+          "name": "go.module.sum",
+          "value": "h1:6vBLea5/NRMVTz8V66gipeLycZMl/+UlFmk8DvqQ6WY="
+        },
+        {
+          "name": "phase0.license_detection",
+          "value": "BSD-3-Clause"
+        }
+      ],
+      "purl": "pkg:golang/rsc.io/qr@v0.2.0",
+      "type": "library",
+      "version": "v0.2.0"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f"
+        }
+      ],
+      "name": "picoclaw-phase0-v0.3.1-android-arm64",
+      "properties": [
+        {
+          "name": "go.version",
+          "value": "go1.25.12"
+        },
+        {
+          "name": "upstream.commit",
+          "value": "2cf030d2fd3b871d7ec17e3be34c24688aac76da"
+        },
+        {
+          "name": "build.GOOS",
+          "value": "unknown"
+        },
+        {
+          "name": "build.GOARCH",
+          "value": "unknown"
+        }
+      ],
+      "type": "application",
+      "version": "v0.3.1-phase0.1"
+    },
+    "timestamp": "2026-06-30T09:42:07Z",
+    "tools": {
+      "components": [
+        {
+          "name": "phase0-generate-sbom.py",
+          "type": "application",
+          "version": "1"
+        }
+      ]
+    }
+  },
+  "serialNumber": "urn:uuid:3c241e45-7a1b-0d67-7ed1-69cda15c0cf9",
+  "specVersion": "1.5",
+  "version": 1
+}

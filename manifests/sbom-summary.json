@@ -1,0 +1,16 @@
+{
+  "binary": "picoclaw-phase0-v0.3.1-android-arm64",
+  "binary_sha256": "b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f",
+  "go_version": "go1.25.12",
+  "license_counts": {
+    "Apache-2.0": 16,
+    "BSD-2-Clause": 6,
+    "BSD-3-Clause": 21,
+    "EPL-2.0 OR EDL-1.0": 1,
+    "ISC": 1,
+    "MIT": 47,
+    "MPL-2.0": 1
+  },
+  "linked_module_count": 93,
+  "note": "License detection is best effort and not legal advice."
+}

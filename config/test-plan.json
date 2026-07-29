@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "sampling_interval_seconds": 60,
+  "scenarios": [
+    {"id":"01-initial-30m","duration_seconds":1800,"expected_echo":10,"restart_min":0,"restart_max":0,"action":"Keep screen on for setup, then send /echo P0-01-001 through P0-01-010."},
+    {"id":"02-screen-locked-2h","duration_seconds":7200,"expected_echo":10,"restart_min":0,"restart_max":0,"action":"Lock screen for two hours; send five echoes before and five after."},
+    {"id":"03-run-12h","duration_seconds":43200,"expected_echo":24,"restart_min":0,"restart_max":0,"action":"Normal 12-hour soak; send one echo about every 30 minutes."},
+    {"id":"04-run-24h","duration_seconds":86400,"expected_echo":48,"restart_min":0,"restart_max":0,"action":"24-hour acceptance soak; send one echo about every 30 minutes."},
+    {"id":"05-wifi-cycle","duration_seconds":900,"expected_echo":6,"restart_min":0,"restart_max":0,"action":"Disable Wi-Fi for two minutes, re-enable it, then verify an echo within 120 seconds."},
+    {"id":"06-wifi-mobile-switch","duration_seconds":1200,"expected_echo":8,"restart_min":0,"restart_max":0,"action":"Switch Wi-Fi to mobile data and back if a SIM/data plan is available."},
+    {"id":"07-airplane-cycle","duration_seconds":900,"expected_echo":6,"restart_min":0,"restart_max":0,"action":"Enable airplane mode for two minutes, disable it, then verify recovery within 120 seconds."},
+    {"id":"08-model-outage","duration_seconds":1200,"expected_echo":6,"restart_min":0,"restart_max":0,"action":"Temporarily use a blocked/invalid model route only if this can be done without exposing the key; restore and test one model message. Echo must remain available."},
+    {"id":"09-telegram-outage","duration_seconds":1200,"expected_echo":6,"restart_min":0,"restart_max":0,"action":"Block Telegram connectivity or disconnect network, restore, and verify echo recovery within 120 seconds."},
+    {"id":"10-reboot","duration_seconds":900,"expected_echo":4,"restart_min":1,"restart_max":2,"action":"Reboot Android once. Termux:Boot must restore the service and echo within 120 seconds after unlock/network availability."},
+    {"id":"11-kill-termux","duration_seconds":900,"expected_echo":4,"restart_min":0,"restart_max":2,"action":"Force-stop/kill Termux once. Record whether Android permits automatic recovery without manually reopening Termux."},
+    {"id":"12-memory-pressure","duration_seconds":1800,"expected_echo":10,"restart_min":0,"restart_max":1,"action":"Open several memory-heavy apps; do not use synthetic root stress tools."},
+    {"id":"13-low-battery","duration_seconds":1800,"expected_echo":6,"restart_min":0,"restart_max":0,"action":"Start at or below 20% battery while unplugged; stop if the device becomes hot or reaches 10%."},
+    {"id":"14-on-charger","duration_seconds":43200,"expected_echo":24,"restart_min":0,"restart_max":0,"action":"12-hour soak on the intended charger in a ventilated location."},
+    {"id":"15-thermal","duration_seconds":1800,"expected_echo":6,"restart_min":0,"restart_max":0,"action":"Normal use only; do not intentionally heat the phone. Fail if battery temperature exceeds 45 C."},
+    {"id":"16-repeated-messages","duration_seconds":600,"expected_echo":100,"restart_min":0,"restart_max":0,"action":"Send 100 uniquely numbered /echo messages at no more than 1 per second."},
+    {"id":"17-duplicate-update","duration_seconds":600,"expected_echo":10,"restart_min":0,"restart_max":1,"action":"Send unique echoes around a brief process restart and inspect duplicate message_id events."},
+    {"id":"18-crash-mid-message","duration_seconds":900,"expected_echo":6,"restart_min":1,"restart_max":1,"action":"Send a model request, kill only the agent PID while it is processing, then send unique echoes after restart."},
+    {"id":"19-singleton","duration_seconds":300,"expected_echo":2,"restart_min":0,"restart_max":0,"action":"While the service runs, invoke run-foreground.sh. It must refuse with exit code 73 and no second poller."},
+    {"id":"20-continuity","duration_seconds":1800,"expected_echo":50,"restart_min":0,"restart_max":0,"action":"Send 50 numbered echoes and compare accepted message IDs to reply events; zero loss and zero duplicate handling required."}
+  ]
+}
