@@ -16,5 +16,11 @@
 | 11 | COMPLETE | `6fc902f` | provider mock/OpenAI contract, request/reference/cost/MIME/dimension/hash/artifact/symlink/audit/policy tests, race, vet, Linux/Android builds, secret scan | Image provider credentials pending | Approval-gated external generation with atomic artifact store and no publishing capability |
 | 12 | COMPLETE | `d65c5fd` | official Graph API contract mock, prepare/preview/bound approval/tamper/replay/idempotency/retry/restart/poll/staging/cleanup/audit/migration tests, race, vet, Linux/Android builds, secret scan | Meta credentials and Instagram Professional account pending; no real publish performed | Official API only; immutable account/asset/caption/time binding and recoverable container workflow |
 | 13 | COMPLETE | `0dfba13` (`9376d77` CI activation) | 140 unit tests, race, vet, staticcheck, govulncheck (no vulnerabilities), Linux/Android builds, secret scan, deterministic 36-module SBOM, license and backup/migration tests; expanded Product CI passed | None beyond integration credentials already listed | Fail-closed config, secrets/redaction, flood and execution budgets, DB integrity/backup/restore, threat model, and active hardened CI |
-| 14 | PLANNED | — | — | Physical phone pending | Android package |
-| 15 | PLANNED | — | — | — | Final docs/handoff |
+| 14 | IN PROGRESS | — | — | — | Model Provider Platform (Kaggle + G4F + MLC + Free APIs) |
+| 15 | PLANNED | — | — | — | Cognitive Engine |
+| 16 | PLANNED | — | — | — | Skills and Work Packs |
+| 17 | PLANNED | — | — | — | Digital Work Intelligence |
+| 18 | PLANNED | — | — | — | Benchmark and Integration |
+| 19 | PLANNED | — | — | Physical phone pending | Android Packaging |
+| 20 | PLANNED | — | — | Physical phone pending | Physical Device Validation |
+| 21 | PLANNED | — | — | — | Release and Handoff |
