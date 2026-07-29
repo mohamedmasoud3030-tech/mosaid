@@ -7,7 +7,7 @@ The release is a prerelease and must not be presented as a production distributi
 | Asset | SHA-256 |
 |---|---|
 | `phase0-phone-kit.tar.gz` | `72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63` |
-| `phase0-phone-kit.tar.gz.sha256` | `8f0417cb23bcd745b8b8b9666dc5fc851df3df80a2167c72d3bbcfa2b03c9b0e` |
+| `phase0-phone-kit.tar.gz.sha256` | `19b47e11939be2c255b50b265e6e62084824754da414e6d7d6b40bf66a46f401` |
 | `picoclaw-phase0-v0.3.1-android-arm64` | `b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f` |
 | `picoclaw-phase0-v0.3.1-android-arm64.sha256` | `55612bb626aa70e8afa09361aa17b5170802364e3729e78eb0e64179cd1f439f` |
 | `phase0-sbom.cdx.json` | `361353e6ba97a00ff9a1913e7b47d172fa5a294ae87785c5cdb1f6790623c74f` |
