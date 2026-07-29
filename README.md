@@ -55,6 +55,7 @@ This foundation remains preserved until the Hermes-based Oracle deployment passe
 ## Pivot assets
 
 - [Runtime decision](docs/pivot/HERMES-RUNTIME-DECISION.md)
+- [Hermes upstream candidate pin](docs/pivot/HERMES-UPSTREAM-PIN.md)
 - [Migration map](docs/pivot/MIGRATION-MAP.md)
 - [Oracle deployment plan](docs/pivot/ORACLE-DEPLOYMENT-PLAN.md)
 - [Deployment entrypoint](deploy/hermes/README.md)
