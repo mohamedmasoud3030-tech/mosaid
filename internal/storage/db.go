@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS task_runs(id INTEGER PRIMARY KEY AUTOINCREMENT,inbox_
 CREATE TABLE IF NOT EXISTS idempotency_keys(key TEXT PRIMARY KEY,created_at TEXT NOT NULL,result_ref TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS approval_requests(id TEXT PRIMARY KEY,token_hash TEXT UNIQUE NOT NULL,user_id INTEGER NOT NULL,tool_name TEXT NOT NULL,args_hash TEXT NOT NULL,resource TEXT NOT NULL,expires_at TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN('pending','approved','denied','expired')),created_at TEXT NOT NULL,resolved_at TEXT);
 CREATE TABLE IF NOT EXISTS audit_entries(seq INTEGER PRIMARY KEY,at TEXT NOT NULL,kind TEXT NOT NULL,user_id INTEGER NOT NULL,resource TEXT NOT NULL,decision TEXT NOT NULL,prev_hash TEXT NOT NULL,entry_hash TEXT UNIQUE NOT NULL,payload_json BLOB NOT NULL);
+CREATE TABLE IF NOT EXISTS approval_uses(approval_id TEXT PRIMARY KEY,used_at TEXT NOT NULL);
 INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,datetime('now'));
 `
 

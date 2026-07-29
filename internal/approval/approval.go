@@ -51,6 +51,27 @@ func (m Manager) ResolveToken(ctx context.Context, token string, user int64, dec
 	}
 	return m.Resolve(ctx, token, user, tool, argsHash, resource, decision)
 }
+func (m Manager) Authorize(ctx context.Context, token string, user int64, tool, argsHash, resource string) error {
+	th := sha256.Sum256([]byte(token))
+	tx, e := m.DB.BeginTx(ctx, nil)
+	if e != nil {
+		return e
+	}
+	defer tx.Rollback()
+	var id, t, a, r, state string
+	var u int64
+	e = tx.QueryRowContext(ctx, `SELECT id,user_id,tool_name,args_hash,resource,state FROM approval_requests WHERE token_hash=?`, hex.EncodeToString(th[:])).Scan(&id, &u, &t, &a, &r, &state)
+	if e != nil {
+		return errors.New("approval not found")
+	}
+	if state != "approved" || u != user || t != tool || a != argsHash || r != resource {
+		return errors.New("approval not authorized")
+	}
+	if _, e = tx.ExecContext(ctx, `INSERT INTO approval_uses(approval_id,used_at) VALUES(?,?)`, id, time.Now().UTC().Format(time.RFC3339Nano)); e != nil {
+		return errors.New("approval already used")
+	}
+	return tx.Commit()
+}
 func (m Manager) Resolve(ctx context.Context, token string, user int64, tool, argsHash, resource, decision string) error {
 	if decision != "approved" && decision != "denied" {
 		return errors.New("invalid decision")
