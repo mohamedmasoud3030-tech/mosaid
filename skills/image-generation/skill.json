@@ -20,12 +20,38 @@
         "type": "integer",
         "minimum": 256,
         "maximum": 2048
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4"
+        ]
+      },
+      "reference_ids": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "maxItems": 4
+      },
+      "max_cost_usd": {
+        "type": "number",
+        "minimum": 0.01,
+        "maximum": 100
       }
     },
     "required": [
       "prompt",
       "width",
-      "height"
+      "height",
+      "aspect_ratio",
+      "max_cost_usd"
     ],
     "additionalProperties": false
   },
@@ -65,5 +91,5 @@
       "arm64"
     ]
   },
-  "integrity_hash": "sha256:29598fc8e3b25b1d7d854aec64e75c9e27f67c0202227b575cb16804e2c53bb9"
+  "integrity_hash": "sha256:8ebb85963c2d205cbc50aebf94cd36de8df8955708e252e47edfe4483401975e"
 }

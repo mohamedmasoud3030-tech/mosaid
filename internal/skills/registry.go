@@ -155,7 +155,7 @@ func (r *Registry) Execute(ctx context.Context, request ExecutionRequest) (Execu
 	if err := ValidateInput(manifest.InputSchema, request.Input); err != nil {
 		return ExecutionResult{}, err
 	}
-	if (manifest.ApprovalPolicy == ApprovalAlways || manifest.ApprovalPolicy == ApprovalBound) && request.ApprovalToken == "" {
+	if manifest.ApprovalPolicy == ApprovalAlways && request.ApprovalToken == "" {
 		return ExecutionResult{}, ErrApprovalRequired
 	}
 	executionContext, cancel := context.WithTimeout(ctx, time.Duration(manifest.TimeoutSeconds)*time.Second)

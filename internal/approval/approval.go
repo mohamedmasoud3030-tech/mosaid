@@ -24,6 +24,13 @@ type Request struct {
 	Expires                  time.Time
 }
 
+type Receipt struct {
+	ID                       string
+	UserID                   int64
+	Tool, ArgsHash, Resource string
+	Expires                  time.Time
+}
+
 func (m Manager) Create(ctx context.Context, user int64, tool, argsHash, resource string, ttl time.Duration) (Request, error) {
 	b := make([]byte, 24)
 	if _, e := rand.Read(b); e != nil {
@@ -52,25 +59,37 @@ func (m Manager) ResolveToken(ctx context.Context, token string, user int64, dec
 	return m.Resolve(ctx, token, user, tool, argsHash, resource, decision)
 }
 func (m Manager) Authorize(ctx context.Context, token string, user int64, tool, argsHash, resource string) error {
+	_, err := m.AuthorizeReceipt(ctx, token, user, tool, argsHash, resource)
+	return err
+}
+
+func (m Manager) AuthorizeReceipt(ctx context.Context, token string, user int64, tool, argsHash, resource string) (Receipt, error) {
 	th := sha256.Sum256([]byte(token))
 	tx, e := m.DB.BeginTx(ctx, nil)
 	if e != nil {
-		return e
+		return Receipt{}, e
 	}
 	defer tx.Rollback()
-	var id, t, a, r, state string
+	var id, t, a, r, state, expires string
 	var u int64
-	e = tx.QueryRowContext(ctx, `SELECT id,user_id,tool_name,args_hash,resource,state FROM approval_requests WHERE token_hash=?`, hex.EncodeToString(th[:])).Scan(&id, &u, &t, &a, &r, &state)
+	e = tx.QueryRowContext(ctx, `SELECT id,user_id,tool_name,args_hash,resource,state,expires_at FROM approval_requests WHERE token_hash=?`, hex.EncodeToString(th[:])).Scan(&id, &u, &t, &a, &r, &state, &expires)
 	if e != nil {
-		return errors.New("approval not found")
+		return Receipt{}, errors.New("approval not found")
+	}
+	expiry, parseErr := time.Parse(time.RFC3339Nano, expires)
+	if parseErr != nil || !time.Now().UTC().Before(expiry) {
+		return Receipt{}, errors.New("approval expired")
 	}
 	if state != "approved" || u != user || t != tool || a != argsHash || r != resource {
-		return errors.New("approval not authorized")
+		return Receipt{}, errors.New("approval not authorized")
 	}
 	if _, e = tx.ExecContext(ctx, `INSERT INTO approval_uses(approval_id,used_at) VALUES(?,?)`, id, time.Now().UTC().Format(time.RFC3339Nano)); e != nil {
-		return errors.New("approval already used")
+		return Receipt{}, errors.New("approval already used")
 	}
-	return tx.Commit()
+	if e = tx.Commit(); e != nil {
+		return Receipt{}, e
+	}
+	return Receipt{ID: id, UserID: u, Tool: t, ArgsHash: a, Resource: r, Expires: expiry}, nil
 }
 func (m Manager) Resolve(ctx context.Context, token string, user int64, tool, argsHash, resource, decision string) error {
 	if decision != "approved" && decision != "denied" {

@@ -84,6 +84,43 @@ CREATE TABLE job_locks(
 );
 `
 
+const instagramMigration = `
+CREATE TABLE instagram_drafts(
+ id TEXT PRIMARY KEY,
+ account_id TEXT NOT NULL,
+ artifact_id TEXT NOT NULL,
+ asset_hash TEXT NOT NULL,
+ caption TEXT NOT NULL,
+ caption_hash TEXT NOT NULL,
+ publish_at TEXT NOT NULL,
+ state TEXT NOT NULL CHECK(state IN('prepared','publishing','failed','published','cancelled')),
+ container_id TEXT NOT NULL DEFAULT '',
+ media_id TEXT NOT NULL DEFAULT '',
+ staging_id TEXT NOT NULL DEFAULT '',
+ staging_url TEXT NOT NULL DEFAULT '',
+ staging_expires_at TEXT,
+ creation_key TEXT NOT NULL UNIQUE,
+ attempts INTEGER NOT NULL DEFAULT 0,
+ max_attempts INTEGER NOT NULL CHECK(max_attempts BETWEEN 1 AND 10),
+ available_at TEXT NOT NULL,
+ authorized_until TEXT,
+ last_error TEXT NOT NULL DEFAULT '',
+ created_at TEXT NOT NULL,
+ updated_at TEXT NOT NULL
+);
+CREATE INDEX instagram_drafts_ready_idx ON instagram_drafts(state,available_at);
+CREATE TABLE instagram_publish_events(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ draft_id TEXT NOT NULL,
+ kind TEXT NOT NULL,
+ provider_ref TEXT NOT NULL DEFAULT '',
+ detail TEXT NOT NULL DEFAULT '',
+ created_at TEXT NOT NULL,
+ FOREIGN KEY(draft_id) REFERENCES instagram_drafts(id)
+);
+CREATE INDEX instagram_publish_events_draft_idx ON instagram_publish_events(draft_id,id);
+`
+
 func applyMigration(ctx context.Context, db *sql.DB, version int, body string) error {
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
@@ -122,6 +159,10 @@ func Open(path string) (*DB, error) {
 		return nil, err
 	}
 	if err = applyMigration(context.Background(), d, 4, schedulerMigration); err != nil {
+		d.Close()
+		return nil, err
+	}
+	if err = applyMigration(context.Background(), d, 5, instagramMigration); err != nil {
 		d.Close()
 		return nil, err
 	}

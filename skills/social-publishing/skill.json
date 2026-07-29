@@ -1,15 +1,33 @@
 {
   "id": "social-publishing",
   "version": "1.0.0",
-  "description": "Prepare and preview an official social API draft; publishing always requires content-bound approval.",
+  "description": "Prepare, preview, and publish through the official Meta Graph API; publishing requires content-bound approval.",
   "type": "builtin",
   "input_schema": {
     "type": "object",
     "properties": {
-      "account_id": {
+      "operation": {
+        "type": "string",
+        "enum": [
+          "prepare",
+          "preview",
+          "publish"
+        ]
+      },
+      "draft_id": {
         "type": "string",
         "minLength": 1,
         "maxLength": 128
+      },
+      "account_id": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64
+      },
+      "artifact_id": {
+        "type": "string",
+        "minLength": 64,
+        "maxLength": 64
       },
       "asset_hash": {
         "type": "string",
@@ -20,12 +38,30 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 2200
+      },
+      "caption_hash": {
+        "type": "string",
+        "minLength": 64,
+        "maxLength": 64
+      },
+      "publish_at": {
+        "type": "string",
+        "minLength": 20,
+        "maxLength": 64
+      },
+      "creation_key": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "max_attempts": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10
       }
     },
     "required": [
-      "account_id",
-      "asset_hash",
-      "caption"
+      "operation"
     ],
     "additionalProperties": false
   },
@@ -69,5 +105,5 @@
       "arm64"
     ]
   },
-  "integrity_hash": "sha256:4526c754f37974add02b4ecf4f26a61fc8149d688b739760c74d62e9eee80127"
+  "integrity_hash": "sha256:c39ce85ada463e3c59115c5f32ad0468d82840bac474da2f35fe24438e43879e"
 }

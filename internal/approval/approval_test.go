@@ -37,6 +37,24 @@ func TestBoundAndSingleUse(t *testing.T) {
 		t.Fatal(e)
 	}
 }
+func TestApprovedTokenCannotBeUsedAfterExpiry(t *testing.T) {
+	m, d := mgr(t)
+	defer d.Close()
+	r, err := m.Create(context.Background(), 9, "instagram.publish", "args", "account", time.Minute)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = m.Resolve(context.Background(), r.Token, 9, "instagram.publish", "args", "account", "approved"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = d.SQL().Exec(`UPDATE approval_requests SET expires_at=? WHERE id=?`, time.Now().UTC().Add(-time.Second).Format(time.RFC3339Nano), r.ID); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = m.AuthorizeReceipt(context.Background(), r.Token, 9, "instagram.publish", "args", "account"); err == nil || !strings.Contains(err.Error(), "expired") {
+		t.Fatalf("err=%v", err)
+	}
+}
+
 func TestExpired(t *testing.T) {
 	m, d := mgr(t)
 	defer d.Close()

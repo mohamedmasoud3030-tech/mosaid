@@ -1,3 +1,5 @@
 # Social-publishing skill
 
-Use official provider APIs only. Preparing and previewing a draft do not authorize publishing. Every publish requires a non-expired, single-use approval bound to account, asset hash, caption hash, and publish time. No browser automation, passwords, cookies, unofficial APIs, or automatic publishing are permitted. The Meta integration is added in Phase 12.
+Use the official Meta Graph API only. `prepare` validates an existing image artifact and creates an idempotent local draft. `preview` displays the immutable account, asset, caption hash, and publish-time binding. `publish` is routed through the core Tool Registry and requires a non-expired, single-use approval bound to all of those values.
+
+Media staging, container creation, bounded status polling, recovery, retry, idempotency, cleanup, and hash-chained audit are implemented behind interfaces. No browser automation, usernames/passwords, cookies, unofficial APIs, or automatic publishing are permitted. Tests use mocks only; real Meta credentials and an Instagram Professional account remain `PENDING_EXTERNAL_VALIDATION`.

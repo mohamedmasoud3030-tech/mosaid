@@ -77,17 +77,19 @@ func TestOutboxRecoveryAndIdempotency(t *testing.T) {
 		t.Fatal("outbox not recovered", e)
 	}
 }
-func TestSchedulerMigration(t *testing.T) {
+func TestProductMigrations(t *testing.T) {
 	d, _ := openTest(t)
 	defer d.Close()
-	var applied int
-	if err := d.SQL().QueryRow(`SELECT count(*) FROM schema_migrations WHERE version=4`).Scan(&applied); err != nil {
-		t.Fatal(err)
+	for _, version := range []int{4, 5} {
+		var applied int
+		if err := d.SQL().QueryRow(`SELECT count(*) FROM schema_migrations WHERE version=?`, version).Scan(&applied); err != nil {
+			t.Fatal(err)
+		}
+		if applied != 1 {
+			t.Fatalf("migration %d count=%d", version, applied)
+		}
 	}
-	if applied != 1 {
-		t.Fatalf("migration 4 count=%d", applied)
-	}
-	for _, table := range []string{"scheduled_jobs", "scheduled_runs", "job_locks"} {
+	for _, table := range []string{"scheduled_jobs", "scheduled_runs", "job_locks", "instagram_drafts", "instagram_publish_events"} {
 		var name string
 		if err := d.SQL().QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`, table).Scan(&name); err != nil {
 			t.Fatalf("table %s: %v", table, err)

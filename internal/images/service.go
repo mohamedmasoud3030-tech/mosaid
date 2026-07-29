@@ -17,6 +17,7 @@ import (
 
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/audit"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/policy"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/skills"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/tools"
 )
 
@@ -155,6 +156,15 @@ func (s *Service) record(ctx context.Context, kind, decision string) error {
 	}
 	_, err := s.Audit.Append(ctx, audit.Entry{Kind: kind, UserID: s.OwnerID, Resource: "images", Decision: decision})
 	return err
+}
+
+func RegisterSkillHandler(registry *skills.Registry) error {
+	if registry == nil {
+		return errors.New("skill registry unavailable")
+	}
+	return registry.RegisterBuiltin("image-generation", "1.0.0", func(ctx context.Context, skill *skills.SkillContext, input json.RawMessage) (any, error) {
+		return skill.CallTool(ctx, "images.generate", policy.Write, input)
+	})
 }
 
 func RegisteredTool(service *Service) tools.Registered {

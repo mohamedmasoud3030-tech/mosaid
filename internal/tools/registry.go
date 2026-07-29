@@ -35,6 +35,22 @@ type Result struct {
 	Approval *approval.Request
 }
 
+type ExecutionMetadata struct {
+	Name     string
+	Mode     policy.Mode
+	UserID   int64
+	Resource string
+	ArgsHash string
+	Approval *approval.Receipt
+}
+
+type executionMetadataKey struct{}
+
+func Metadata(ctx context.Context) (ExecutionMetadata, bool) {
+	value, ok := ctx.Value(executionMetadataKey{}).(ExecutionMetadata)
+	return value, ok
+}
+
 func NewRegistry(a *approval.Manager) *Registry {
 	return &Registry{tools: map[string]Registered{}, Approvals: a}
 }
@@ -66,6 +82,7 @@ func (r *Registry) Execute(ctx context.Context, q Request) (Result, error) {
 	}
 	h := sha256.Sum256(q.Arguments)
 	argsHash := hex.EncodeToString(h[:])
+	metadata := ExecutionMetadata{Name: q.Name, Mode: q.Mode, UserID: q.UserID, Resource: q.Resource, ArgsHash: argsHash}
 	if d.NeedsApproval {
 		if r.Approvals == nil {
 			return Result{}, errors.New("approval service unavailable")
@@ -74,10 +91,13 @@ func (r *Registry) Execute(ctx context.Context, q Request) (Result, error) {
 			a, e := r.Approvals.Create(ctx, q.UserID, q.Name, argsHash, q.Resource, 5*time.Minute)
 			return Result{Approval: &a}, e
 		}
-		if e := r.Approvals.Authorize(ctx, q.ApprovalToken, q.UserID, q.Name, argsHash, q.Resource); e != nil {
+		receipt, e := r.Approvals.AuthorizeReceipt(ctx, q.ApprovalToken, q.UserID, q.Name, argsHash, q.Resource)
+		if e != nil {
 			return Result{}, e
 		}
+		metadata.Approval = &receipt
 	}
+	ctx = context.WithValue(ctx, executionMetadataKey{}, metadata)
 	cctx, cancel := context.WithTimeout(ctx, x.Spec.Timeout)
 	defer cancel()
 	v, e := x.Run(cctx, q.Arguments)
