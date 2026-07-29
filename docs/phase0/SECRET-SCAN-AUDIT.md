@@ -33,10 +33,11 @@ No `.security.yml` or real `.env` file is present. `.env.example` files contain 
 
 Raw binary scanning found three key-like static sequences:
 
-1. Two upstream example/placeholder strings explicitly containing placeholder terms.
-2. One Anthropic-shaped sequence formed in the linked binary/string evidence without a token boundary. It was absent as an exact literal from the pinned PicoClaw source and all downloaded Go module source files. It is consistent with linker string concatenation/detection data, not a credential supplied during this work.
+1. One explicit upstream example/placeholder string.
+2. One 23-byte, all-lowercase identifier-shaped sequence with separators, low character entropy, and no source literal match. It is far shorter and structurally unlike a real provider credential; its reviewed SHA-256 prefix is `54f6a0d6ed9b8436`.
+3. One Anthropic-shaped sequence formed in the linked binary/string evidence without a token boundary. It was absent as an exact literal from the pinned PicoClaw source and all downloaded Go module source files. It is consistent with linker string concatenation/detection data, not a credential supplied during this work.
 
-The values are intentionally not reproduced here. Their hashes and classification were reviewed locally without printing the values. The qualification build never received a Telegram/model/GitHub runtime secret.
+The values are intentionally not reproduced here. Their hashes, boundaries, entropy, source absence, and classification were reviewed locally without printing the values. The qualification build never received a Telegram/model/GitHub runtime secret.
 
 ## Preventive controls
 
