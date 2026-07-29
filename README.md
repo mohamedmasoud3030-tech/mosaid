@@ -1,70 +1,80 @@
 # Mosaid
 
-Mosaid is a planned lightweight, extensible general personal AI agent for coding workflows, safe local tools, repository work, scheduled assistance, and future modular integrations.
+Mosaid is Mohamed's personal digital-work agent: an Arabic-first product that helps a beginner understand, learn, execute, verify and deliver real digital work.
 
 ## Current status
 
-**Research and Phase 0 qualification only. The product has not been built.**
+The security-hardened Go product foundation through Phase 13 is merged in PR #2 and preserved on `main`.
 
-The initial runtime target is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. PicoClaw `v0.3.1` is the current **conditional candidate** for runtime qualification; it is not yet a confirmed permanent dependency or the final architecture.
+The project is now pivoting to use [`NousResearch/hermes-agent`](https://github.com/NousResearch/hermes-agent) as the **single general-purpose runtime**, hosted on Oracle Cloud Compute. Mosaid remains the differentiated product layer: identity, Arabic behavior, safety and approvals, Work Packs, portfolio, opportunity and client workflows, and product-specific evaluation.
 
-Phase 1 has not started. Phone testing is intentionally deferred by the owner.
+The earlier Phase 14–18 runtime prototype is preserved in closed, unmerged PR #3. It is not the active runtime path.
 
-## What exists today
-
-- A deep comparison of open-source personal-agent runtimes and frameworks.
-- ADR-0001 recording the conditional PicoClaw decision.
-- Proposed security-first Mosaid architecture.
-- A pinned and reproducible Phase 0 Android ARM64 qualification build.
-- Telegram private-owner controls with `/status` and `/echo` only.
-- All dangerous tools disabled: Shell, filesystem tools, MCP, cron commands, web, GitHub, images, Instagram, dynamic Skills, remote execution, and self-update.
-- Termux installation, preflight, runit supervision, wake lock, Termux:Boot, health sampling, log rotation, test harness, SBOM, license report, and diagnostics collector.
-- Numeric acceptance criteria for 30-minute, 2-hour, 12-hour, and 24-hour tests plus network, reboot, crash, memory, battery, thermal, duplicate, and continuity scenarios.
-
-## What does not exist
-
-- A production-ready personal agent.
-- A safe general Shell or Permission Engine.
-- Durable exactly-once Telegram processing.
-- Git/GitHub runtime integration.
-- Skills or MCP runtime enablement.
-- Image generation or Instagram publishing.
-- A passed real-phone qualification report.
-
-## Start with the evidence
-
-- [Full runtime/framework evaluation](docs/research/2026-07-29-agent-runtime-evaluation.md)
-- [ADR-0001: conditional PicoClaw selection](docs/decisions/ADR-0001-picoclaw-conditional-selection.md)
-- [Proposed architecture](docs/architecture/proposed-architecture.md)
-- [Phase 0 execution report](docs/phase0/EXECUTION-REPORT.md)
-- [Pinned source verification](docs/phase0/SOURCE-VERIFICATION.md)
-- [Numeric acceptance criteria](docs/phase0/ACCEPTANCE-CRITERIA.md)
-- [Threat notes](docs/phase0/THREAT-NOTES.md)
-- [Phone guide](docs/phase0/PHONE-GUIDE.md)
-- [Next-session handoff](docs/handoff/NEXT-SESSION.md)
-
-The self-contained harness is under [`phase0-android-runtime/`](phase0-android-runtime/README.md).
-
-## Phase 0 pinned identity
+The active work is Draft PR #4 on:
 
 ```text
-Upstream:         sipeed/picoclaw
-Tag:              v0.3.1
-Tag object:       9fba4cec050cbfe3d73dfcfe015d7960447b9c7f (unsigned)
-Commit:           2cf030d2fd3b871d7ec17e3be34c24688aac76da
-Tree:             79530d185c4c5eb30719fd45cf323217d2a9f5c5
-Qualification Go: 1.25.12
-Android target:   arm64-v8a
-Binary SHA-256:   b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f
-Phone-kit SHA-256: 78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e
+pivot/hermes-oracle-runtime-20260729
 ```
 
-## Warning
+## Target architecture
 
-Do **not** use the Phase 0 kit with production Telegram bots, production model keys, sensitive repositories, public groups, or publishing accounts. Use dedicated low-quota test credentials and revoke them after testing.
+```text
+Telegram / phone
+      |
+      v
+Hermes Agent on Oracle Cloud
+      |
+      +-- Mosaid Arabic identity
+      +-- Mosaid safety and approval profile
+      +-- Mosaid Skills and Work Packs
+      +-- portfolio, opportunity and client workflows
+      +-- verified-free or self-hosted model endpoint
+```
 
-`chmod 600`, allowlists, redaction, and Termux's app directory are defense in depth. They are not a substitute for an OS sandbox, and arbitrary untrusted code must not run under the same Termux UID as secrets.
+There will not be two agent runtimes running beside each other.
 
-## Licensing
+## Completed foundation
 
-Original Mosaid material is MIT-licensed. The qualification binary and patches derive from MIT-licensed PicoClaw and retain its attribution. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the Phase 0 SBOM/license report.
+The merged Go foundation contains evidence and tested implementations for:
+
+- durable Telegram inbox/outbox;
+- policy and short-lived approvals;
+- safe tools;
+- Git/GitHub contracts;
+- memory;
+- scheduler;
+- Skills;
+- MCP;
+- web/documents;
+- image generation contracts;
+- Instagram official API contracts;
+- security, backup, SBOM, license and CI hardening.
+
+This foundation remains preserved until the Hermes-based Oracle deployment passes end-to-end acceptance.
+
+## Pivot assets
+
+- [Runtime decision](docs/pivot/HERMES-RUNTIME-DECISION.md)
+- [Migration map](docs/pivot/MIGRATION-MAP.md)
+- [Oracle deployment plan](docs/pivot/ORACLE-DEPLOYMENT-PLAN.md)
+- [Deployment entrypoint](deploy/hermes/README.md)
+- [Mosaid identity](product/identity/MOSAID.md)
+- [Mosaid safety policy](product/policies/SAFETY.md)
+- [First Research Skill](product/skills/research/SKILL.md)
+- [Implementation status](docs/roadmap/IMPLEMENTATION-STATUS.md)
+
+## Security and secrets
+
+Never commit or paste:
+
+- Oracle Auth Tokens;
+- SSH private keys;
+- Telegram bot tokens;
+- model/API keys;
+- populated server environment files.
+
+External Skills are not auto-enabled, self-improvement creates drafts only, high-risk actions require owner approval, and the default billing policy is free-only with no paid fallback.
+
+## Next gate
+
+The next technical gate is a pinned Hermes deployment on the Oracle Compute instance, followed by owner-only Telegram, model, approval, restart, rollback and no-secret validation.
