@@ -1,0 +1,728 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "pkg:golang/cloud.google.com/go/compute/metadata@v0.3.0",
+      "name": "cloud.google.com/go/compute/metadata",
+      "purl": "pkg:golang/cloud.google.com/go/compute/metadata@v0.3.0",
+      "type": "library",
+      "version": "v0.3.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/dustin/go-humanize@v1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1b392163b4f954d8449301f43d52608f3f9f5f5ae106b47ba514f79839297826"
+        }
+      ],
+      "name": "github.com/dustin/go-humanize",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY="
+        }
+      ],
+      "purl": "pkg:golang/github.com/dustin/go-humanize@v1.0.1",
+      "type": "library",
+      "version": "v1.0.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9187fcd434d615eeedfb556f2fb792fa32855566949caf5c075a9bc27eb76026"
+        }
+      ],
+      "name": "github.com/golang-jwt/jwt/v5",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:kYf81DTWFe7t+1VvL7eS+jKFVWaUnK9cB1qbwn63YCY="
+        }
+      ],
+      "purl": "pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.1",
+      "type": "library",
+      "version": "v5.3.1"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/go-cmp@v0.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c24f37f36113b2fe0961467022c9fa6296225a206c60b489893b320726d5b8df"
+        }
+      ],
+      "name": "github.com/google/go-cmp",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8="
+        }
+      ],
+      "purl": "pkg:golang/github.com/google/go-cmp@v0.7.0",
+      "type": "library",
+      "version": "v0.7.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/jsonschema-go@v0.4.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fc304e2d94df0e8c3ba5ed8699a24d865b6e7864ed0ca2028bc57ca7e0d03ddd"
+        }
+      ],
+      "name": "github.com/google/jsonschema-go",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:/DBOLZTfDow7pe2GmaJNhltueGTtDKICi8V8p+DQPd0="
+        }
+      ],
+      "purl": "pkg:golang/github.com/google/jsonschema-go@v0.4.3",
+      "type": "library",
+      "version": "v0.4.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/pprof@v0.0.0-20250317173921-a4b03ec1a45e",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8a30a5b33627fa6003445635ee48d01154355d186adbf251d4cdec1aa789a31b"
+        }
+      ],
+      "name": "github.com/google/pprof",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:ijClszYn+mADRFY17kjQEVQ1XRhq2/JR1M3sGqeJoxs="
+        }
+      ],
+      "purl": "pkg:golang/github.com/google/pprof@v0.0.0-20250317173921-a4b03ec1a45e",
+      "type": "library",
+      "version": "v0.0.0-20250317173921-a4b03ec1a45e"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "348bda24330eb231c0f27d630212d2833ac0cf2d4782bfa136b6f9edefbde05d"
+        }
+      ],
+      "name": "github.com/google/uuid",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0="
+        }
+      ],
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "type": "library",
+      "version": "v1.6.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6be6ec439aef18b8f31eec30ead571a333d91558215da1cec05b3896e2d42b69"
+        }
+      ],
+      "name": "github.com/hashicorp/golang-lru/v2",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k="
+        }
+      ],
+      "purl": "pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7",
+      "type": "library",
+      "version": "v2.0.7"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mattn/go-isatty@v0.0.20",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c5f0f4883b842a70e4974deae258a607ebc7f86c4b12d2ff8dbe315494965846"
+        }
+      ],
+      "name": "github.com/mattn/go-isatty",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY="
+        }
+      ],
+      "purl": "pkg:golang/github.com/mattn/go-isatty@v0.0.20",
+      "type": "library",
+      "version": "v0.0.20"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/modelcontextprotocol/go-sdk@v1.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "caa8d8d9db1b2800b42d2b9665504cac78221bcba45efe8d468d098802dacb8e"
+        }
+      ],
+      "name": "github.com/modelcontextprotocol/go-sdk",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:yqjY2dsbKAC0LSuWZVBMrHgiG8ukXv6NRo0JiALay44="
+        }
+      ],
+      "purl": "pkg:golang/github.com/modelcontextprotocol/go-sdk@v1.7.0",
+      "type": "library",
+      "version": "v1.7.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/mohamedmasoud3030-tech/mosaid@workspace",
+      "name": "github.com/mohamedmasoud3030-tech/mosaid",
+      "purl": "pkg:golang/github.com/mohamedmasoud3030-tech/mosaid@workspace",
+      "type": "application",
+      "version": "workspace"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/ncruces/go-strftime@v1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1cc169f262c24cfa77e3533f667038a9a7fb665b1b4dcfa68998c22ce140c3bc"
+        }
+      ],
+      "name": "github.com/ncruces/go-strftime",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:HMFp8mLCTPp341M/ZnA4qaf7ZlsbTc+miZjCLOFAw7w="
+        }
+      ],
+      "purl": "pkg:golang/github.com/ncruces/go-strftime@v1.0.0",
+      "type": "library",
+      "version": "v1.0.0"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/remyoudompheng/bigfft@v0.0.0-20230129092748-24d4a6f8daec",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5b4f4854973de2272ae0d8d8ddc95becb93c3b5a89f01741105f33d226d4d2b1"
+        }
+      ],
+      "name": "github.com/remyoudompheng/bigfft",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE="
+        }
+      ],
+      "purl": "pkg:golang/github.com/remyoudompheng/bigfft@v0.0.0-20230129092748-24d4a6f8daec",
+      "type": "library",
+      "version": "v0.0.0-20230129092748-24d4a6f8daec"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/segmentio/asm@v1.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "58cd37b1f50e10dbef29ec4e2e9fa90aa81bfd60e3b22ec42bc808b080adce17"
+        }
+      ],
+      "name": "github.com/segmentio/asm",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:WM03sfUOENvvKexOLp+pCqgb/WDjsi7EK8gIsICtzhc="
+        }
+      ],
+      "purl": "pkg:golang/github.com/segmentio/asm@v1.1.3",
+      "type": "library",
+      "version": "v1.1.3"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/segmentio/encoding@v0.5.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "396d5545eae7f0dc3a21302dc1267b21dae5dcc5c21705c73e0a844987ef36dd"
+        }
+      ],
+      "name": "github.com/segmentio/encoding",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:OW1VRern8Nw6ITAtwSZ7Idrl3MXCFwXHPgqESYfvNt0="
+        }
+      ],
+      "purl": "pkg:golang/github.com/segmentio/encoding@v0.5.4",
+      "type": "library",
+      "version": "v0.5.4"
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/yosida95/uritemplate/v3@v3.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "11ddceca3f72ae68bdd3cefe35ccee2f9070908738c2f4dbe7320cf9424f1b3e"
+        }
+      ],
+      "name": "github.com/yosida95/uritemplate/v3",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:Ed3Oyj9yrmi9087+NczuL5BwkIc4wvTb5zIM+UJPGz4="
+        }
+      ],
+      "purl": "pkg:golang/github.com/yosida95/uritemplate/v3@v3.0.2",
+      "type": "library",
+      "version": "v3.0.2"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/mod@v0.36.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2498e9571ea6c9f52c51d03366e3924d39911343df65e356cf3bcaacfeda99be"
+        }
+      ],
+      "name": "golang.org/x/mod",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:JJjpVx6myfUsUdAzZuOSTTmRE0PfZeNWzzvKrP7amb4="
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/mod@v0.36.0",
+      "type": "library",
+      "version": "v0.36.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/oauth2@v0.35.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "32fda6cee1ee66e636f9b93259720731f84d74901dc16dc5b967823d83791954"
+        }
+      ],
+      "name": "golang.org/x/oauth2",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:Mv2mzuHuZuY2+bkyWXIHMfhNdJAdwW3FuWeCPYN5GVQ="
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/oauth2@v0.35.0",
+      "type": "library",
+      "version": "v0.35.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/sync@v0.20.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7b43d3a5bee98cef0602d4ecd9d43a8d86b905662532e5f4e3b0dca3fa48b4ee"
+        }
+      ],
+      "name": "golang.org/x/sync",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:e0PTpb7pjO8GAtTs2dQ6jYa5BWYlMuX047Dco/pItO4="
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/sync@v0.20.0",
+      "type": "library",
+      "version": "v0.20.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/sys@v0.44.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8a5759977278bb378a3f4eebd85fbe3a9ec4f41dbd251532f9adbb1226ed0534"
+        }
+      ],
+      "name": "golang.org/x/sys",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:ildZl3J4uzeKP07r2F++Op7E9B29JRUy+a27EibtBTQ="
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/sys@v0.44.0",
+      "type": "library",
+      "version": "v0.44.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/time@v0.15.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6dbae9f2dddb1947853b1d3ca6fb0c6114c2552324f3dbb8b4a6cd3996e9f3c5"
+        }
+      ],
+      "name": "golang.org/x/time",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:bbrp8t3bGUeFOx08pvsMYRTCVSMk89u4tKbNOZbp88U="
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/time@v0.15.0",
+      "type": "library",
+      "version": "v0.15.0"
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/tools@v0.45.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d7ca8ddc5028a0e46f0297f95e309782cb9ac99384b577fa24ad7c237f8e35af"
+        }
+      ],
+      "name": "golang.org/x/tools",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:18qN3FAooORvApf5XjCXgsuayZOEtXf6JK18I3+ONa8="
+        }
+      ],
+      "purl": "pkg:golang/golang.org/x/tools@v0.45.0",
+      "type": "library",
+      "version": "v0.45.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/cc/v4@v4.28.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1ddff812cf8c063fbfee149d65a8ac372bba6efdd5d03a7631d965c9fa9a1fe7"
+        }
+      ],
+      "name": "modernc.org/cc/v4",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:Hd/4Es+MBj+/7hSdZaisNyu6bv3V0Dp2MdllyfqaH+c="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/cc/v4@v4.28.4",
+      "type": "library",
+      "version": "v4.28.4"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/ccgo/v4@v4.34.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3959d239642354a398905c681d807ea909921cae60a8ca8044cf8af43a51fd6b"
+        }
+      ],
+      "name": "modernc.org/ccgo/v4",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:OVnSOWQjVKOYkFxoHYB+qQmSHK5gqMqARM+K9DpR/Ws="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/ccgo/v4@v4.34.4",
+      "type": "library",
+      "version": "v4.34.4"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/fileutil@v1.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8fa6733537ed552d39e208b6f354f22e31cfa7a08f1ebd8a0b11178c46c3e923"
+        }
+      ],
+      "name": "modernc.org/fileutil",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:j6ZzNTftVS054gi281TyLjHPp6CPHr2KCxEXjEbD6SM="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/fileutil@v1.4.0",
+      "type": "library",
+      "version": "v1.4.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/gc/v2@v2.6.5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9f2a9d57cab8e8abd3a5996cc3aea45aac1744776322524e846ea4c6257ff712"
+        }
+      ],
+      "name": "modernc.org/gc/v2",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:nyqdV8q46KvTpZlsw66kWqwXRHdjIlJOhG6kxiV/9xI="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/gc/v2@v2.6.5",
+      "type": "library",
+      "version": "v2.6.5"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/gc/v3@v3.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e90029958c953be29d3d6de91a7aa6243531b6479cf28a045af92cfe1854de57"
+        }
+      ],
+      "name": "modernc.org/gc/v3",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:6QAplYyVO+KdPW3pGnqmJDUxtkec8ooEWvks/hhU3lc="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/gc/v3@v3.1.3",
+      "type": "library",
+      "version": "v3.1.3"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/goabi0@v0.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1ef128c24ecbc5c3ddd1eaba99538010c6a2e3a57e8bb26b8f5dede00cee364b"
+        }
+      ],
+      "name": "modernc.org/goabi0",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:HvEowk7LxcPd0eq6mVOAEMai46V+i7Jrj13t4AzuNks="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/goabi0@v0.2.0",
+      "type": "library",
+      "version": "v0.2.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/libc@v1.73.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fab6b8522f27832b7c1c370ed454c33d6964021eb239d68edb202887c31d7500"
+        }
+      ],
+      "name": "modernc.org/libc",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:+ra4Ui8ngyt8HDcO1FTDPWlkAh6yOdaO2yAoh8MddQA="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/libc@v1.73.4",
+      "type": "library",
+      "version": "v1.73.4"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/mathutil@v1.7.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "18265519775a37c813a81d4c7ffbaca7563f852aa0236bc01863f88d9302c4e5"
+        }
+      ],
+      "name": "modernc.org/mathutil",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/mathutil@v1.7.1",
+      "type": "library",
+      "version": "v1.7.1"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/memory@v1.11.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a38402f1a310ce673008adeddd4c7f6479b014fcc4ea17f66392db911b3e85b2"
+        }
+      ],
+      "name": "modernc.org/memory",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:o4QC8aMQzmcwCK3t3Ux/ZHmwFPzE6hf2Y5LbkRs+hbI="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/memory@v1.11.0",
+      "type": "library",
+      "version": "v1.11.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/opt@v0.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b46c9e7f9029c9c03b15210e32b69acbd49a4e4e7399bc7b4eef9c26ce102998"
+        }
+      ],
+      "name": "modernc.org/opt",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:tGyef5ApycA7FSEOMraay9SaTk5zmbx7Tu+cJs4QKZg="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/opt@v0.2.0",
+      "type": "library",
+      "version": "v0.2.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/sortutil@v1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fb1ca819fd7998cdcd3253c39c5aabb5e634ee49521712c4944d8f56e58827bc"
+        }
+      ],
+      "name": "modernc.org/sortutil",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:+xyoGf15mM3NMlPDnFqrteY07klSFxLElE2PVuWIJ7w="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/sortutil@v1.2.1",
+      "type": "library",
+      "version": "v1.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/sqlite@v1.53.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "db4586f0df6ae238bf744a86938ba223473a38f8d278b4cd606142737fbb7353"
+        }
+      ],
+      "name": "modernc.org/sqlite",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:20WG8N9q4ji/dEqGk4uiI0c6OPjSeLTNYGFCc3+7c1M="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/sqlite@v1.53.0",
+      "type": "library",
+      "version": "v1.53.0"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/strutil@v1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "527799064400f835f6469df929c33af5c4ac3444bd972f264160fbd472a5380d"
+        }
+      ],
+      "name": "modernc.org/strutil",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:UneZBkQA+DX2Rp35KcM69cSsNES9ly8mQWD71HKlOA0="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/strutil@v1.2.1",
+      "type": "library",
+      "version": "v1.2.1"
+    },
+    {
+      "bom-ref": "pkg:golang/modernc.org/token@v1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5e5ec0a7d74a684b3990ba0e41e4263d67af7e793f0cce6a70b718940f32b3a6"
+        }
+      ],
+      "name": "modernc.org/token",
+      "properties": [
+        {
+          "name": "golang:module:sum",
+          "value": "h1:Xl7Ap9dKaEs5kLoOQeQmPWevfnk/DM5qcLcYlA8ys6Y="
+        }
+      ],
+      "purl": "pkg:golang/modernc.org/token@v1.1.0",
+      "type": "library",
+      "version": "v1.1.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "pkg:golang/cloud.google.com/go/compute/metadata@v0.3.0",
+        "pkg:golang/github.com/dustin/go-humanize@v1.0.1",
+        "pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.1",
+        "pkg:golang/github.com/google/go-cmp@v0.7.0",
+        "pkg:golang/github.com/google/jsonschema-go@v0.4.3",
+        "pkg:golang/github.com/google/pprof@v0.0.0-20250317173921-a4b03ec1a45e",
+        "pkg:golang/github.com/google/uuid@v1.6.0",
+        "pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7",
+        "pkg:golang/github.com/mattn/go-isatty@v0.0.20",
+        "pkg:golang/github.com/modelcontextprotocol/go-sdk@v1.7.0",
+        "pkg:golang/github.com/ncruces/go-strftime@v1.0.0",
+        "pkg:golang/github.com/remyoudompheng/bigfft@v0.0.0-20230129092748-24d4a6f8daec",
+        "pkg:golang/github.com/segmentio/asm@v1.1.3",
+        "pkg:golang/github.com/segmentio/encoding@v0.5.4",
+        "pkg:golang/github.com/yosida95/uritemplate/v3@v3.0.2",
+        "pkg:golang/golang.org/x/mod@v0.36.0",
+        "pkg:golang/golang.org/x/oauth2@v0.35.0",
+        "pkg:golang/golang.org/x/sync@v0.20.0",
+        "pkg:golang/golang.org/x/sys@v0.44.0",
+        "pkg:golang/golang.org/x/time@v0.15.0",
+        "pkg:golang/golang.org/x/tools@v0.45.0",
+        "pkg:golang/modernc.org/cc/v4@v4.28.4",
+        "pkg:golang/modernc.org/ccgo/v4@v4.34.4",
+        "pkg:golang/modernc.org/fileutil@v1.4.0",
+        "pkg:golang/modernc.org/gc/v2@v2.6.5",
+        "pkg:golang/modernc.org/gc/v3@v3.1.3",
+        "pkg:golang/modernc.org/goabi0@v0.2.0",
+        "pkg:golang/modernc.org/libc@v1.73.4",
+        "pkg:golang/modernc.org/mathutil@v1.7.1",
+        "pkg:golang/modernc.org/memory@v1.11.0",
+        "pkg:golang/modernc.org/opt@v0.2.0",
+        "pkg:golang/modernc.org/sortutil@v1.2.1",
+        "pkg:golang/modernc.org/sqlite@v1.53.0",
+        "pkg:golang/modernc.org/strutil@v1.2.1",
+        "pkg:golang/modernc.org/token@v1.1.0"
+      ],
+      "ref": "pkg:golang/github.com/mohamedmasoud3030-tech/mosaid@workspace"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "pkg:golang/github.com/mohamedmasoud3030-tech/mosaid@workspace",
+      "name": "github.com/mohamedmasoud3030-tech/mosaid",
+      "purl": "pkg:golang/github.com/mohamedmasoud3030-tech/mosaid@workspace",
+      "type": "application",
+      "version": "workspace"
+    },
+    "tools": {
+      "components": [
+        {
+          "name": "Mosaid stdlib SBOM generator",
+          "type": "application",
+          "version": "1"
+        }
+      ]
+    }
+  },
+  "serialNumber": "urn:uuid:ac95757b-f390-550c-ac3a-a84f46c088b6",
+  "specVersion": "1.5",
+  "version": 1
+}

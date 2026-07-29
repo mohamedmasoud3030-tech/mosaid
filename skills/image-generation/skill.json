@@ -1,0 +1,95 @@
+{
+  "id": "image-generation",
+  "version": "1.0.0",
+  "description": "Generate a validated image artifact through an explicitly configured external image provider.",
+  "type": "builtin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 256,
+        "maximum": 2048
+      },
+      "height": {
+        "type": "integer",
+        "minimum": 256,
+        "maximum": 2048
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4"
+        ]
+      },
+      "reference_ids": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "maxItems": 4
+      },
+      "max_cost_usd": {
+        "type": "number",
+        "minimum": 0.01,
+        "maximum": 100
+      }
+    },
+    "required": [
+      "prompt",
+      "width",
+      "height",
+      "aspect_ratio",
+      "max_cost_usd"
+    ],
+    "additionalProperties": false
+  },
+  "outputs": [
+    {
+      "name": "artifact",
+      "description": "Validated local image artifact metadata.",
+      "schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ],
+  "required_tools": [
+    "images.generate"
+  ],
+  "required_permissions": [
+    "write"
+  ],
+  "required_secrets": [
+    "IMAGE_PROVIDER_API_KEY"
+  ],
+  "allowed_networks": [
+    "api.openai.com"
+  ],
+  "timeout_seconds": 180,
+  "approval_policy": "policy",
+  "compatibility": {
+    "min_core": "0.1.0",
+    "os": [
+      "linux",
+      "android"
+    ],
+    "arch": [
+      "amd64",
+      "arm64"
+    ]
+  },
+  "integrity_hash": "sha256:8ebb85963c2d205cbc50aebf94cd36de8df8955708e252e47edfe4483401975e"
+}

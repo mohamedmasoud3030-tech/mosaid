@@ -1,0 +1,25 @@
+{
+  "data_dir": "/data/data/com.termux/files/home/.local/share/mosaid",
+  "owner_telegram_id": 123456789,
+  "telegram": {
+    "token_file": "/data/data/com.termux/files/home/.config/mosaid/telegram.token",
+    "poll_timeout_seconds": 30
+  },
+  "model": {
+    "base_url": "https://api.example.invalid/v1",
+    "api_key_file": "/data/data/com.termux/files/home/.config/mosaid/model.key",
+    "name": "replace-model",
+    "timeout_seconds": 60
+  },
+  "limits": {
+    "max_message_bytes": 16384,
+    "max_response_bytes": 65536,
+    "max_model_steps": 4,
+    "max_tool_calls": 16,
+    "max_tokens": 32000,
+    "max_cost_usd": 1.0,
+    "max_retries": 5,
+    "messages_per_minute": 30,
+    "message_burst": 5
+  }
+}

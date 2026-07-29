@@ -1,0 +1,79 @@
+{
+  "id": "coding",
+  "version": "1.0.0",
+  "description": "Inspect, edit, test, and propose changes on an explicitly approved repository workspace.",
+  "type": "declarative",
+  "input_schema": {
+    "type": "object",
+    "description": "A bounded coding task.",
+    "properties": {
+      "task": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+      },
+      "workspace": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "required": [
+      "task",
+      "workspace"
+    ],
+    "additionalProperties": false
+  },
+  "outputs": [
+    {
+      "name": "result",
+      "description": "Structured coding workflow result.",
+      "schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ],
+  "required_tools": [
+    "workspace.list",
+    "workspace.read",
+    "workspace.search",
+    "workspace.write",
+    "workspace.patch",
+    "process.run"
+  ],
+  "required_permissions": [
+    "read",
+    "write"
+  ],
+  "required_secrets": [],
+  "allowed_networks": [
+    "github.com",
+    "api.github.com"
+  ],
+  "timeout_seconds": 1800,
+  "approval_policy": "always",
+  "compatibility": {
+    "min_core": "0.1.0",
+    "os": [
+      "linux",
+      "android"
+    ],
+    "arch": [
+      "amd64",
+      "arm64"
+    ]
+  },
+  "integrity_hash": "sha256:656fa56716f5ec8086245bdef75a27495e5a81a8361adaadde929e1a29aac097",
+  "steps": [
+    {
+      "tool": "workspace.list",
+      "mode": "read",
+      "arguments": {
+        "path": ".",
+        "max_entries": 200
+      }
+    }
+  ]
+}

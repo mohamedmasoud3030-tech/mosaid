@@ -1,0 +1,59 @@
+{
+  "id": "research",
+  "version": "1.0.0",
+  "description": "Perform bounded research while preserving provenance and treating all results as untrusted content.",
+  "type": "declarative",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "required": [
+      "query"
+    ],
+    "additionalProperties": false
+  },
+  "outputs": [
+    {
+      "name": "result",
+      "description": "Research result with provenance.",
+      "schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ],
+  "required_tools": [
+    "workspace.search"
+  ],
+  "required_permissions": [
+    "read"
+  ],
+  "required_secrets": [],
+  "allowed_networks": [],
+  "timeout_seconds": 120,
+  "approval_policy": "policy",
+  "compatibility": {
+    "min_core": "0.1.0",
+    "os": [
+      "linux",
+      "android"
+    ],
+    "arch": [
+      "amd64",
+      "arm64"
+    ]
+  },
+  "integrity_hash": "sha256:87635dd46a09d9e40b061f3269db8c8806a2b7f42b1a5b9f463cb870ca8f39db",
+  "steps": [
+    {
+      "tool": "workspace.search",
+      "mode": "read"
+    }
+  ]
+}
