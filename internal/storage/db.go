@@ -22,6 +22,9 @@ CREATE TABLE IF NOT EXISTS outbox_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,
 CREATE TABLE IF NOT EXISTS sessions(chat_id INTEGER PRIMARY KEY,updated_at TEXT NOT NULL,summary TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS task_runs(id INTEGER PRIMARY KEY AUTOINCREMENT,inbox_id INTEGER,state TEXT NOT NULL,started_at TEXT,completed_at TEXT,last_error TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS idempotency_keys(key TEXT PRIMARY KEY,created_at TEXT NOT NULL,result_ref TEXT NOT NULL DEFAULT '');
+CREATE TABLE IF NOT EXISTS approval_requests(id TEXT PRIMARY KEY,token_hash TEXT UNIQUE NOT NULL,user_id INTEGER NOT NULL,tool_name TEXT NOT NULL,args_hash TEXT NOT NULL,resource TEXT NOT NULL,expires_at TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN('pending','approved','denied','expired')),created_at TEXT NOT NULL,resolved_at TEXT);
+CREATE TABLE IF NOT EXISTS audit_entries(seq INTEGER PRIMARY KEY,at TEXT NOT NULL,kind TEXT NOT NULL,user_id INTEGER NOT NULL,resource TEXT NOT NULL,decision TEXT NOT NULL,prev_hash TEXT NOT NULL,entry_hash TEXT UNIQUE NOT NULL,payload_json BLOB NOT NULL);
+INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,datetime('now'));
 `
 
 func Open(path string) (*DB, error) {
@@ -45,6 +48,7 @@ func Open(path string) (*DB, error) {
 	return &DB{d}, nil
 }
 func (d *DB) Close() error { return d.db.Close() }
+func (d *DB) SQL() *sql.DB { return d.db }
 func now() string          { return time.Now().UTC().Format(time.RFC3339Nano) }
 func (d *DB) Ingest(ctx context.Context, m message.Inbound, hash string) (bool, error) {
 	b, _ := json.Marshal(m)

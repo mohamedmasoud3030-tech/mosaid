@@ -3,6 +3,7 @@ package agent
 import (
 	"context"
 	"fmt"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
@@ -13,12 +14,13 @@ import (
 )
 
 type Agent struct {
-	Model    model.Client
-	Sessions *storage.SessionStore
-	Health   *health.Writer
-	Version  string
-	mu       sync.Mutex
-	cancel   context.CancelFunc
+	Model     model.Client
+	Sessions  *storage.SessionStore
+	Health    *health.Writer
+	Version   string
+	Approvals *approval.Manager
+	mu        sync.Mutex
+	cancel    context.CancelFunc
 }
 
 func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outbound, error) {
@@ -30,7 +32,22 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	}
 	switch fields[0] {
 	case "/help":
-		out.Text = "Mosaid commands: /status /help /stop"
+		out.Text = "Mosaid commands: /status /help /stop /approve <token> /deny <token>"
+		return out, nil
+	case "/approve", "/deny":
+		if a.Approvals == nil || len(fields) != 2 {
+			out.Text = "Approval command requires one token."
+			return out, nil
+		}
+		decision := "approved"
+		if fields[0] == "/deny" {
+			decision = "denied"
+		}
+		if err := a.Approvals.ResolveToken(ctx, fields[1], in.UserID, decision); err != nil {
+			out.Text = "Approval rejected: " + err.Error()
+			return out, nil
+		}
+		out.Text = "Approval " + decision + "."
 		return out, nil
 	case "/status":
 		s := a.Health.Snapshot()

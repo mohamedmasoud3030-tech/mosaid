@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/agent"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/audit"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/config"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
@@ -72,7 +74,8 @@ func main() {
 		os.Exit(1)
 	}
 	defer db.Close()
-	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version}
+	approvalManager := &approval.Manager{DB: db.SQL(), Audit: audit.Logger{DB: db.SQL()}}
+	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version, Approvals: approvalManager}
 	g := &telegram.Gateway{Client: telegram.New(token), Handler: a, Owner: cfg.OwnerTelegramID, PollTimeout: cfg.Telegram.PollTimeoutSeconds, Log: log, Health: h, Store: db, MaxAttempts: 5}
 	log.Info("mosaid started", "version", version, "commit", commit)
 	if err = g.Run(ctx); err != nil {
