@@ -1,0 +1,175 @@
+name: Phase 0 pinned Android build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'patches/**'
+      - 'phone/**'
+      - 'scripts/**'
+      - 'config/**'
+      - '.github/workflows/phase0-build.yml'
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      UPSTREAM_REPOSITORY: sipeed/picoclaw
+      UPSTREAM_TAG: v0.3.1
+      UPSTREAM_TAG_OBJECT: 9fba4cec050cbfe3d73dfcfe015d7960447b9c7f
+      UPSTREAM_COMMIT: 2cf030d2fd3b871d7ec17e3be34c24688aac76da
+      GO_VERSION: 1.25.12
+      SOURCE_DATE_EPOCH: '1782812527'
+      CGO_ENABLED: '0'
+      GOTOOLCHAIN: local
+      GOMAXPROCS: '2'
+    steps:
+      - name: Checkout qualification harness
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Setup pinned Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: '1.25.12'
+          check-latest: false
+          cache: false
+
+      - name: Secret scan
+        run: bash scripts/scan-secrets.sh
+
+      - name: Fetch and verify immutable upstream commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/picoclaw"
+          git clone --filter=blob:none --no-checkout "https://github.com/${UPSTREAM_REPOSITORY}.git" "$src"
+          cd "$src"
+          remote_tag="$(git ls-remote origin "refs/tags/${UPSTREAM_TAG}" | awk '{print $1}')"
+          test "$remote_tag" = "$UPSTREAM_TAG_OBJECT"
+          git fetch --depth=1 origin "$UPSTREAM_COMMIT"
+          git checkout --detach "$UPSTREAM_COMMIT"
+          test "$(git rev-parse HEAD)" = "$UPSTREAM_COMMIT"
+          test "$(git rev-parse HEAD^{tree})" = "79530d185c4c5eb30719fd45cf323217d2a9f5c5"
+          # The annotated release tag is unsigned. GitHub reports the peeled
+          # commit as verified; capture that API assertion without pretending
+          # it makes the unsigned tag cryptographically immutable.
+          test "$(curl -fsSL -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${UPSTREAM_REPOSITORY}/commits/${UPSTREAM_COMMIT}" \
+            | jq -r '.commit.verification.verified')" = true
+          git apply --check "$GITHUB_WORKSPACE/patches/phase0-qualification.patch"
+          git apply "$GITHUB_WORKSPACE/patches/phase0-qualification.patch"
+          git apply --check "$GITHUB_WORKSPACE/patches/phase0-security-overrides.patch"
+          git apply "$GITHUB_WORKSPACE/patches/phase0-security-overrides.patch"
+          git diff --check
+          echo "PICOSTRIP_SOURCE=$src" >> "$GITHUB_ENV"
+
+      - name: Verify modules and run scoped tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PICOSTRIP_SOURCE"
+          go mod verify
+          go test -tags stdjson ./pkg/channels/telegram
+          go test -run '^$' -tags stdjson ./pkg/agent
+          go test -tags stdjson -skip 'TestWebTool_Kagi' ./pkg/tools/integration
+
+      - name: Build Android arm64 twice and compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PICOSTRIP_SOURCE"
+          mkdir -p "$GITHUB_WORKSPACE/build-a" "$GITHUB_WORKSPACE/build-b" "$GITHUB_WORKSPACE/evidence/inspection"
+          ldflags="-s -w -buildid= -X github.com/sipeed/picoclaw/pkg/config.Version=v0.3.1-phase0.1 -X github.com/sipeed/picoclaw/pkg/config.GitCommit=${UPSTREAM_COMMIT} -X github.com/sipeed/picoclaw/pkg/config.BuildTime=2026-06-30T09:42:07Z -X github.com/sipeed/picoclaw/pkg/config.GoVersion=go${GO_VERSION}"
+          for out in "$GITHUB_WORKSPACE/build-a/picoclaw-phase0" "$GITHUB_WORKSPACE/build-b/picoclaw-phase0"; do
+            GOOS=android GOARCH=arm64 go build -p 1 -trimpath -buildvcs=false -tags stdjson -ldflags "$ldflags" -o "$out" ./cmd/picoclaw
+          done
+          a="$(sha256sum "$GITHUB_WORKSPACE/build-a/picoclaw-phase0" | awk '{print $1}')"
+          b="$(sha256sum "$GITHUB_WORKSPACE/build-b/picoclaw-phase0" | awk '{print $1}')"
+          test "$a" = "$b"
+          install -m 0755 "$GITHUB_WORKSPACE/build-a/picoclaw-phase0" "$GITHUB_WORKSPACE/picoclaw-phase0-v0.3.1-android-arm64"
+          sha256sum "$GITHUB_WORKSPACE/picoclaw-phase0-v0.3.1-android-arm64" > "$GITHUB_WORKSPACE/picoclaw-phase0-v0.3.1-android-arm64.sha256"
+          go version -m "$GITHUB_WORKSPACE/picoclaw-phase0-v0.3.1-android-arm64" > "$GITHUB_WORKSPACE/evidence/inspection/custom-binary-go-version-m.txt"
+          ! grep -q 'kagisearch/kagi-openapi-golang' "$GITHUB_WORKSPACE/evidence/inspection/custom-binary-go-version-m.txt"
+
+      - name: Generate SBOM and license report
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf manifests
+          mkdir manifests
+          python3 scripts/generate-sbom.py \
+            --binary picoclaw-phase0-v0.3.1-android-arm64 \
+            --source "$PICOSTRIP_SOURCE" \
+            --output-dir manifests
+          (cd "$PICOSTRIP_SOURCE" && go mod graph) > manifests/go-mod-graph.txt
+          (cd "$PICOSTRIP_SOURCE" && go list -m all) > manifests/go-modules-all.txt
+          if awk -F '\t' 'NR>1 && ($3=="UNKNOWN" || $3=="NOT_FOUND" || $3 ~ /^GPL/){bad=1} END{exit bad}' manifests/license-report.tsv; then :; else
+            echo 'Unknown, missing, or GPL-classified linked license' >&2; exit 1
+          fi
+          sha256sum manifests/* | sort > manifests/MANIFESTS.sha256
+
+      - name: Vulnerability scan with one documented module-level exception
+        shell: bash
+        run: |
+          set -euo pipefail
+          GOBIN="$RUNNER_TEMP/bin" go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          set +e
+          "$RUNNER_TEMP/bin/govulncheck" -mode=binary picoclaw-phase0-v0.3.1-android-arm64 > evidence/inspection/govulncheck-binary.txt 2>&1
+          rc=$?
+          set -e
+          ids="$(grep -o 'GO-[0-9]\{4\}-[0-9]\{4\}' evidence/inspection/govulncheck-binary.txt | sort -u | tr '\n' ' ')"
+          test "$ids" = 'GO-2026-5932 '
+          test "$rc" = 3
+          # The scanner flags the whole x/crypto module; prove the openpgp package
+          # itself is absent from the compiled package dependency graph.
+          if (cd "$PICOSTRIP_SOURCE" && go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
+            echo 'openpgp unexpectedly imported' >&2; exit 1
+          fi
+
+      - name: Build metadata and phone kit
+        shell: bash
+        run: |
+          set -euo pipefail
+          binary_sha="$(cut -d' ' -f1 picoclaw-phase0-v0.3.1-android-arm64.sha256)"
+          jq -n \
+            --arg upstream_repo "$UPSTREAM_REPOSITORY" --arg upstream_tag "$UPSTREAM_TAG" \
+            --arg tag_object "$UPSTREAM_TAG_OBJECT" --arg commit "$UPSTREAM_COMMIT" \
+            --arg go_version "$GO_VERSION" --arg binary_sha "$binary_sha" \
+            --arg qualification_patch "$(sha256sum patches/phase0-qualification.patch | awk '{print $1}')" \
+            --arg security_patch "$(sha256sum patches/phase0-security-overrides.patch | awk '{print $1}')" \
+            '{upstream_repository:$upstream_repo,upstream_tag:$upstream_tag,upstream_tag_object_sha:$tag_object,upstream_commit_sha:$commit,go_version:$go_version,binary_sha256:$binary_sha,qualification_patch_sha256:$qualification_patch,security_overrides_patch_sha256:$security_patch,reproducible_two_build_comparison:true}' > build-metadata.json
+          mkdir -p evidence/upstream
+          cp "$PICOSTRIP_SOURCE/LICENSE" evidence/upstream/LICENSE
+          bash scripts/build-phone-kit.sh "$GITHUB_WORKSPACE/picoclaw-phase0-v0.3.1-android-arm64" "$GITHUB_WORKSPACE/release"
+
+      - name: Attest build provenance on manual public-repository builds
+        if: github.event_name == 'workflow_dispatch' && github.repository_visibility == 'public'
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: |
+            picoclaw-phase0-v0.3.1-android-arm64
+            release/phase0-phone-kit.tar.gz
+
+      - name: Upload qualification evidence
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: phase0-android-arm64-${{ env.UPSTREAM_COMMIT }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            picoclaw-phase0-v0.3.1-android-arm64
+            picoclaw-phase0-v0.3.1-android-arm64.sha256
+            build-metadata.json
+            manifests/
+            evidence/inspection/govulncheck-binary.txt
+            evidence/inspection/custom-binary-go-version-m.txt
+            release/phase0-phone-kit.tar.gz
+            release/phase0-phone-kit.tar.gz.sha256

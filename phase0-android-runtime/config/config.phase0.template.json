@@ -1,0 +1,115 @@
+{
+  "version": 3,
+  "agents": {
+    "defaults": {
+      "workspace": "__PICOCLAW_PHASE0_WORKSPACE__",
+      "restrict_to_workspace": true,
+      "model_name": "phase0-model",
+      "max_tokens": 1024,
+      "context_window": 16384,
+      "temperature": 0.1,
+      "max_tool_iterations": 1,
+      "summarize_message_threshold": 20,
+      "summarize_token_percent": 75,
+      "max_llm_retries": 3,
+      "llm_retry_backoff_secs": 2,
+      "turn_profile": {
+        "enabled": true,
+        "history": {"mode": "default"},
+        "system_prompt": {"mode": "default"},
+        "skills": {"mode": "off"},
+        "tools": {"mode": "off"}
+      },
+      "tool_feedback": {
+        "enabled": false,
+        "max_args_length": 0,
+        "separate_messages": false
+      }
+    }
+  },
+  "session": {
+    "dm_scope": "per-channel-peer"
+  },
+  "evolution": {
+    "enabled": false,
+    "mode": "observe",
+    "cold_path_trigger": "manual"
+  },
+  "model_list": [
+    {
+      "model_name": "phase0-model",
+      "model": "openai/__OPENAI_COMPAT_MODEL__",
+      "api_base": "__OPENAI_COMPAT_BASE__"
+    }
+  ],
+  "channel_list": {
+    "telegram": {
+      "enabled": true,
+      "type": "telegram",
+      "allow_from": ["__TELEGRAM_NUMERIC_OWNER_ID__"],
+      "group_trigger": {"mention_only": true},
+      "typing": {"enabled": true},
+      "placeholder": {"enabled": false},
+      "reasoning_channel_id": "",
+      "settings": {
+        "base_url": "",
+        "proxy": "",
+        "use_markdown_v2": false,
+        "media_group_delay_ms": 500,
+        "streaming": {"enabled": false}
+      }
+    }
+  },
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 18790,
+    "hot_reload": false,
+    "log_level": "info"
+  },
+  "events": {
+    "logging": {"enabled": true}
+  },
+  "hooks": {
+    "enabled": false,
+    "builtins": {},
+    "processes": {}
+  },
+  "tools": {
+    "allow_read_paths": [],
+    "allow_write_paths": [],
+    "filter_sensitive_data": true,
+    "filter_min_length": 1,
+    "web": {"enabled": false, "prefer_native": false, "provider": "disabled", "private_host_whitelist": []},
+    "cron": {"enabled": false, "allow_command": false, "command_allowed_remotes": [], "exec_timeout_minutes": 0},
+    "exec": {"enabled": false, "allow_remote": false, "enable_deny_patterns": true, "custom_deny_patterns": [], "custom_allow_patterns": [], "timeout_seconds": 1},
+    "skills": {"enabled": false, "registries": [], "max_concurrent_searches": 0},
+    "media_cleanup": {"enabled": false, "max_age_minutes": 0, "interval_minutes": 0},
+    "mcp": {"enabled": false, "servers": {}, "discovery": {"enabled": false}},
+    "append_file": {"enabled": false},
+    "edit_file": {"enabled": false},
+    "find_skills": {"enabled": false},
+    "i2c": {"enabled": false},
+    "install_skill": {"enabled": false},
+    "list_dir": {"enabled": false},
+    "load_image": {"enabled": false},
+    "message": {"enabled": false, "media_enabled": false},
+    "read_file": {"enabled": false, "mode": "bytes", "max_read_file_size": 0},
+    "serial": {"enabled": false},
+    "send_file": {"enabled": false},
+    "send_tts": {"enabled": false},
+    "spawn": {"enabled": false},
+    "spawn_status": {"enabled": false},
+    "spi": {"enabled": false},
+    "subagent": {"enabled": false},
+    "web_fetch": {"enabled": false},
+    "write_file": {"enabled": false}
+  },
+  "heartbeat": {"enabled": false, "interval": 0},
+  "devices": {},
+  "voice": {
+    "model_name": "",
+    "tts_model_name": "",
+    "echo_transcription": false,
+    "elevenlabs_api_key": ""
+  }
+}

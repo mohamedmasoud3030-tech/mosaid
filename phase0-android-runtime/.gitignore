@@ -1,0 +1,30 @@
+# Never commit runtime secrets or generated local configuration.
+.env
+.env.*
+!.env.example
+.security.yml
+config.json
+*.key
+*.pem
+
+# Built binaries and downloaded upstream artifacts are evidence outputs, not source.
+evidence/artifacts/
+# Mosaid preserves text inspection evidence and the archival phone kit.
+!evidence/inspection/
+!evidence/inspection/**
+!release/
+!release/phase0-phone-kit.tar.gz
+!release/phase0-phone-kit.tar.gz.sha256
+build/
+build-*/
+*.apk
+*.so
+
+# Phone-returned private diagnostics and tests.
+phone-results/
+phase0-diagnostics-*.tar.gz*
+
+# Local tooling.
+.cache/
+__pycache__/
+*.pyc

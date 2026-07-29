@@ -1,0 +1,159 @@
+name: Phase 0 preservation CI
+
+on:
+  push:
+    branches: [main, phase0/android-runtime-qualification]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      HARNESS: phase0-android-runtime
+      UPSTREAM_REPOSITORY: sipeed/picoclaw
+      UPSTREAM_TAG: v0.3.1
+      UPSTREAM_TAG_OBJECT: 9fba4cec050cbfe3d73dfcfe015d7960447b9c7f
+      UPSTREAM_COMMIT: 2cf030d2fd3b871d7ec17e3be34c24688aac76da
+      UPSTREAM_TREE: 79530d185c4c5eb30719fd45cf323217d2a9f5c5
+      GO_VERSION: 1.25.12
+      CGO_ENABLED: '0'
+      GOTOOLCHAIN: local
+      GOMAXPROCS: '2'
+    steps:
+      - name: Checkout Mosaid
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Setup pinned Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: '1.25.12'
+          check-latest: false
+          cache: false
+
+      - name: Repository secret scan and committed artifact checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash "$HARNESS/scripts/scan-secrets.sh" .
+          sha256sum -c "$HARNESS/release/phase0-phone-kit.tar.gz.sha256"
+          python3 -m json.tool "$HARNESS/manifests/source-manifest.json" >/dev/null
+          python3 -m json.tool "$HARNESS/manifests/sbom.cdx.json" >/dev/null
+
+      - name: Fetch and pin upstream source
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/picoclaw"
+          git clone --filter=blob:none --no-checkout "https://github.com/${UPSTREAM_REPOSITORY}.git" "$src"
+          cd "$src"
+          test "$(git ls-remote origin "refs/tags/${UPSTREAM_TAG}" | awk '{print $1}')" = "$UPSTREAM_TAG_OBJECT"
+          git fetch --depth=1 origin "$UPSTREAM_COMMIT"
+          git checkout --detach "$UPSTREAM_COMMIT"
+          test "$(git rev-parse HEAD)" = "$UPSTREAM_COMMIT"
+          test "$(git rev-parse HEAD^{tree})" = "$UPSTREAM_TREE"
+          test "$(curl -fsSL -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${UPSTREAM_REPOSITORY}/commits/${UPSTREAM_COMMIT}" \
+            | jq -r '.commit.verification.verified')" = true
+          git apply --check "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-qualification.patch"
+          git apply "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-qualification.patch"
+          git apply --check "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-security-overrides.patch"
+          git apply "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-security-overrides.patch"
+          git diff --check
+          echo "PICOCLAW_SOURCE=$src" >> "$GITHUB_ENV"
+
+      - name: Formatting and scoped tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PICOCLAW_SOURCE"
+          go mod verify
+          test -z "$(gofmt -l pkg/channels/telegram/telegram.go pkg/channels/telegram/phase0_qualification_test.go pkg/tools/integration/web.go)"
+          go test -tags stdjson ./pkg/channels/telegram
+          go test -tags stdjson ./pkg/agent
+          go test -tags stdjson -skip 'TestWebTool_Kagi' ./pkg/tools/integration
+          cd "$GITHUB_WORKSPACE"
+          bash "$HARNESS/scripts/ci-selftest.sh"
+
+      - name: Reproducible Android ARM64 build
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/out"
+          mkdir -p "$out/a" "$out/b" "$out/manifests" "$out/evidence" "$out/release"
+          cd "$PICOCLAW_SOURCE"
+          ldflags="-s -w -buildid= -X github.com/sipeed/picoclaw/pkg/config.Version=v0.3.1-phase0.1 -X github.com/sipeed/picoclaw/pkg/config.GitCommit=${UPSTREAM_COMMIT} -X github.com/sipeed/picoclaw/pkg/config.BuildTime=2026-06-30T09:42:07Z -X github.com/sipeed/picoclaw/pkg/config.GoVersion=go${GO_VERSION}"
+          for bin in "$out/a/picoclaw-phase0" "$out/b/picoclaw-phase0"; do
+            GOOS=android GOARCH=arm64 go build -p 1 -trimpath -buildvcs=false -tags stdjson -ldflags "$ldflags" -o "$bin" ./cmd/picoclaw
+          done
+          test "$(sha256sum "$out/a/picoclaw-phase0" | awk '{print $1}')" = "$(sha256sum "$out/b/picoclaw-phase0" | awk '{print $1}')"
+          install -m 0755 "$out/a/picoclaw-phase0" "$out/picoclaw-phase0-v0.3.1-android-arm64"
+          expected="$(jq -r '.qualification_derivative.binary_sha256' "$GITHUB_WORKSPACE/$HARNESS/manifests/source-manifest.json")"
+          actual="$(sha256sum "$out/picoclaw-phase0-v0.3.1-android-arm64" | awk '{print $1}')"
+          test "$actual" = "$expected"
+          go version -m "$out/picoclaw-phase0-v0.3.1-android-arm64" > "$out/evidence/go-version-m.txt"
+          ! grep -q 'kagisearch/kagi-openapi-golang' "$out/evidence/go-version-m.txt"
+          echo "PHASE0_OUT=$out" >> "$GITHUB_ENV"
+
+      - name: SBOM, licenses, and vulnerability verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 "$HARNESS/scripts/generate-sbom.py" \
+            --binary "$PHASE0_OUT/picoclaw-phase0-v0.3.1-android-arm64" \
+            --source "$PICOCLAW_SOURCE" \
+            --output-dir "$PHASE0_OUT/manifests"
+          cmp "$PHASE0_OUT/manifests/sbom.cdx.json" "$HARNESS/manifests/sbom.cdx.json"
+          if awk -F '\t' 'NR>1 && ($3=="UNKNOWN" || $3=="NOT_FOUND" || $3 ~ /^GPL/){bad=1} END{exit bad}' "$PHASE0_OUT/manifests/license-report.tsv"; then :; else
+            echo 'Unknown, missing, or GPL-classified linked license' >&2; exit 1
+          fi
+          GOBIN="$RUNNER_TEMP/bin" go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          set +e
+          "$RUNNER_TEMP/bin/govulncheck" -mode=binary "$PHASE0_OUT/picoclaw-phase0-v0.3.1-android-arm64" > "$PHASE0_OUT/evidence/govulncheck.txt" 2>&1
+          rc=$?
+          set -e
+          ids="$(grep -o 'GO-[0-9]\{4\}-[0-9]\{4\}' "$PHASE0_OUT/evidence/govulncheck.txt" | sort -u | tr '\n' ' ')"
+          test "$rc" = 3
+          test "$ids" = 'GO-2026-5932 '
+          if (cd "$PICOCLAW_SOURCE" && go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
+            echo 'openpgp unexpectedly imported' >&2; exit 1
+          fi
+
+      - name: Rebuild and compare archival phone kit
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$PICOCLAW_SOURCE/LICENSE" "$HARNESS/evidence/upstream/LICENSE"
+          bash "$HARNESS/scripts/build-phone-kit.sh" "$PHASE0_OUT/picoclaw-phase0-v0.3.1-android-arm64" "$PHASE0_OUT/release"
+          expected="$(awk '{print $1}' "$HARNESS/release/phase0-phone-kit.tar.gz.sha256")"
+          actual="$(sha256sum "$PHASE0_OUT/release/phase0-phone-kit.tar.gz" | awk '{print $1}')"
+          test "$actual" = "$expected"
+
+      - name: Optional public-repository provenance attestation
+        if: github.event_name == 'workflow_dispatch' && github.repository_visibility == 'public'
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: |
+            ${{ env.PHASE0_OUT }}/picoclaw-phase0-v0.3.1-android-arm64
+            ${{ env.PHASE0_OUT }}/release/phase0-phone-kit.tar.gz
+
+      - name: Upload CI evidence
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: phase0-preservation-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ env.PHASE0_OUT }}/picoclaw-phase0-v0.3.1-android-arm64
+            ${{ env.PHASE0_OUT }}/manifests/
+            ${{ env.PHASE0_OUT }}/evidence/
+            ${{ env.PHASE0_OUT }}/release/phase0-phone-kit.tar.gz
+            ${{ env.PHASE0_OUT }}/release/phase0-phone-kit.tar.gz.sha256

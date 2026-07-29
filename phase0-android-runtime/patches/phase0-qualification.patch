@@ -1,0 +1,447 @@
+diff --git a/pkg/channels/telegram/telegram.go b/pkg/channels/telegram/telegram.go
+index d7265fb..903de3a 100644
+--- a/pkg/channels/telegram/telegram.go
++++ b/pkg/channels/telegram/telegram.go
+@@ -61,6 +61,13 @@ type TelegramChannel struct {
+ 	tgCfg     *config.TelegramSettings
+ 	progress  *channels.ToolFeedbackAnimator
+ 
++	// qualificationMode is an intentionally narrow Phase 0 runtime guard.
++	// It is enabled only by PICOCLAW_PHASE0_QUALIFICATION=1 and is not a
++	// general-purpose product feature. It restricts ingress to one numeric
++	// owner in a private chat and adds only /status and /echo diagnostics.
++	qualificationMode  bool
++	qualificationStart time.Time
++
+ 	registerFunc      func(context.Context, []commands.Definition) error
+ 	commandRegDelayFn func(int) time.Duration
+ 	commandRegCancel  context.CancelFunc
+@@ -87,6 +94,19 @@ func NewTelegramChannel(
+ 	bus *bus.MessageBus,
+ ) (*TelegramChannel, error) {
+ 	channelName := bc.Name()
++	qualificationMode := os.Getenv("PICOCLAW_PHASE0_QUALIFICATION") == "1"
++	if qualificationMode {
++		if len(bc.AllowFrom) != 1 {
++			return nil, fmt.Errorf("phase0 qualification requires exactly one numeric Telegram owner ID")
++		}
++		ownerID := strings.TrimSpace(bc.AllowFrom[0])
++		if ownerID == "" || ownerID == "*" {
++			return nil, fmt.Errorf("phase0 qualification forbids an empty or wildcard Telegram owner ID")
++		}
++		if _, err := strconv.ParseInt(ownerID, 10, 64); err != nil {
++			return nil, fmt.Errorf("phase0 qualification requires a numeric Telegram owner ID")
++		}
++	}
+ 	var opts []telego.BotOption
+ 
+ 	if telegramCfg.Proxy != "" {
+@@ -129,11 +149,13 @@ func NewTelegramChannel(
+ 	)
+ 
+ 	ch := &TelegramChannel{
+-		BaseChannel: base,
+-		bot:         bot,
+-		bc:          bc,
+-		chatIDs:     make(map[string]int64),
+-		tgCfg:       telegramCfg,
++		BaseChannel:        base,
++		bot:                bot,
++		bc:                 bc,
++		chatIDs:            make(map[string]int64),
++		tgCfg:              telegramCfg,
++		qualificationMode:  qualificationMode,
++		qualificationStart: time.Now(),
+ 
+ 		mediaGroups:     make(map[string]*telegramMediaGroup),
+ 		mediaGroupDelay: telegramMediaGroupDelay(telegramCfg),
+@@ -1033,6 +1055,60 @@ func (c *TelegramChannel) flushMediaGroup(ctx context.Context, key string, gener
+ 	}
+ }
+ 
++func phase0QualificationKind(content string) string {
++	command, _, _ := strings.Cut(strings.TrimSpace(content), " ")
++	switch strings.ToLower(command) {
++	case "/status":
++		return "status"
++	case "/echo":
++		return "echo"
++	default:
++		return "rejected"
++	}
++}
++
++func phase0QualificationResponse(
++	enabled bool,
++	privateChat bool,
++	allowed bool,
++	content string,
++	uptime time.Duration,
++) (handled bool, response string) {
++	if !enabled {
++		return false, ""
++	}
++	if !privateChat {
++		return true, "This qualification bot accepts private chats only."
++	}
++	if !allowed {
++		return true, "Access denied."
++	}
++
++	content = strings.TrimSpace(content)
++	command, arg, _ := strings.Cut(content, " ")
++	switch strings.ToLower(command) {
++	case "/status":
++		seconds := int64(uptime / time.Second)
++		if seconds < 0 {
++			seconds = 0
++		}
++		return true, fmt.Sprintf("phase0_status=ok uptime_seconds=%d", seconds)
++	case "/echo":
++		arg = strings.TrimSpace(arg)
++		if arg == "" {
++			return true, "Usage: /echo <text>"
++		}
++		const maxEchoRunes = 512
++		runes := []rune(arg)
++		if len(runes) > maxEchoRunes {
++			runes = runes[:maxEchoRunes]
++		}
++		return true, "echo: " + string(runes)
++	default:
++		return false, ""
++	}
++}
++
+ func (c *TelegramChannel) handleMessages(ctx context.Context, messages []*telego.Message) error {
+ 	if len(messages) == 0 {
+ 		return nil
+@@ -1065,6 +1141,51 @@ func (c *TelegramChannel) handleMessages(ctx context.Context, messages []*telego
+ 		DisplayName: user.FirstName,
+ 	}
+ 
++	qualificationContent := strings.TrimSpace(message.Text)
++	if qualificationContent == "" {
++		qualificationContent = strings.TrimSpace(message.Caption)
++	}
++	qualificationStarted := time.Now()
++	qualificationAllowed := c.IsAllowedSender(sender)
++	if handled, response := phase0QualificationResponse(
++		c.qualificationMode,
++		message.Chat.Type == "private",
++		qualificationAllowed,
++		qualificationContent,
++		time.Since(c.qualificationStart),
++	); handled {
++		result := "rejected"
++		replyCount := 0
++		// Tests intentionally construct a channel without a network bot. In the
++		// real runtime NewTelegramChannel always sets c.bot.
++		if c.bot != nil && response != "" {
++			ids, sendErr := c.sendCaptionText(ctx, message.Chat.ID, 0, response)
++			if sendErr != nil {
++				logger.WarnCF("phase0", "Qualification reply failed", map[string]any{
++					"message_id": message.MessageID,
++					"error":      "telegram send failed",
++				})
++				return nil
++			}
++			replyCount = len(ids)
++			result = "replied"
++		}
++		logger.InfoCF("phase0", "Qualification message handled", map[string]any{
++			"message_id":  message.MessageID,
++			"kind":        phase0QualificationKind(qualificationContent),
++			"result":      result,
++			"reply_count": replyCount,
++			"latency_ms":  time.Since(qualificationStarted).Milliseconds(),
++		})
++		return nil
++	}
++	if c.qualificationMode {
++		logger.InfoCF("phase0", "Owner model message accepted", map[string]any{
++			"message_id": message.MessageID,
++			"kind":       "model",
++		})
++	}
++
+ 	// check allowlist to avoid downloading attachments for rejected users
+ 	if !c.IsAllowedSender(sender) {
+ 		logger.DebugCF("telegram", "Message rejected by allowlist", map[string]any{
+diff --git a/pkg/tools/integration/web.go b/pkg/tools/integration/web.go
+index d7a3112..5b21e61 100644
+--- a/pkg/tools/integration/web.go
++++ b/pkg/tools/integration/web.go
+@@ -18,8 +18,6 @@ import (
+ 	"time"
+ 	"unicode"
+ 
+-	kagiopenapi "github.com/kagisearch/kagi-openapi-golang"
+-
+ 	"github.com/sipeed/picoclaw/pkg/config"
+ 	"github.com/sipeed/picoclaw/pkg/logger"
+ 	"github.com/sipeed/picoclaw/pkg/utils"
+@@ -252,23 +250,6 @@ func mapBaiduRecencyFilter(rangeCode string) string {
+ 	}
+ }
+ 
+-func mapKagiLensTimeFilter(rangeCode string, now time.Time) *kagiopenapi.SearchRequestLens {
+-	lens := kagiopenapi.NewSearchRequestLens()
+-	switch rangeCode {
+-	case "d":
+-		lens.SetTimeRelative("day")
+-	case "w":
+-		lens.SetTimeRelative("week")
+-	case "m":
+-		lens.SetTimeRelative("month")
+-	case "y":
+-		lens.SetTimeAfter(now.AddDate(-1, 0, 0).Format("2006-01-02"))
+-	default:
+-		return nil
+-	}
+-	return lens
+-}
+-
+ type BraveSearchProvider struct {
+ 	keyPool *APIKeyPool
+ 	proxy   string
+@@ -514,78 +495,12 @@ func (p *KagiSearchProvider) Search(
+ 	count int,
+ 	rangeCode string,
+ ) (string, error) {
+-	if p.keyPool == nil || len(p.keyPool.keys) == 0 {
+-		return "", errors.New("no API key provided")
+-	}
+-
+-	client := p.client
+-	if client == nil {
+-		client = &http.Client{Timeout: searchTimeout}
+-	}
+-
+-	apiClient := newKagiAPIClient(client, p.baseURL)
+-	searchReq := kagiopenapi.NewSearchRequest(query)
+-	searchReq.SetLimit(int32(count))
+-	if lens := mapKagiLensTimeFilter(rangeCode, time.Now().UTC()); lens != nil {
+-		searchReq.SetLens(*lens)
+-	}
+-
+-	var lastErr error
+-	iter := p.keyPool.NewIterator()
+-
+-	for {
+-		apiKey, ok := iter.Next()
+-		if !ok {
+-			break
+-		}
+-
+-		authCtx := context.WithValue(ctx, kagiopenapi.ContextAccessToken, apiKey)
+-		searchResp, httpResp, err := apiClient.SearchAPI.Search(authCtx).SearchRequest(*searchReq).Execute()
+-		if httpResp != nil && httpResp.Body != nil {
+-			defer httpResp.Body.Close()
+-		}
+-		if err != nil {
+-			if httpResp != nil {
+-				if httpResp.StatusCode >= 200 && httpResp.StatusCode < 300 {
+-					results, parseErr := fallbackKagiSearchResults(httpResp, count)
+-					if parseErr != nil {
+-						return "", parseErr
+-					}
+-					return formatKagiSearchResults(query, results), nil
+-				}
+-				lastErr = kagiStatusError(httpResp.StatusCode)
+-				if httpResp.StatusCode == http.StatusTooManyRequests ||
+-					httpResp.StatusCode == http.StatusUnauthorized ||
+-					httpResp.StatusCode == http.StatusForbidden ||
+-					httpResp.StatusCode >= 500 {
+-					continue
+-				}
+-				return "", lastErr
+-			}
+-			lastErr = fmt.Errorf("request failed: %w", err)
+-			continue
+-		}
+-
+-		results := kagiSearchResults(searchResp, count)
+-		if len(results) == 0 {
+-			return fmt.Sprintf("No results for: %s", query), nil
+-		}
+-
+-		return formatKagiSearchResults(query, results), nil
+-	}
+-
+-	return "", fmt.Errorf("all api keys failed, last error: %w", lastErr)
+-}
+-
+-func newKagiAPIClient(client *http.Client, baseURL string) *kagiopenapi.APIClient {
+-	cfg := kagiopenapi.NewConfiguration()
+-	cfg.UserAgent = fmt.Sprintf(userAgentHonest, config.Version)
+-	cfg.HTTPClient = client
+-	cfg.Servers = kagiopenapi.ServerConfigurations{{
+-		URL:         kagiServerURL(baseURL),
+-		Description: "Kagi Search API endpoint",
+-	}}
+-	return kagiopenapi.NewAPIClient(cfg)
++	// Phase 0 deliberately disables Kagi. The generated Kagi client imported by
++	// v0.3.1 has no license file in its upstream repository, and web search is
++	// outside the qualification scope. Keep the provider shape for config
++	// compatibility but do not link or execute that client.
++	_, _, _, _ = ctx, query, count, rangeCode
++	return "", errors.New("Kagi search is disabled in Phase 0 qualification mode")
+ }
+ 
+ func formatKagiSearchResults(query string, results []SearchResultItem) string {
+@@ -733,33 +648,6 @@ func appendFallbackKagiResults(
+ 	}
+ }
+ 
+-func kagiSearchResults(searchResp *kagiopenapi.Search200Response, count int) []SearchResultItem {
+-	if count <= 0 {
+-		count = 10
+-	}
+-	if searchResp == nil || searchResp.Data == nil {
+-		return nil
+-	}
+-
+-	results := make([]SearchResultItem, 0, count)
+-	for _, item := range searchResp.Data.Search {
+-		if len(results) >= count {
+-			break
+-		}
+-		urlStr := strings.TrimSpace(item.GetUrl())
+-		if urlStr == "" {
+-			continue
+-		}
+-		results = append(results, SearchResultItem{
+-			Title:     cleanSearchText(item.GetTitle()),
+-			URL:       urlStr,
+-			Snippet:   cleanSearchText(item.GetSnippet()),
+-			Published: strings.TrimSpace(item.GetTime()),
+-		})
+-	}
+-	return results
+-}
+-
+ func cleanSearchText(content string) string {
+ 	return strings.TrimSpace(html.UnescapeString(stripTags(content)))
+ }
+diff --git a/pkg/channels/telegram/phase0_qualification_test.go b/pkg/channels/telegram/phase0_qualification_test.go
+new file mode 100644
+index 0000000..835cf7f
+--- /dev/null
++++ b/pkg/channels/telegram/phase0_qualification_test.go
+@@ -0,0 +1,115 @@
++package telegram
++
++import (
++	"context"
++	"strings"
++	"testing"
++	"time"
++
++	"github.com/mymmrac/telego"
++
++	"github.com/sipeed/picoclaw/pkg/bus"
++	"github.com/sipeed/picoclaw/pkg/channels"
++)
++
++func TestPhase0QualificationResponse(t *testing.T) {
++	tests := []struct {
++		name        string
++		enabled     bool
++		privateChat bool
++		allowed     bool
++		content     string
++		wantHandled bool
++		wantPrefix  string
++	}{
++		{"disabled", false, true, true, "/status", false, ""},
++		{"group denied", true, false, true, "/status", true, "This qualification bot accepts private chats only."},
++		{"unknown denied", true, true, false, "/status", true, "Access denied."},
++		{"status", true, true, true, "/status", true, "phase0_status=ok uptime_seconds=12"},
++		{"echo", true, true, true, "/echo hello", true, "echo: hello"},
++		{"echo usage", true, true, true, "/echo", true, "Usage:"},
++		{"plain owner message reaches agent", true, true, true, "hello model", false, ""},
++	}
++
++	for _, tt := range tests {
++		t.Run(tt.name, func(t *testing.T) {
++			handled, response := phase0QualificationResponse(
++				tt.enabled, tt.privateChat, tt.allowed, tt.content, 12*time.Second,
++			)
++			if handled != tt.wantHandled {
++				t.Fatalf("handled=%v want=%v", handled, tt.wantHandled)
++			}
++			if !strings.HasPrefix(response, tt.wantPrefix) {
++				t.Fatalf("response=%q want prefix=%q", response, tt.wantPrefix)
++			}
++		})
++	}
++}
++
++func TestPhase0EchoIsBounded(t *testing.T) {
++	_, response := phase0QualificationResponse(true, true, true, "/echo "+strings.Repeat("x", 700), 0)
++	if got := len([]rune(strings.TrimPrefix(response, "echo: "))); got != 512 {
++		t.Fatalf("echo rune length=%d want=512", got)
++	}
++}
++
++func TestPhase0IngressRejectsUnauthorizedAndGroupsBeforeBus(t *testing.T) {
++	messageBus := bus.NewMessageBus()
++	ch := &TelegramChannel{
++		BaseChannel:        channels.NewBaseChannel("telegram", nil, messageBus, []string{"42"}),
++		chatIDs:            make(map[string]int64),
++		ctx:                context.Background(),
++		qualificationMode:  true,
++		qualificationStart: time.Now(),
++	}
++
++	cases := []*telego.Message{
++		{
++			Text: "/status", MessageID: 1,
++			Chat: telego.Chat{ID: 999, Type: "private"},
++			From: &telego.User{ID: 99, FirstName: "Unknown"},
++		},
++		{
++			Text: "run a tool", MessageID: 2,
++			Chat: telego.Chat{ID: -100, Type: "group"},
++			From: &telego.User{ID: 42, FirstName: "Owner"},
++		},
++	}
++	for _, msg := range cases {
++		if err := ch.handleMessage(context.Background(), msg); err != nil {
++			t.Fatalf("handleMessage error: %v", err)
++		}
++		select {
++		case inbound := <-messageBus.InboundChan():
++			t.Fatalf("rejected message reached agent bus: %#v", inbound)
++		default:
++		}
++	}
++}
++
++func TestPhase0PrivateOwnerPlainMessageReachesBus(t *testing.T) {
++	messageBus := bus.NewMessageBus()
++	ch := &TelegramChannel{
++		BaseChannel:        channels.NewBaseChannel("telegram", nil, messageBus, []string{"42"}),
++		chatIDs:            make(map[string]int64),
++		ctx:                context.Background(),
++		qualificationMode:  true,
++		qualificationStart: time.Now(),
++	}
++	msg := &telego.Message{
++		Text: "hello model", MessageID: 3,
++		Chat: telego.Chat{ID: 42, Type: "private"},
++		From: &telego.User{ID: 42, FirstName: "Owner"},
++	}
++	if err := ch.handleMessage(context.Background(), msg); err != nil {
++		t.Fatalf("handleMessage error: %v", err)
++	}
++	select {
++	case inbound := <-messageBus.InboundChan():
++		if inbound.Content != "hello model" {
++			t.Fatalf("content=%q", inbound.Content)
++		}
++	default:
++		t.Fatal("owner private message did not reach agent bus")
++	}
++}
