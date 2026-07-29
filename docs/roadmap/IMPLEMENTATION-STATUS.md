@@ -9,8 +9,8 @@
 | 4 | COMPLETE | `43ed57c` | traversal/symlink/secret/atomic/process/approval tests, race, vet | Termux has no strong OS sandbox | Structured argv only; no shell |
 | 5 | COMPLETE | `15b8567` | local repository and mock GitHub contract tests, race, vet | Real GitHub credentials pending | Draft PR only; main/force/destructive operations denied |
 | 6 | COMPLETE | `d5d79d0` | FTS5 lifecycle and secret-rejection tests, race, vet | Model summarization quality pending | Explicit/provenance memory without vector DB |
-| 7 | RECONSTRUCTION IN PROGRESS | — | Baseline at `d5d79d0` passed unit, race, vet, Linux/Android builds, secret scan | Physical-phone scheduler validation pending | No Phase 7 implementation exists on the remote; rebuilding because the prior local-only work was lost during the Arena workspace failure |
-| 8 | PLANNED | — | — | — | Skills |
+| 7 | COMPLETE | `074e61b` | 18 scheduler tests plus migration, unit, race, vet, Linux/Android builds, secret scan | Physical-phone scheduler validation pending | Durable one-time/recurring jobs, missed-run policy, retries, locks, recovery, cancellation, policy-bound execution; reconstructed from remote after the prior local-only loss |
+| 8 | IN PROGRESS | — | — | — | Skills |
 | 9 | PLANNED | — | — | — | MCP |
 | 10 | PLANNED | — | — | Search credentials optional | Web/documents |
 | 11 | PLANNED | — | — | Image provider credentials pending | Images |
