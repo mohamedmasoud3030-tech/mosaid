@@ -18,6 +18,9 @@ import (
 type Handler interface {
 	Handle(context.Context, message.Inbound) (message.Outbound, error)
 }
+type MessageGuard interface {
+	Allow(int64, string) error
+}
 type Gateway struct {
 	Client      Client
 	Handler     Handler
@@ -26,10 +29,14 @@ type Gateway struct {
 	Log         *slog.Logger
 	Health      *health.Writer
 	Store       *storage.DB
+	Guard       MessageGuard
 	MaxAttempts int
 }
 
 func (g *Gateway) Run(ctx context.Context) error {
+	if g.Client == nil || g.Handler == nil || g.Log == nil || g.Health == nil || g.Guard == nil || g.Owner <= 0 {
+		return errors.New("telegram gateway dependencies unavailable")
+	}
 	var offset int64
 	failures := 0
 	if g.MaxAttempts <= 0 {
@@ -67,6 +74,11 @@ func (g *Gateway) Run(ctx context.Context) error {
 			if in.UserID != g.Owner {
 				_ = g.Client.Send(ctx, message.Outbound{ChatID: in.ChatID, Text: "Access denied."})
 				g.Log.Warn("unauthorized user rejected", "update_id", in.UpdateID)
+				continue
+			}
+			if err := g.Guard.Allow(in.UserID, in.Text); err != nil {
+				_ = g.Client.Send(ctx, message.Outbound{ChatID: in.ChatID, Text: "Request rate limited."})
+				g.Log.Warn("telegram message limited", "update_id", in.UpdateID)
 				continue
 			}
 			if g.Store == nil {

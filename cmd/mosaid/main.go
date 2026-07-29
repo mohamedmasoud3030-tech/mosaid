@@ -12,6 +12,7 @@ import (
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/memory"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/observability"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/secrets"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/telegram"
@@ -44,16 +45,20 @@ func main() {
 		fmt.Fprintln(os.Stderr, "config:", err)
 		os.Exit(1)
 	}
-	token, err := config.ReadSecret(cfg.Telegram.TokenFile)
+	secretSource := secrets.FileSource{}
+	tokenValue, err := secretSource.Read(cfg.Telegram.TokenFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "telegram secret:", err)
 		os.Exit(1)
 	}
-	key, err := config.ReadSecret(cfg.Model.APIKeyFile)
+	defer tokenValue.Destroy()
+	keyValue, err := secretSource.Read(cfg.Model.APIKeyFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "model secret:", err)
 		os.Exit(1)
 	}
+	defer keyValue.Destroy()
+	token, key := tokenValue.String(), keyValue.String()
 	red := observability.NewRedactor(token, key)
 	log := observability.New(os.Stdout, red)
 	lock, err := security.Acquire(cfg.DataDir)
@@ -75,10 +80,20 @@ func main() {
 		os.Exit(1)
 	}
 	defer db.Close()
+	if err = db.IntegrityCheck(context.Background()); err != nil {
+		log.Error("database integrity", "error", err.Error())
+		os.Exit(1)
+	}
 	approvalManager := &approval.Manager{DB: db.SQL(), Audit: audit.Logger{DB: db.SQL()}}
 	memoryStore := &memory.Store{DB: db.SQL()}
-	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version, Approvals: approvalManager, Memory: memoryStore}
-	g := &telegram.Gateway{Client: telegram.New(token), Handler: a, Owner: cfg.OwnerTelegramID, PollTimeout: cfg.Telegram.PollTimeoutSeconds, Log: log, Health: h, Store: db, MaxAttempts: 5}
+	budgetLimits := security.BudgetLimits{ModelSteps: cfg.Limits.MaxModelSteps, ToolCalls: cfg.Limits.MaxToolCalls, Tokens: cfg.Limits.MaxTokens, CostUSD: cfg.Limits.MaxCostUSD, Retries: cfg.Limits.MaxRetries}
+	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version, Approvals: approvalManager, Memory: memoryStore, Limits: budgetLimits}
+	guard, err := security.NewMessageGuard(security.SystemClock{}, cfg.Limits.MaxMessageBytes, cfg.Limits.MessagesPerMinute, cfg.Limits.MessageBurst)
+	if err != nil {
+		log.Error("message guard", "error", err.Error())
+		os.Exit(1)
+	}
+	g := &telegram.Gateway{Client: telegram.New(token), Handler: a, Owner: cfg.OwnerTelegramID, PollTimeout: cfg.Telegram.PollTimeoutSeconds, Log: log, Health: h, Store: db, Guard: guard, MaxAttempts: cfg.Limits.MaxRetries}
 	log.Info("mosaid started", "version", version, "commit", commit)
 	if err = g.Run(ctx); err != nil {
 		log.Error("gateway stopped", "error", err.Error())

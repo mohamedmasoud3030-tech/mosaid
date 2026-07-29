@@ -1,65 +1,46 @@
 # Security policy
 
-## Project status
+## Product status
 
-Mosaid is pre-product research and an Android runtime qualification harness. It is not ready for production credentials, sensitive repositories, public Telegram groups, or unattended publishing.
+Mosaid is a security-hardened **product foundation preview**, not a production service. Software gates run on Linux CI and Android ARM64 is cross-compiled. Physical Android/Termux behavior, real Telegram/model credentials, real MCP servers, image-provider credentials, Meta credentials, and an Instagram Professional account remain `PENDING_EXTERNAL_VALIDATION`.
+
+No real Instagram publishing has been performed.
 
 ## Reporting
 
-Until a dedicated private advisory process is configured, report suspected vulnerabilities privately to the repository owner. Do not create a public issue containing a token, exploit, device identifier, private path, or unredacted diagnostic archive.
+Report suspected vulnerabilities privately to the repository owner. Do not open a public issue containing tokens, Authorization headers, private paths, device identifiers, staging URLs, personal data, or unredacted diagnostics.
 
-## Current trust model
+## Trust model
 
-- One trusted owner and one private Telegram chat.
-- All Phase 0 tools, Skills, MCP, cron commands, web, filesystem tools, Shell, remote execution, publishing, and self-update are disabled.
-- Android/Termux provides an app UID boundary from ordinary unrelated apps; it does not isolate processes running under the Termux UID from one another.
-- `chmod 600`, redaction, allowlists, and application path checks are defense in depth, not an OS sandbox against malicious code.
-- The Phase 0 binary must not be used with production accounts or keys.
+- One trusted numeric Telegram owner in a private chat.
+- Model output, web/documents, repositories, MCP servers, provider responses, and generated artifacts are untrusted.
+- Every Tool side effect is policy gated; high-risk and publishing actions require bound, expiring, single-use approval.
+- No free-form shell, browser automation, dynamic Go plugins, MCP auto-discovery, self-modification, or automatic self-update.
+- Official Meta Graph API only; no passwords, cookies, or unofficial Instagram API.
+
+See [the product threat model](docs/security/THREAT-MODEL.md) and [hardening controls](docs/security/HARDENING.md).
 
 ## Secret rules
 
 Never commit or attach:
 
-- `.env` or `.security.yml`;
-- Telegram bot tokens;
-- model-provider or GitHub tokens;
-- Authorization headers;
-- private keys;
-- phone diagnostics before running the collector/redaction checks;
-- future phone results containing personal identifiers.
+- `.env`, `.security.yml`, credential stores, private keys, or access tokens;
+- Telegram, model, GitHub, MCP, image-provider, or Meta credentials;
+- live media-staging URLs;
+- private diagnostics, owner messages, memory exports, or personal data.
 
-Use dedicated low-quota test credentials and revoke them after qualification. The repository CI performs pattern-based secret scanning, but scanners do not replace manual review.
+Runtime secrets must be one-line regular non-symlink files, mode `0600` or stricter. Use dedicated low-quota test credentials and revoke them after external validation.
 
-## Phase 0 controls
+## Termux limitation
 
-The qualification harness enforces:
+Termux does **not** provide a strong sandbox between processes running under its Android app UID. A malicious repository test or MCP executable under the same UID may read Mosaid files and secrets despite application-level path and environment controls. Do not run arbitrary untrusted code on the credential-bearing phone. Prefer a separate remote sandbox for such work.
 
-- one numeric Telegram owner;
-- private chat only;
-- bounded `/echo` and non-sensitive `/status`;
-- config and binary checksum verification before process start;
-- tool and Skill disablement at config and turn-profile layers;
-- exact-value log redaction and rotated logs;
-- singleton supervision and clean shutdown;
-- diagnostics packaging that refuses to proceed when an exact active secret is found outside the secret file.
+## Continuous controls
 
-See:
+Product CI verifies formatting, module checksums, unit/race tests, vet, staticcheck, govulncheck, Linux and Android builds, binary checksums, secret scan, deterministic CycloneDX SBOM, license classification, and a clean working tree. Tracked evidence is under [`security/`](security/).
 
-- `docs/phase0/THREAT-NOTES.md`
-- `docs/phase0/ACCEPTANCE-CRITERIA.md`
-- `phase0-android-runtime/manifests/sbom.cdx.json`
-- `THIRD_PARTY_NOTICES.md`
+Security scans are point-in-time evidence, not proof that the system is vulnerability-free.
 
-## Unsupported security claims
+## Historical Phase 0
 
-The project does not currently claim:
-
-- exactly-once Telegram processing;
-- safe arbitrary Shell execution;
-- safe execution of untrusted repository tests;
-- multi-user isolation;
-- Android background-service reliability;
-- production-ready secret storage;
-- safe external Skill/MCP installation.
-
-These claims require future design and testing; Phase 1 has not started.
+The `phase0-harness-v1` tag, release, harness, reports, and their earlier advisory analysis are immutable historical qualification evidence. Product hardening does not claim that the archived PicoClaw binary passed physical-phone testing.

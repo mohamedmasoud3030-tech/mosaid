@@ -424,15 +424,6 @@ func clonePolicies(input map[string]policy.Tool) map[string]policy.Tool {
 	return output
 }
 
-func containsMode(values []policy.Mode, wanted policy.Mode) bool {
-	for _, value := range values {
-		if value == wanted {
-			return true
-		}
-	}
-	return false
-}
-
 func isSubset(requested, allowed []string) bool {
 	for _, value := range requested {
 		if !contains(allowed, value) {

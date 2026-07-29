@@ -30,7 +30,7 @@ var apiVersionPattern = regexp.MustCompile(`^v[0-9]{1,3}\.[0-9]{1,2}$`)
 
 func NewGraphClient(config MetaConfig) (*GraphClient, error) {
 	if !apiVersionPattern.MatchString(config.APIVersion) || config.Tokens == nil {
-		return nil, errors.New("Meta Graph API version and token source required")
+		return nil, errors.New("meta Graph API version and token source required")
 	}
 	if config.Client == nil {
 		config.Client = &http.Client{}
@@ -39,7 +39,7 @@ func NewGraphClient(config MetaConfig) (*GraphClient, error) {
 		config.MaxResponseBytes = 1024 * 1024
 	}
 	if config.MaxResponseBytes < 1024 || config.MaxResponseBytes > 4*1024*1024 {
-		return nil, errors.New("Meta response limit invalid")
+		return nil, errors.New("meta response limit invalid")
 	}
 	return &GraphClient{config: config}, nil
 }
@@ -103,7 +103,7 @@ func (c *GraphClient) PublishContainer(ctx context.Context, accountID, container
 func (c *GraphClient) request(ctx context.Context, method, path string, values url.Values, idempotencyKey string, target any) error {
 	token, err := c.config.Tokens.BearerToken(ctx)
 	if err != nil || token == "" || strings.ContainsAny(token, "\r\n") {
-		return errors.New("Meta credential unavailable")
+		return errors.New("meta credential unavailable")
 	}
 	endpoint := "https://graph.facebook.com/" + c.config.APIVersion + path
 	var body io.Reader
@@ -125,18 +125,18 @@ func (c *GraphClient) request(ctx context.Context, method, path string, values u
 		request.Header.Set("Idempotency-Key", idempotencyKey)
 	}
 	client := *c.config.Client
-	client.CheckRedirect = func(*http.Request, []*http.Request) error { return errors.New("Meta redirects disabled") }
+	client.CheckRedirect = func(*http.Request, []*http.Request) error { return errors.New("meta redirects disabled") }
 	response, err := client.Do(request)
 	if err != nil {
 		return err
 	}
 	defer response.Body.Close()
 	if response.StatusCode < 200 || response.StatusCode > 299 {
-		return fmt.Errorf("Meta Graph API HTTP status %d", response.StatusCode)
+		return fmt.Errorf("meta Graph API HTTP status %d", response.StatusCode)
 	}
 	encoded, err := io.ReadAll(io.LimitReader(response.Body, c.config.MaxResponseBytes+1))
 	if err != nil || int64(len(encoded)) > c.config.MaxResponseBytes {
-		return errors.New("Meta Graph API response too large")
+		return errors.New("meta Graph API response too large")
 	}
 	decoder := json.NewDecoder(bytes.NewReader(encoded))
 	decoder.DisallowUnknownFields()

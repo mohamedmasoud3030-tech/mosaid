@@ -3,9 +3,11 @@ package tools
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/audit"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/policy"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 	"os"
 	"path/filepath"
@@ -49,6 +51,22 @@ func TestProcessProfiles(t *testing.T) {
 		t.Fatal("shell")
 	}
 }
+func TestRegistryEnforcesContextToolBudget(t *testing.T) {
+	registry := NewRegistry(nil)
+	if err := registry.Register(Registered{Spec: policy.Tool{Name: "read", Version: "1", Risk: policy.Safe, Modes: []policy.Mode{policy.Read}, Timeout: time.Second, OutputLimit: 10}, Run: func(context.Context, json.RawMessage) (any, error) { return "ok", nil }}); err != nil {
+		t.Fatal(err)
+	}
+	budget, _ := security.NewBudget(security.BudgetLimits{ModelSteps: 1, ToolCalls: 1, Tokens: 1, CostUSD: 1, Retries: 1})
+	ctx := security.WithBudget(context.Background(), budget)
+	request := Request{Name: "read", Arguments: json.RawMessage(`{}`), Mode: policy.Read}
+	if _, err := registry.Execute(ctx, request); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := registry.Execute(ctx, request); !errors.Is(err, security.ErrBudgetExceeded) {
+		t.Fatalf("err=%v", err)
+	}
+}
+
 func TestRegistryApprovalBinding(t *testing.T) {
 	d, e := storage.Open(filepath.Join(t.TempDir(), "d.db"))
 	if e != nil {

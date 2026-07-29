@@ -8,6 +8,7 @@ import (
 	"errors"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/policy"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"sync"
 	"time"
 )
@@ -75,6 +76,11 @@ func (r *Registry) Execute(ctx context.Context, q Request) (Result, error) {
 	r.mu.RUnlock()
 	if !ok {
 		return Result{}, errors.New("tool not registered")
+	}
+	if budget, exists := security.BudgetFromContext(ctx); exists {
+		if err := budget.UseTool(); err != nil {
+			return Result{}, err
+		}
 	}
 	d := policy.Evaluate(x.Spec, q.Mode)
 	if !d.Allowed && !d.NeedsApproval {

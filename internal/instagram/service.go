@@ -232,7 +232,7 @@ func (s *Service) Resume(ctx context.Context, id string) (result PublishResult, 
 		}
 	}
 	if !finished {
-		err = errors.New("Instagram container polling exhausted")
+		err = errors.New("instagram container polling exhausted")
 		return PublishResult{}, err
 	}
 	current, getErr := s.Store.Get(ctx, draft.ID)
@@ -290,7 +290,7 @@ func (s *Service) CleanupExpired(ctx context.Context) error {
 
 func (s *Service) validateDependencies() error {
 	if s == nil || s.Store == nil || s.Artifacts == nil || s.Meta == nil || s.Stager == nil || s.Clock == nil || s.Sleeper == nil || s.OwnerID == 0 || s.PollInterval <= 0 || s.PollInterval > time.Minute || s.MaxPolls < 1 || s.MaxPolls > 60 {
-		return errors.New("Instagram service dependencies or limits unavailable")
+		return errors.New("instagram service dependencies or limits unavailable")
 	}
 	return nil
 }

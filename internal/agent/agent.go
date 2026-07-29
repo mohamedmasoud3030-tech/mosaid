@@ -8,6 +8,7 @@ import (
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/memory"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 	"strconv"
 	"strings"
@@ -22,6 +23,7 @@ type Agent struct {
 	Version   string
 	Approvals *approval.Manager
 	Memory    *memory.Store
+	Limits    security.BudgetLimits
 	mu        sync.Mutex
 	cancel    context.CancelFunc
 }
@@ -125,7 +127,21 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	if err != nil {
 		return out, err
 	}
-	run, cancel := context.WithCancel(ctx)
+	budget, err := security.NewBudget(a.Limits)
+	if err != nil {
+		return out, err
+	}
+	if err = budget.UseModelStep(); err != nil {
+		return out, err
+	}
+	inputCharacters := 0
+	for _, item := range hist {
+		inputCharacters += len(item.Content)
+	}
+	if err = budget.UseTokens(estimatedTokens(inputCharacters)); err != nil {
+		return out, err
+	}
+	run, cancel := context.WithCancel(security.WithBudget(ctx, budget))
 	a.mu.Lock()
 	if a.cancel != nil {
 		a.cancel()
@@ -140,7 +156,17 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	if err != nil {
 		return out, err
 	}
+	if err = budget.UseTokens(estimatedTokens(len(answer))); err != nil {
+		return out, err
+	}
 	_ = a.Sessions.Append(in.ChatID, "assistant", answer)
 	out.Text = answer
 	return out, nil
+}
+
+func estimatedTokens(characters int) int {
+	if characters <= 0 {
+		return 0
+	}
+	return (characters + 3) / 4
 }

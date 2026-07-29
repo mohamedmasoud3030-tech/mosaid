@@ -8,11 +8,11 @@ import (
 
 var (
 	ErrInvalidDraft    = errors.New("invalid Instagram draft")
-	ErrDraftConflict   = errors.New("Instagram draft idempotency conflict")
-	ErrNotDue          = errors.New("Instagram draft is not due")
-	ErrApprovalBinding = errors.New("Instagram publish approval binding mismatch")
-	ErrRetryExhausted  = errors.New("Instagram publish retry budget exhausted")
-	ErrContainer       = errors.New("Instagram media container failed")
+	ErrDraftConflict   = errors.New("instagram draft idempotency conflict")
+	ErrNotDue          = errors.New("instagram draft is not due")
+	ErrApprovalBinding = errors.New("instagram publish approval binding mismatch")
+	ErrRetryExhausted  = errors.New("instagram publish retry budget exhausted")
+	ErrContainer       = errors.New("instagram media container failed")
 )
 
 type PrepareRequest struct {
