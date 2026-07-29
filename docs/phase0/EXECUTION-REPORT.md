@@ -100,7 +100,7 @@ The generated phone kit includes:
 Final phone-kit SHA-256:
 
 ```text
-72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63
+78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e
 ```
 
 ## 3. What remains impossible here

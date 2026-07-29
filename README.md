@@ -56,7 +56,7 @@ Tree:             79530d185c4c5eb30719fd45cf323217d2a9f5c5
 Qualification Go: 1.25.12
 Android target:   arm64-v8a
 Binary SHA-256:   b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f
-Phone-kit SHA-256: 72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63
+Phone-kit SHA-256: 78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e
 ```
 
 ## Warning

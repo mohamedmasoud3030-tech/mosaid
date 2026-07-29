@@ -1,0 +1,3 @@
+old_phone_kit_sha256=72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63
+new_path_independent_phone_kit_sha256=78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e
+reason=FILES.sha256 paths changed from absolute staging paths to relative paths

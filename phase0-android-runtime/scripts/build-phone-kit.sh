@@ -33,7 +33,10 @@ Run inside Termux after extracting:
 
 No shared-storage permission is requested. Do not place real secrets in this kit.
 EOF
-find "$STAGE" -type f -not -name FILES.sha256 -print0 | sort -z | xargs -0 sha256sum > "$STAGE/FILES.sha256"
+(
+  cd "$STAGE"
+  find . -type f -not -name FILES.sha256 -print0 | sort -z | xargs -0 sha256sum > FILES.sha256
+)
 mkdir -p "$OUT_DIR"
 tar -C "$OUT_DIR" --sort=name --mtime='UTC 2026-06-30 09:42:07' --owner=0 --group=0 --numeric-owner -czf "$OUT_DIR/phase0-phone-kit.tar.gz" phase0-phone-kit
 sha256sum "$OUT_DIR/phase0-phone-kit.tar.gz" > "$OUT_DIR/phase0-phone-kit.tar.gz.sha256"

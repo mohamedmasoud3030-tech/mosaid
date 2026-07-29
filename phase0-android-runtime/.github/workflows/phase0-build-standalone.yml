@@ -130,7 +130,7 @@ jobs:
           test "$rc" = 3
           # The scanner flags the whole x/crypto module; prove the openpgp package
           # itself is absent from the compiled package dependency graph.
-          if (cd "$PICOSTRIP_SOURCE" && go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
+          if (cd "$PICOSTRIP_SOURCE" && GOOS=android GOARCH=arm64 go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
             echo 'openpgp unexpectedly imported' >&2; exit 1
           fi
 

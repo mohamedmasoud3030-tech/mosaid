@@ -123,7 +123,7 @@ jobs:
           ids="$(grep -o 'GO-[0-9]\{4\}-[0-9]\{4\}' "$PHASE0_OUT/evidence/govulncheck.txt" | sort -u | tr '\n' ' ')"
           test "$rc" = 3
           test "$ids" = 'GO-2026-5932 '
-          if (cd "$PICOCLAW_SOURCE" && go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
+          if (cd "$PICOCLAW_SOURCE" && GOOS=android GOARCH=arm64 go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
             echo 'openpgp unexpectedly imported' >&2; exit 1
           fi
 

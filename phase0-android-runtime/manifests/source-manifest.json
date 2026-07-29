@@ -72,7 +72,7 @@
     "two_independent_local_builds_match": true,
     "linked_module_count": 93,
     "unlicensed_kagi_client_linked": false,
-    "phone_kit_sha256": "72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63"
+    "phone_kit_sha256": "78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e"
   },
   "vulnerability_scan": {
     "scanner": "govulncheck v1.1.4",

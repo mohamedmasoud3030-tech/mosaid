@@ -1,11 +1,11 @@
 cad10398e56a8616bb1b2fa5e407dc36157b9be524b3299a9f12cb5204084cc9  ./.env.example
-1e0914443b925ce614a45653fc320e49079a911412d1ea332404358ce7187a3b  ./.github/workflows/phase0-build-standalone.yml
+f33b80d83ff1868bef61997b13d209817ff3cf0990803177aa40854aaee08d3f  ./.github/workflows/phase0-build-standalone.yml
 a5b5025be3913a8fb205ea23606a56314a563aabf6bdf30a4719fdba67d92018  ./.gitignore
-16eccc74a57c8cf4a18885f01634991649ff0ace83987dae9861ee4079b9aec8  ./README.md
+7ea97ceb8fe8be2e7bc55560abc64f40561c7b93b04aad40685fe74256deaf68  ./README.md
 0c08b19626c666708024673ef4855ba9a119061804d7ca97fb0660020c3d6ffc  ./config/config.phase0.template.json
 69270d086d1a89542be8ece0495e02ba25d6146ee39fff133dbb2260c9a70f91  ./config/test-plan.json
 cbfb26e32379224a41467e476618d0995672b23ffcadbd0de983c83483693b9f  ./docs/ACCEPTANCE-CRITERIA.md
-cdf6db712da5376a1056f290c2042508150a3d2ccd353ce87f3afb84d339c503  ./docs/EXECUTION-REPORT.md
+b8862761ee3f06017600269ed2722eab47d58d288ebd2a793a21b14dfcea77fe  ./docs/EXECUTION-REPORT.md
 3c530a9496adb1dd81b834d72fe0c4e110efdceb18dda835f8bb6ef5ea5018ad  ./docs/MANUAL-STEPS.md
 660c6864472286e5a20564134f7bcce4c615f868e830a881621fb8d3e81743de  ./docs/PHONE-GUIDE.md
 8dbddb8e9f6d68e25f674cc58c94d9e057b91e2ed25f6efd7aa42ffd9e584dc9  ./docs/SOURCE-VERIFICATION.md
@@ -61,6 +61,7 @@ a39e906daff1709225f4d3a1631589f3aa6feda1e46db57c0083804ef1f25abe  ./evidence/ins
 55d81e7bd9126ce0278f9e2b9c8c32c3be0081bccb5924094a0bc208c130a974  ./evidence/inspection/phone-kit-build.txt
 f0f736263ba49bffd42f3b95c117aad015f0edd1a707478df976dc4c34629a63  ./evidence/inspection/phone-kit-contents.txt
 361ce0e808f221730ed5530da4e415a76dd175cd766cf33a1d2bb4652c62f74f  ./evidence/inspection/phone-kit-inner-verify.txt
+00c4fc3822ad47bf3b0ce9d62ca06831dc12d3ab8a57e813f20bb04ceea4f1d5  ./evidence/inspection/phone-kit-reproducible-rebuild.txt
 e75857de52faba5215be5c29ff841d2edee880b5c46c412e50bbcd47bd225251  ./evidence/inspection/pinned-source-sha256.txt
 b899a442f7a26a4ad48da2c4b20d238d5ea1f6a2c8644ed7f87be6a4b0f537b8  ./evidence/inspection/redaction-selftest.txt
 0db849e26483c69ab746f35c975fcf7662515b01668062c8618c5c5f2cdc6bd8  ./evidence/inspection/result-collector-selftest.json
@@ -86,7 +87,7 @@ eab78c403b73718d261538943470663f816d004517c8b97e7dffc8fabeddce17  ./evidence/ups
 d2de15cfdc4d3c5204a31d36193600f9479fee86f474fbd85daaae72500c7924  ./evidence/upstream/release.json
 4bfaf625d4d3b87b246ddbc5bcfc194857c863e96f5e97e78ccca4a263c32d48  ./evidence/upstream/tag-object.json
 6e72edc6658e5aaf65927c2dcc68ff3447212fa98f1b34414ae1209c6788f71c  ./evidence/upstream/tag-ref.json
-8003c3a710171923066ad5cccfe3bc193fcbe66d0d127cf5c0044624405727d3  ./manifests/build-metadata.json
+63e0a989da61f6c3c1288d5aaaa540ef19372ec173dfc27678ff33dacf26ccbd  ./manifests/build-metadata.json
 0a138ed158d37ae6110984df126ef4ec51583b7e2115dc074c5abc7049ce90cd  ./manifests/go-mod-graph.txt
 7718db73f0bef912e7efd5bba3a20746bf8cb6cfad6dcfbfdc8204f7a9591816  ./manifests/go-modules-all.txt
 da479c950347328e83a0cab094699298979c61f85546b1bcbc1c694f7b0bf0ae  ./manifests/go-version-m.txt
@@ -94,7 +95,7 @@ da479c950347328e83a0cab094699298979c61f85546b1bcbc1c694f7b0bf0ae  ./manifests/go
 37f49e80c7e3549d181a82cc1d627f7bed8d1dba1c8e51607ebd15b9d319710d  ./manifests/linked-modules.tsv
 37ae7e4cc49fca2f42fd725065fe69c5d7606cc1971a5c6f193456c09935de80  ./manifests/sbom-summary.json
 361353e6ba97a00ff9a1913e7b47d172fa5a294ae87785c5cdb1f6790623c74f  ./manifests/sbom.cdx.json
-b07298d4e62699602e958dce3387fcb17ca530ff0c9130b2a780d7f5c2606e6e  ./manifests/source-manifest.json
+bc32cfdb4cb84da12c7d2818460d1697f063a9c91031d059062676e9d10b5a63  ./manifests/source-manifest.json
 d61d3f336e644a7b9e4cc01b411314dce91768a2b67507371a9efee66dd396ed  ./patches/phase0-qualification.patch
 bb21969231dda482579622e63cc16f8efdfc3893b19946933121a79ba8e6dd17  ./patches/phase0-security-overrides.patch
 bf005a40c66a5ed091ecd1b33654cc3ceedb709fdd7f7663996c553d384d68f2  ./phone/10-picoclaw-phase0.boot
@@ -108,11 +109,11 @@ cb1f0fdb1774f890f2c9e4386e40179050a313cd74ecd17f7dee1bd24110eb8b  ./phone/run-fo
 6d1e56c21cf09553121d3d261529e4a518431022743a4bf148fa38bce47e2e01  ./phone/supervisor.sh
 9e28f0cc39d9bbfa5b3d1f1dd77ab54e5c448505b0846df5ca496e4837655d41  ./phone/test-harness.sh
 c90b31d13f4f32d8627a9cc2288c2259a2195d962c560c97df8bee54197fd2c6  ./phone/verify-config.sh
-19b47e11939be2c255b50b265e6e62084824754da414e6d7d6b40bf66a46f401  ./release/phase0-phone-kit.tar.gz.sha256
+10fe63c085e14adf6a2ae7603d50f65cb52529cc2efa866f8050530e73f282c0  ./release/phase0-phone-kit.tar.gz.sha256
 4a1afc54ca8f8e9a6ac98cd684d684a63aa33c63cb7a27baa4c28b955f2693e4  ./sbom/license-report.tsv
 37f49e80c7e3549d181a82cc1d627f7bed8d1dba1c8e51607ebd15b9d319710d  ./sbom/linked-modules.tsv
 361353e6ba97a00ff9a1913e7b47d172fa5a294ae87785c5cdb1f6790623c74f  ./sbom/sbom.cdx.json
-c765096226bd830702d4b8f74549929cd45dc5c3a4eafe2602dd9b33e3ee73e4  ./scripts/build-phone-kit.sh
+a87faac1f2507c4c3cb07f036e88194b8e437604134f66de9d301f4210cd9ed9  ./scripts/build-phone-kit.sh
 a0fd8530ba205c1800c8e95a79aab98e5263ebc147d784d291c146e12af6182e  ./scripts/ci-selftest.sh
 4932d0b57d3261502b1d5bde8260ed610ba88084752d36e8822b75fa4a91da6d  ./scripts/generate-sbom.py
 e190617c7b6c403b2241c92c70a48a8db818b4a986117609a9d62f225337d0a6  ./scripts/scan-secrets.sh

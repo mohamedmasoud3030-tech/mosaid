@@ -29,7 +29,7 @@ Binary SHA-256:   b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a
 
 - `release/phase0-phone-kit.tar.gz`
 - `release/phase0-phone-kit.tar.gz.sha256`
-- Final kit SHA-256: `72a10827f7adbc9c743e8b9cddac89b5eebadcb349e1dbcf811acfb787bf4a63`
+- Final kit SHA-256: `78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e`
 
 After importing and extracting the kit inside Termux, the single setup entry point is:
 
