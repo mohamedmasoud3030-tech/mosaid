@@ -1,0 +1,69 @@
+{
+  "id": "image-generation",
+  "version": "1.0.0",
+  "description": "Generate a validated image artifact through an explicitly configured external image provider.",
+  "type": "builtin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+      },
+      "width": {
+        "type": "integer",
+        "minimum": 256,
+        "maximum": 2048
+      },
+      "height": {
+        "type": "integer",
+        "minimum": 256,
+        "maximum": 2048
+      }
+    },
+    "required": [
+      "prompt",
+      "width",
+      "height"
+    ],
+    "additionalProperties": false
+  },
+  "outputs": [
+    {
+      "name": "artifact",
+      "description": "Validated local image artifact metadata.",
+      "schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ],
+  "required_tools": [
+    "images.generate"
+  ],
+  "required_permissions": [
+    "write"
+  ],
+  "required_secrets": [
+    "IMAGE_PROVIDER_API_KEY"
+  ],
+  "allowed_networks": [
+    "api.openai.com"
+  ],
+  "timeout_seconds": 180,
+  "approval_policy": "policy",
+  "compatibility": {
+    "min_core": "0.1.0",
+    "os": [
+      "linux",
+      "android"
+    ],
+    "arch": [
+      "amd64",
+      "arm64"
+    ]
+  },
+  "integrity_hash": "sha256:29598fc8e3b25b1d7d854aec64e75c9e27f67c0202227b575cb16804e2c53bb9"
+}

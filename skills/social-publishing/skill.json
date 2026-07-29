@@ -1,0 +1,73 @@
+{
+  "id": "social-publishing",
+  "version": "1.0.0",
+  "description": "Prepare and preview an official social API draft; publishing always requires content-bound approval.",
+  "type": "builtin",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "account_id": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "asset_hash": {
+        "type": "string",
+        "minLength": 64,
+        "maxLength": 64
+      },
+      "caption": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2200
+      }
+    },
+    "required": [
+      "account_id",
+      "asset_hash",
+      "caption"
+    ],
+    "additionalProperties": false
+  },
+  "outputs": [
+    {
+      "name": "draft",
+      "description": "Validated publishing draft or preview.",
+      "schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ],
+  "required_tools": [
+    "instagram.prepare",
+    "instagram.preview",
+    "instagram.publish"
+  ],
+  "required_permissions": [
+    "read",
+    "write",
+    "publish"
+  ],
+  "required_secrets": [
+    "META_ACCESS_TOKEN"
+  ],
+  "allowed_networks": [
+    "graph.facebook.com"
+  ],
+  "timeout_seconds": 300,
+  "approval_policy": "bound_publish",
+  "compatibility": {
+    "min_core": "0.1.0",
+    "os": [
+      "linux",
+      "android"
+    ],
+    "arch": [
+      "amd64",
+      "arm64"
+    ]
+  },
+  "integrity_hash": "sha256:4526c754f37974add02b4ecf4f26a61fc8149d688b739760c74d62e9eee80127"
+}
