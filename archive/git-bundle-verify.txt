@@ -1,0 +1,7 @@
+/home/user/mosaid-preservation/phase0-local-all-refs.bundle is okay
+The bundle contains these 3 refs:
+91e6758475fd91cb92b9585f260642704586ce2e refs/heads/phase0/android-runtime-qualification
+44c27dd7522a505711764a2dda71e9fa7cd862c6 refs/tags/phase0-harness-v1
+91e6758475fd91cb92b9585f260642704586ce2e HEAD
+The bundle records a complete history.
+The bundle uses this hash algorithm: sha1

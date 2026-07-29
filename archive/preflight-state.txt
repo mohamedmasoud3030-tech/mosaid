@@ -1,0 +1,78 @@
+# Mosaid preservation preflight
+captured_utc=2026-07-29T06:50:13Z
+## git status --short
+## branch
+phase0/android-runtime-qualification
+## HEAD
+91e6758475fd91cb92b9585f260642704586ce2e
+## tags
+44c27dd7522a505711764a2dda71e9fa7cd862c6 refs/tags/phase0-harness-v1
+## untracked
+## ignored
+evidence/artifacts/picoclaw-phase0-v0.3.1-android-arm64
+evidence/inspection/android-build-targets.txt
+evidence/inspection/android-elf-summary.txt
+evidence/inspection/android-file-types.txt
+evidence/inspection/android-inner-sha256.txt
+evidence/inspection/android-zip-files.txt
+evidence/inspection/android-zip-list.txt
+evidence/inspection/asset-digest-comparison.json
+evidence/inspection/base-channel-auth-tail.go.txt
+evidence/inspection/base-channel-auth.go.txt
+evidence/inspection/commit-verification.json
+evidence/inspection/custom-binary-build-summary.txt
+evidence/inspection/custom-binary-elf.txt
+evidence/inspection/custom-binary-file.txt
+evidence/inspection/custom-binary-go-version-m.txt
+evidence/inspection/custom-binary-sha256.txt
+evidence/inspection/custom-build-reproducibility.txt
+evidence/inspection/downloaded-sha256.txt
+evidence/inspection/elf-runtime.txt
+evidence/inspection/embedded-metadata.txt
+evidence/inspection/experimental-repo-identity.txt
+evidence/inspection/go-mod-verify.txt
+evidence/inspection/govulncheck-binary-exit.txt
+evidence/inspection/govulncheck-binary.stderr
+evidence/inspection/govulncheck-binary.txt
+evidence/inspection/govulncheck-help.txt
+evidence/inspection/govulncheck-json-summary.txt
+evidence/inspection/govulncheck-version.txt
+evidence/inspection/linux-arm64-elf.txt
+evidence/inspection/linux-arm64-file-types.txt
+evidence/inspection/linux-arm64-inner-sha256.txt
+evidence/inspection/linux-arm64-list.txt
+evidence/inspection/makefile-header.txt
+evidence/inspection/native-config-load-status.txt
+evidence/inspection/official-android-go-version-m.txt
+evidence/inspection/official-checksum-verify.txt
+evidence/inspection/official-checksums.txt
+evidence/inspection/official-linux-go-version-m.txt
+evidence/inspection/official-rebuild-comparison.txt
+evidence/inspection/openpgp-reachability.txt
+evidence/inspection/patch-apply-check.txt
+evidence/inspection/phase0-compile-go1.25.12.txt
+evidence/inspection/phase0-core-tests-final.txt
+evidence/inspection/phase0-core-tests-go1.25.12.txt
+evidence/inspection/phase0-integration-tests-excluding-disabled-kagi.txt
+evidence/inspection/phase0-patch-sha256.txt
+evidence/inspection/phase0-patch-tests-final.txt
+evidence/inspection/phase0-patch-tests.txt
+evidence/inspection/phase0-telegram-tests-final.txt
+evidence/inspection/phone-kit-build.txt
+evidence/inspection/phone-kit-contents.txt
+evidence/inspection/phone-kit-inner-verify.txt
+evidence/inspection/pinned-source-sha256.txt
+evidence/inspection/redaction-selftest.txt
+evidence/inspection/result-collector-selftest.json
+evidence/inspection/secret-scan.txt
+evidence/inspection/security-overrides-patch-sha256.txt
+evidence/inspection/supervisor-selftest.txt
+evidence/inspection/tag-verification.json
+evidence/inspection/telegram-auth-code-index.txt
+evidence/inspection/telegram-handleMessages.go.txt
+evidence/inspection/tool-policy-code-index.txt
+evidence/inspection/turn-profile.go.txt
+evidence/inspection/turn_profile_policy.go.txt
+evidence/inspection/verify-config-selftest.txt
+release/phase0-phone-kit.tar.gz
+release/phase0-phone-kit.tar.gz.sha256

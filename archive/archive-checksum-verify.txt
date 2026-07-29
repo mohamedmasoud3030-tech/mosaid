@@ -1,0 +1,2 @@
+/home/user/mosaid-preservation/phase0-local-all-refs.bundle: OK
+/home/user/mosaid-preservation/phase0-working-tree-complete.tar.gz: OK
