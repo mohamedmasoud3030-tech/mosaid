@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -21,7 +22,9 @@ var (
 )
 
 // LoopGuard prevents infinite loops and unbounded execution.
+// Each Run gets its own LoopGuard instance — never shared between runs.
 type LoopGuard struct {
+	mu                   sync.Mutex
 	MaxSteps             int
 	MaxRepeatedActions   int
 	MaxNoProgressSteps   int
@@ -32,7 +35,7 @@ type LoopGuard struct {
 	ToolCallBudget       int
 	TimeBudget           time.Duration
 
-	// Counters
+	// Counters (all protected by mu)
 	steps            int
 	repeatedActions  int
 	noProgressSteps  int
@@ -61,8 +64,28 @@ func DefaultLoopGuard() *LoopGuard {
 	}
 }
 
+// NewLoopGuardForRun creates a per-run loop guard from run budgets.
+func NewLoopGuardForRun(budgets RunBudgets) *LoopGuard {
+	return &LoopGuard{
+		MaxSteps:             budgets.MaxSteps,
+		MaxRepeatedActions:   3,
+		MaxNoProgressSteps:   10,
+		StateFingerprints:    make(map[string]int),
+		RetryBudget:          budgets.MaxRetries,
+		ProviderSwitchBudget: budgets.MaxProviderSwitches,
+		TokenBudget:          budgets.MaxTokens,
+		ToolCallBudget:       budgets.MaxToolCalls,
+		TimeBudget:           time.Duration(budgets.TimeoutSeconds) * time.Second,
+		startTime:            time.Now().UTC(),
+		lastProgressStep:     -1,
+	}
+}
+
 // CheckLimits verifies that all execution limits are still within bounds.
 func (g *LoopGuard) CheckLimits() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
 	if g.steps >= g.MaxSteps {
 		return fmt.Errorf("%w: %d/%d", ErrMaxStepsExceeded, g.steps, g.MaxSteps)
 	}
@@ -89,9 +112,11 @@ func (g *LoopGuard) CheckLimits() error {
 
 // RecordStep records a completed step and checks for loops.
 func (g *LoopGuard) RecordStep(step Step, result json.RawMessage) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
 	g.steps++
 
-	// Generate fingerprint of the step + result
 	fingerprint := g.fingerprint(step, result)
 	g.StateFingerprints[fingerprint]++
 	if g.StateFingerprints[fingerprint] > g.MaxRepeatedActions {
@@ -99,7 +124,6 @@ func (g *LoopGuard) RecordStep(step Step, result json.RawMessage) error {
 			ErrMaxRepeatedActions, g.StateFingerprints[fingerprint])
 	}
 
-	// Track progress (a step that completes successfully counts as progress)
 	if step.State == StepCompleted {
 		g.noProgressSteps = 0
 		g.lastProgressStep = g.steps
@@ -112,6 +136,8 @@ func (g *LoopGuard) RecordStep(step Step, result json.RawMessage) error {
 
 // RecordRetry increments the retry counter.
 func (g *LoopGuard) RecordRetry() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	g.retries++
 	if g.retries >= g.RetryBudget {
 		return ErrRetryBudgetExhausted
@@ -121,6 +147,8 @@ func (g *LoopGuard) RecordRetry() error {
 
 // RecordProviderSwitch increments the provider switch counter.
 func (g *LoopGuard) RecordProviderSwitch() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	g.providerSwitches++
 	if g.providerSwitches >= g.ProviderSwitchBudget {
 		return ErrProviderSwitchLimit
@@ -130,11 +158,15 @@ func (g *LoopGuard) RecordProviderSwitch() error {
 
 // RecordTokens adds tokens to the usage counter.
 func (g *LoopGuard) RecordTokens(tokens int) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	g.tokensUsed += tokens
 }
 
 // RecordToolCall increments the tool call counter.
 func (g *LoopGuard) RecordToolCall() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	g.toolCalls++
 	if g.toolCalls >= g.ToolCallBudget {
 		return ErrToolCallBudgetExhausted
@@ -144,6 +176,8 @@ func (g *LoopGuard) RecordToolCall() error {
 
 // Snapshot returns the current state of the loop guard for persistence.
 func (g *LoopGuard) Snapshot() LoopGuardSnapshot {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	return LoopGuardSnapshot{
 		Steps:            g.steps,
 		RepeatedActions:  g.repeatedActions,
@@ -168,7 +202,6 @@ type LoopGuardSnapshot struct {
 	Elapsed          time.Duration `json:"elapsed"`
 }
 
-// fingerprint generates a hash of the step and result for loop detection.
 func (g *LoopGuard) fingerprint(step Step, result json.RawMessage) string {
 	h := sha256.New()
 	h.Write([]byte(step.ToolName))
