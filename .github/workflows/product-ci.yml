@@ -1,7 +1,7 @@
 name: Mosaid product CI
 on:
   push:
-    branches: [main, build/mosaid-product-foundation-20260729]
+    branches: [main, build/mosaid-product-foundation-20260729, pivot/hermes-oracle-runtime-20260729]
   pull_request:
 permissions:
   contents: read
@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}
+      - name: Hermes pivot contract
+        run: python3 scripts/verify-hermes-pivot.py
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
         with: {go-version: '1.25.12', cache: true}
       - name: Formatting
