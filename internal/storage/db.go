@@ -35,6 +35,78 @@ INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,datetime('n
 INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,datetime('now'));
 `
 
+const schedulerMigration = `
+CREATE TABLE scheduled_jobs(
+ id TEXT PRIMARY KEY,
+ skill_id TEXT NOT NULL,
+ input_json BLOB NOT NULL,
+ kind TEXT NOT NULL CHECK(kind IN('one_time','recurring')),
+ class TEXT NOT NULL CHECK(class IN('reminder','read','write','publish')),
+ risk TEXT NOT NULL CHECK(risk IN('safe','low','medium','high','critical')),
+ timezone TEXT NOT NULL,
+ interval_ns INTEGER NOT NULL DEFAULT 0,
+ next_run TEXT NOT NULL,
+ enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN(0,1)),
+ missed_policy TEXT NOT NULL CHECK(missed_policy IN('skip','run_once')),
+ max_attempts INTEGER NOT NULL CHECK(max_attempts BETWEEN 1 AND 20),
+ retry_backoff_ns INTEGER NOT NULL DEFAULT 0,
+ timeout_ns INTEGER NOT NULL,
+ creation_key TEXT NOT NULL UNIQUE,
+ approval_ref TEXT NOT NULL DEFAULT '',
+ cancelled_at TEXT,
+ created_at TEXT NOT NULL,
+ updated_at TEXT NOT NULL
+);
+CREATE INDEX scheduled_jobs_due_idx ON scheduled_jobs(enabled,next_run);
+CREATE TABLE scheduled_runs(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ job_id TEXT NOT NULL,
+ scheduled_for TEXT NOT NULL,
+ idempotency_key TEXT NOT NULL UNIQUE,
+ state TEXT NOT NULL CHECK(state IN('pending','running','completed','failed','dead','denied','cancelled','skipped')),
+ attempts INTEGER NOT NULL DEFAULT 0,
+ available_at TEXT NOT NULL,
+ started_at TEXT,
+ finished_at TEXT,
+ last_error TEXT NOT NULL DEFAULT '',
+ created_at TEXT NOT NULL,
+ updated_at TEXT NOT NULL,
+ FOREIGN KEY(job_id) REFERENCES scheduled_jobs(id)
+);
+CREATE INDEX scheduled_runs_ready_idx ON scheduled_runs(state,available_at);
+CREATE INDEX scheduled_runs_job_idx ON scheduled_runs(job_id,scheduled_for);
+CREATE TABLE job_locks(
+ job_id TEXT PRIMARY KEY,
+ owner TEXT NOT NULL,
+ acquired_at TEXT NOT NULL,
+ expires_at TEXT NOT NULL,
+ FOREIGN KEY(job_id) REFERENCES scheduled_jobs(id)
+);
+`
+
+func applyMigration(ctx context.Context, db *sql.DB, version int, body string) error {
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var applied int
+	err = tx.QueryRowContext(ctx, `SELECT count(*) FROM schema_migrations WHERE version=?`, version).Scan(&applied)
+	if err != nil {
+		return err
+	}
+	if applied != 0 {
+		return nil
+	}
+	if _, err = tx.ExecContext(ctx, body); err != nil {
+		return fmt.Errorf("migration %d: %w", version, err)
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO schema_migrations(version,applied_at) VALUES(?,?)`, version, now()); err != nil {
+		return fmt.Errorf("record migration %d: %w", version, err)
+	}
+	return tx.Commit()
+}
+
 func Open(path string) (*DB, error) {
 	d, err := sql.Open("sqlite", path)
 	if err != nil {
@@ -46,6 +118,10 @@ func Open(path string) (*DB, error) {
 		return nil, err
 	}
 	if _, err = d.Exec(schema); err != nil {
+		d.Close()
+		return nil, err
+	}
+	if err = applyMigration(context.Background(), d, 4, schedulerMigration); err != nil {
 		d.Close()
 		return nil, err
 	}
