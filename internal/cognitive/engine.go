@@ -38,7 +38,6 @@ type callConfig struct {
 	maxTokens   int
 	temperature float64
 	jsonMode    bool
-	tools       []providers.Tool
 }
 
 func WithMaxTokens(n int) CallOption       { return func(c *callConfig) { c.maxTokens = n } }
@@ -72,7 +71,7 @@ type ApprovalManager interface {
 // Engine is the Cognitive Engine that drives the execution loop.
 type Engine struct {
 	llm       LLMCaller
-	tools     ToolExecutor
+	tools     ToolExecutor // used in executeStep
 	store     GoalStore
 	approvals ApprovalManager
 	mu        sync.Mutex

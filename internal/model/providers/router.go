@@ -25,11 +25,10 @@ type FallbackChain struct {
 
 // Router selects the best provider for a request based on capabilities and fallback chains.
 type Router struct {
-	mu            sync.RWMutex
-	registry      *Registry
-	chains        map[TaskType][]FallbackEntry
-	lastHealth    map[string]Health
-	providerOrder []string // Stable ordering
+	mu         sync.RWMutex
+	registry   *Registry
+	chains     map[TaskType][]FallbackEntry
+	lastHealth map[string]Health
 }
 
 // NewRouter creates a new capability router.

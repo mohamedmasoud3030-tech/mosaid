@@ -76,11 +76,9 @@ func generateID(prefix string) string {
 
 // randomHex generates a random hex string of n bytes.
 func randomHex(n int) string {
-	// Simple non-crypto random for IDs (crypto/rand used in production)
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = "0123456789abcdef"[time.Now().UnixNano()%16]
-		time.Sleep(1) // Ensure different values
 	}
 	return fmt.Sprintf("%x", b)
 }
