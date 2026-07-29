@@ -86,7 +86,6 @@ eab78c403b73718d261538943470663f816d004517c8b97e7dffc8fabeddce17  ./evidence/ups
 d2de15cfdc4d3c5204a31d36193600f9479fee86f474fbd85daaae72500c7924  ./evidence/upstream/release.json
 4bfaf625d4d3b87b246ddbc5bcfc194857c863e96f5e97e78ccca4a263c32d48  ./evidence/upstream/tag-object.json
 6e72edc6658e5aaf65927c2dcc68ff3447212fa98f1b34414ae1209c6788f71c  ./evidence/upstream/tag-ref.json
-bd14ef27a3a6541e3355b036bce2a1f77b1385b58292d98ced3df9c6278a284a  ./manifests/MANIFESTS.sha256
 8003c3a710171923066ad5cccfe3bc193fcbe66d0d127cf5c0044624405727d3  ./manifests/build-metadata.json
 0a138ed158d37ae6110984df126ef4ec51583b7e2115dc074c5abc7049ce90cd  ./manifests/go-mod-graph.txt
 7718db73f0bef912e7efd5bba3a20746bf8cb6cfad6dcfbfdc8204f7a9591816  ./manifests/go-modules-all.txt

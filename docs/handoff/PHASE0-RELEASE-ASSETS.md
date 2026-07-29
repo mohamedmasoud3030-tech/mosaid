@@ -13,8 +13,8 @@ The release is a prerelease and must not be presented as a production distributi
 | `phase0-sbom.cdx.json` | `361353e6ba97a00ff9a1913e7b47d172fa5a294ae87785c5cdb1f6790623c74f` |
 | `phase0-source-manifest.json` | `b07298d4e62699602e958dce3387fcb17ca530ff0c9130b2a780d7f5c2606e6e` |
 | `phase0-build-metadata.json` | `8003c3a710171923066ad5cccfe3bc193fcbe66d0d127cf5c0044624405727d3` |
-| `phase0-manifests.sha256` | `a38b146a5400d0d365fecb8a259d928014a42d0a707e60a741e34626f874b3a2` |
-| `phase0-deliverables.sha256` | `a190be91a1b6907bb2b1437b731ef31ab8ecb366b45605d1fa27afd1d96122f5` |
+| `phase0-manifests.sha256` | `76b71850c721ba960c962503d6cdeb8e6e756cfaaaff32bd9db61299bbb15504` |
+| `phase0-deliverables.sha256` | `0e23eafb709c5d7099b9587bec73183dc29fcde27cf6c1f0b06c076663728cda` |
 | `phase0-license-report.tsv` | `4a1afc54ca8f8e9a6ac98cd684d684a63aa33c63cb7a27baa4c28b955f2693e4` |
 | `upstream-official-checksums.txt` | `a60e0242f72508f5fbd8ab5976661d0d183c76d8f7863a383e60f3262e976acf` |
 | `phase0-local-all-refs.bundle` | `c9d85c29e959ef92a3c49ce581a9687a20c517842362d7fba4094a959244d1f4` |
