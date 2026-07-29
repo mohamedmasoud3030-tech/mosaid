@@ -1,0 +1,83 @@
+# Mosaid restricted Hermes profile for the first Oracle acceptance gate.
+# Install as $HERMES_HOME/config.yaml after replacing environment placeholders.
+
+model:
+  provider: "custom"
+  default: "${MODEL_NAME}"
+  base_url: "${MODEL_BASE_URL}"
+
+providers:
+  custom:
+    request_timeout_seconds: 180
+    stale_timeout_seconds: 300
+
+# First gate is intentionally read-only from Telegram.
+platform_toolsets:
+  telegram:
+    - web
+    - skills
+    - todo
+    - memory
+    - session_search
+    - clarify
+
+# Defense in depth: these toolsets remain unavailable even if a platform preset
+# or future configuration tries to include them.
+agent:
+  disabled_toolsets:
+    - terminal
+    - file
+    - code_execution
+    - browser
+    - computer_use
+    - delegation
+    - cronjob
+    - image_gen
+    - video_gen
+    - x_search
+    - homeassistant
+    - spotify
+    - discord
+    - discord_admin
+
+skills:
+  external_dirs:
+    - /opt/mosaid/product/skills
+  write_approval: true
+  guard_agent_created: true
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  write_approval: true
+
+display:
+  memory_notifications: on
+
+# Prepared for a later, separately approved execution profile. Terminal remains
+# disabled above during the first acceptance gate.
+terminal:
+  backend: docker
+  cwd: /workspace
+  timeout: 180
+  home_mode: profile
+  docker_image: "python:3.12-slim"
+  docker_mount_cwd_to_workspace: false
+  docker_run_as_host_user: false
+  docker_forward_env: []
+  docker_volumes:
+    - "/var/lib/mosaid/workspaces:/workspace"
+    - "/var/lib/mosaid/outputs:/output"
+  docker_network: false
+  container_cpu: 2
+  container_memory: 4096
+  container_disk: 20480
+  container_persistent: true
+  docker_persist_across_processes: true
+
+updates:
+  pre_update_backup: full
+  backup_keep: 5
+  non_interactive_local_changes: stash
