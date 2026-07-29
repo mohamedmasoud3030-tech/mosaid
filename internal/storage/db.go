@@ -25,7 +25,14 @@ CREATE TABLE IF NOT EXISTS idempotency_keys(key TEXT PRIMARY KEY,created_at TEXT
 CREATE TABLE IF NOT EXISTS approval_requests(id TEXT PRIMARY KEY,token_hash TEXT UNIQUE NOT NULL,user_id INTEGER NOT NULL,tool_name TEXT NOT NULL,args_hash TEXT NOT NULL,resource TEXT NOT NULL,expires_at TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN('pending','approved','denied','expired')),created_at TEXT NOT NULL,resolved_at TEXT);
 CREATE TABLE IF NOT EXISTS audit_entries(seq INTEGER PRIMARY KEY,at TEXT NOT NULL,kind TEXT NOT NULL,user_id INTEGER NOT NULL,resource TEXT NOT NULL,decision TEXT NOT NULL,prev_hash TEXT NOT NULL,entry_hash TEXT UNIQUE NOT NULL,payload_json BLOB NOT NULL);
 CREATE TABLE IF NOT EXISTS approval_uses(approval_id TEXT PRIMARY KEY,used_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS session_messages(id INTEGER PRIMARY KEY AUTOINCREMENT,session_id TEXT NOT NULL,role TEXT NOT NULL,content TEXT NOT NULL,created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS session_summaries(session_id TEXT PRIMARY KEY,summary TEXT NOT NULL,updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS memory_candidates(id INTEGER PRIMARY KEY AUTOINCREMENT,content TEXT NOT NULL,source TEXT NOT NULL,confidence REAL NOT NULL,expires_at TEXT,state TEXT NOT NULL DEFAULT 'pending',created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS memory_items(id INTEGER PRIMARY KEY AUTOINCREMENT,content TEXT NOT NULL,source TEXT NOT NULL,confidence REAL NOT NULL,expires_at TEXT,created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS memory_links(id INTEGER PRIMARY KEY AUTOINCREMENT,memory_id INTEGER NOT NULL,kind TEXT NOT NULL,target TEXT NOT NULL,FOREIGN KEY(memory_id) REFERENCES memory_items(id));
+CREATE VIRTUAL TABLE IF NOT EXISTS memory_fts USING fts5(content, content='memory_items', content_rowid='id');
 INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,datetime('now'));
+INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,datetime('now'));
 `
 
 func Open(path string) (*DB, error) {

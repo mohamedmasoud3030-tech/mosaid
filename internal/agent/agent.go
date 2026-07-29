@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/memory"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -19,6 +21,7 @@ type Agent struct {
 	Health    *health.Writer
 	Version   string
 	Approvals *approval.Manager
+	Memory    *memory.Store
 	mu        sync.Mutex
 	cancel    context.CancelFunc
 }
@@ -32,7 +35,7 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	}
 	switch fields[0] {
 	case "/help":
-		out.Text = "Mosaid commands: /status /help /stop /approve <token> /deny <token>"
+		out.Text = "Mosaid commands: /status /help /stop /approve /deny /memory <query> /remember <text> /forget <id> /export"
 		return out, nil
 	case "/approve", "/deny":
 		if a.Approvals == nil || len(fields) != 2 {
@@ -48,6 +51,60 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 			return out, nil
 		}
 		out.Text = "Approval " + decision + "."
+		return out, nil
+	case "/memory":
+		if a.Memory == nil || len(fields) < 2 {
+			out.Text = "Usage: /memory <query>"
+			return out, nil
+		}
+		items, err := a.Memory.Search(ctx, strings.Join(fields[1:], " "), 10)
+		if err != nil {
+			return out, err
+		}
+		if len(items) == 0 {
+			out.Text = "No memory found."
+		} else {
+			var b strings.Builder
+			for _, m := range items {
+				fmt.Fprintf(&b, "#%d %s\n", m.ID, m.Content)
+			}
+			out.Text = strings.TrimSpace(b.String())
+		}
+		return out, nil
+	case "/remember":
+		if a.Memory == nil || len(fields) < 2 {
+			out.Text = "Usage: /remember <text>"
+			return out, nil
+		}
+		id, err := a.Memory.Remember(ctx, strings.Join(fields[1:], " "))
+		if err != nil {
+			return out, err
+		}
+		out.Text = fmt.Sprintf("Remembered #%d.", id)
+		return out, nil
+	case "/forget":
+		if a.Memory == nil || len(fields) != 2 {
+			out.Text = "Usage: /forget <id>"
+			return out, nil
+		}
+		id, err := strconv.ParseInt(fields[1], 10, 64)
+		if err != nil {
+			return out, err
+		}
+		if err = a.Memory.Forget(ctx, id); err != nil {
+			return out, err
+		}
+		out.Text = "Memory forgotten."
+		return out, nil
+	case "/export":
+		if a.Memory == nil {
+			return out, nil
+		}
+		b, err := a.Memory.Export(ctx)
+		if err != nil {
+			return out, err
+		}
+		out.Text = string(b)
 		return out, nil
 	case "/status":
 		s := a.Health.Snapshot()
