@@ -34,6 +34,7 @@ type MCPCall struct {
 	ServerID       string
 	Tool           string
 	Arguments      json.RawMessage
+	Mode           policy.Mode
 	UserID         int64
 	Resource       string
 	ApprovalToken  string
@@ -192,7 +193,7 @@ func (r *Registry) Execute(ctx context.Context, request ExecutionRequest) (Execu
 		if r.MCP == nil || manifest.MCP == nil {
 			return ExecutionResult{}, ErrRuntimeMissing
 		}
-		value, err = r.MCP.InvokeMCP(executionContext, MCPCall{ServerID: manifest.MCP.ServerID, Tool: manifest.MCP.Tool, Arguments: request.Input, UserID: request.UserID, Resource: request.Resource, ApprovalToken: request.ApprovalToken, AllowedNetwork: append([]string(nil), manifest.AllowedNetworks...)})
+		value, err = r.MCP.InvokeMCP(executionContext, MCPCall{ServerID: manifest.MCP.ServerID, Tool: manifest.MCP.Tool, Arguments: request.Input, Mode: highestPermission(manifest.RequiredPermissions), UserID: request.UserID, Resource: request.Resource, ApprovalToken: request.ApprovalToken, AllowedNetwork: append([]string(nil), manifest.AllowedNetworks...)})
 		if err != nil {
 			return ExecutionResult{}, err
 		}
@@ -200,4 +201,18 @@ func (r *Registry) Execute(ctx context.Context, request ExecutionRequest) (Execu
 		return ExecutionResult{}, ErrRuntimeMissing
 	}
 	return ExecutionResult{Manifest: manifest, Value: value}, nil
+}
+
+func highestPermission(permissions []policy.Mode) policy.Mode {
+	for _, permission := range permissions {
+		if permission == policy.Publish {
+			return policy.Publish
+		}
+	}
+	for _, permission := range permissions {
+		if permission == policy.Write {
+			return policy.Write
+		}
+	}
+	return policy.Read
 }
