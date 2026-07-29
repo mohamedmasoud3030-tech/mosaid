@@ -1,0 +1,10 @@
+{
+  "id": "coding",
+  "version": "0.1.0",
+  "description": "Inspect, edit, test and propose changes on an approved repository",
+  "required_tools": ["workspace.list", "workspace.read", "workspace.search", "workspace.write", "workspace.patch", "process.run"],
+  "required_modes": ["read", "write"],
+  "always_approve": ["workspace.write", "workspace.patch", "process.run", "git.push", "github.create_draft_pr"],
+  "network_allowlist": ["github.com", "api.github.com"],
+  "timeout_seconds": 1800
+}
