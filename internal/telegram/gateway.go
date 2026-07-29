@@ -2,12 +2,17 @@ package telegram
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
-	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
-	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
 	"log/slog"
 	"math"
+	"strconv"
 	"time"
+
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 )
 
 type Handler interface {
@@ -20,11 +25,16 @@ type Gateway struct {
 	PollTimeout int
 	Log         *slog.Logger
 	Health      *health.Writer
+	Store       *storage.DB
+	MaxAttempts int
 }
 
 func (g *Gateway) Run(ctx context.Context) error {
 	var offset int64
 	failures := 0
+	if g.MaxAttempts <= 0 {
+		g.MaxAttempts = 5
+	}
 	for {
 		if ctx.Err() != nil {
 			return nil
@@ -59,17 +69,65 @@ func (g *Gateway) Run(ctx context.Context) error {
 				g.Log.Warn("unauthorized user rejected", "update_id", in.UpdateID)
 				continue
 			}
-			out, e := g.Handler.Handle(ctx, in)
-			if e != nil {
-				g.Log.Error("message failed", "update_id", in.UpdateID, "error", e.Error())
-				out = message.Outbound{ChatID: in.ChatID, ReplyTo: in.MessageID, Text: "Request failed safely."}
-			}
-			if out.Text != "" {
-				if e = g.Client.Send(ctx, out); e != nil {
-					g.Log.Error("send failed", "update_id", in.UpdateID, "error", e.Error())
+			if g.Store == nil {
+				out, e := g.Handler.Handle(ctx, in)
+				if e == nil && out.Text != "" {
+					_ = g.Client.Send(ctx, out)
 				}
+				continue
 			}
-			_ = g.Health.Update(func(s *health.State) { s.Messages++ })
+			h := sha256.Sum256([]byte(strconv.FormatInt(in.UpdateID, 10) + ":" + strconv.FormatInt(in.MessageID, 10) + ":" + in.Text))
+			inserted, e := g.Store.Ingest(ctx, in, hex.EncodeToString(h[:]))
+			if e != nil {
+				g.Log.Error("inbox ingest failed", "error", e.Error())
+				continue
+			}
+			if !inserted {
+				g.Log.Info("duplicate update ignored", "update_id", in.UpdateID)
+			}
 		}
+		if g.Store != nil {
+			g.drainInbox(ctx)
+			g.drainOutbox(ctx)
+		}
+	}
+}
+func (g *Gateway) drainInbox(ctx context.Context) {
+	for {
+		in, e := g.Store.ClaimInbox(ctx, g.MaxAttempts)
+		if e != nil {
+			g.Log.Error("claim inbox", "error", e.Error())
+			return
+		}
+		if in == nil {
+			return
+		}
+		out, e := g.Handler.Handle(ctx, in.Message)
+		if e != nil {
+			_ = g.Store.FailInbox(ctx, in.ID, e, g.MaxAttempts)
+			continue
+		}
+		key := "telegram-reply:" + strconv.FormatInt(in.Message.UpdateID, 10)
+		if e = g.Store.CompleteWithOutbox(ctx, in.ID, out, key); e != nil {
+			_ = g.Store.FailInbox(ctx, in.ID, e, g.MaxAttempts)
+		}
+	}
+}
+func (g *Gateway) drainOutbox(ctx context.Context) {
+	for {
+		o, e := g.Store.ClaimOutbox(ctx)
+		if e != nil {
+			g.Log.Error("claim outbox", "error", e.Error())
+			return
+		}
+		if o == nil {
+			return
+		}
+		if e = g.Client.Send(ctx, o.Message); e != nil {
+			_ = g.Store.OutboxFailed(ctx, o.ID, e, g.MaxAttempts)
+			return
+		}
+		_ = g.Store.OutboxSent(ctx, o.ID)
+		_ = g.Health.Update(func(s *health.State) { s.Messages++ })
 	}
 }

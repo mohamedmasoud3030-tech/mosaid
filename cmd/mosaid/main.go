@@ -66,8 +66,14 @@ func main() {
 	defer cancel()
 	m := model.NewOpenAI(cfg.Model.BaseURL, key, cfg.Model.Name, time.Duration(cfg.Model.TimeoutSeconds)*time.Second, int64(cfg.Limits.MaxResponseBytes))
 	sessions := storage.NewSessionStore(filepath.Join(cfg.DataDir, "state"))
+	db, err := storage.Open(filepath.Join(cfg.DataDir, "mosaid.db"))
+	if err != nil {
+		log.Error("database", "error", err.Error())
+		os.Exit(1)
+	}
+	defer db.Close()
 	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version}
-	g := &telegram.Gateway{Client: telegram.New(token), Handler: a, Owner: cfg.OwnerTelegramID, PollTimeout: cfg.Telegram.PollTimeoutSeconds, Log: log, Health: h}
+	g := &telegram.Gateway{Client: telegram.New(token), Handler: a, Owner: cfg.OwnerTelegramID, PollTimeout: cfg.Telegram.PollTimeoutSeconds, Log: log, Health: h, Store: db, MaxAttempts: 5}
 	log.Info("mosaid started", "version", version, "commit", commit)
 	if err = g.Run(ctx); err != nil {
 		log.Error("gateway stopped", "error", err.Error())
