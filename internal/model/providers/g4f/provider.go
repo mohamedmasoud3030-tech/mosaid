@@ -25,8 +25,8 @@ import (
 
 // Config holds the G4F provider configuration.
 type Config struct {
-	BaseURL          string        `json:"base_url"`           // Default: http://localhost:8080
-	ModelID          string        `json:"model_id"`           // Model to use
+	BaseURL          string        `json:"base_url"` // Default: http://localhost:8080
+	ModelID          string        `json:"model_id"` // Model to use
 	Timeout          time.Duration `json:"timeout"`
 	MaxResponseBytes int64         `json:"max_response_bytes"`
 }
@@ -66,16 +66,16 @@ func (p *Provider) Tier() providers.ProviderTier {
 
 func (p *Provider) Capabilities(ctx context.Context) (providers.Capabilities, error) {
 	return providers.Capabilities{
-		Text:              true,
-		StructuredOutput:  true,
-		Vision:            true, // G4F supports vision via GPT-4o
-		Coding:            true,
-		ArabicQuality:     providers.QualityHigh,
-		MaxContextTokens:  128000, // GPT-4 level context
-		TunnelType:        "none",
+		Text:                true,
+		StructuredOutput:    true,
+		Vision:              true, // G4F supports vision via GPT-4o
+		Coding:              true,
+		ArabicQuality:       providers.QualityHigh,
+		MaxContextTokens:    128000, // GPT-4 level context
+		TunnelType:          "none",
 		IsReverseEngineered: true, // G4F uses reverse engineering
-		IsLocalOnly:       true,   // Runs on localhost
-		SessionBased:      false,
+		IsLocalOnly:         true, // Runs on localhost
+		SessionBased:        false,
 	}, nil
 }
 
@@ -261,13 +261,13 @@ func (p *Provider) EstimateCost(req providers.Request) (providers.CostEstimate, 
 // OpenAI-compatible types for G4F
 
 type openAIRequest struct {
-	Model          string           `json:"model"`
-	Messages       []openAIMessage  `json:"messages"`
-	MaxTokens      int              `json:"max_tokens"`
-	Temperature    float64          `json:"temperature"`
-	Tools          []openAITool     `json:"tools,omitempty"`
-	ResponseFormat *responseFormat  `json:"response_format,omitempty"`
-	Stop           []string         `json:"stop,omitempty"`
+	Model          string          `json:"model"`
+	Messages       []openAIMessage `json:"messages"`
+	MaxTokens      int             `json:"max_tokens"`
+	Temperature    float64         `json:"temperature"`
+	Tools          []openAITool    `json:"tools,omitempty"`
+	ResponseFormat *responseFormat `json:"response_format,omitempty"`
+	Stop           []string        `json:"stop,omitempty"`
 }
 
 type openAIMessage struct {

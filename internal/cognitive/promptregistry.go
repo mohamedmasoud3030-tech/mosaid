@@ -12,25 +12,25 @@ import (
 )
 
 var (
-	ErrPromptNotFound     = errors.New("prompt not found")
-	ErrPromptConflict     = errors.New("prompt version already exists")
-	ErrPromptIntegrity    = errors.New("prompt integrity verification failed")
-	ErrPromptForbidden    = errors.New("prompt overrides forbidden system content")
-	ErrInvalidPromptMeta  = errors.New("invalid prompt metadata")
+	ErrPromptNotFound    = errors.New("prompt not found")
+	ErrPromptConflict    = errors.New("prompt version already exists")
+	ErrPromptIntegrity   = errors.New("prompt integrity verification failed")
+	ErrPromptForbidden   = errors.New("prompt overrides forbidden system content")
+	ErrInvalidPromptMeta = errors.New("invalid prompt metadata")
 )
 
 var promptIDPattern = regexp.MustCompile(`^[a-z][a-z0-9/-]{1,255}$`)
 
 // PromptMetadata contains metadata about a registered prompt.
 type PromptMetadata struct {
-	ID                   string   `json:"id"`                     // e.g., "core/planning/v2"
-	Version              string   `json:"version"`                // e.g., "2.1.0"
-	Purpose              string   `json:"purpose"`                // Human-readable description
-	IntegritySHA256      string   `json:"integrity_sha256"`       // SHA-256 of content
-	LastReviewed         string   `json:"last_reviewed"`          // Date string
-	RequiredCapabilities []string `json:"required_capabilities"`  // e.g., ["structured-output"]
-	AllowedTools         []string `json:"allowed_tools"`          // Tools this prompt can use
-	Risk                 string   `json:"risk"`                   // "low", "medium", "high"
+	ID                   string   `json:"id"`                    // e.g., "core/planning/v2"
+	Version              string   `json:"version"`               // e.g., "2.1.0"
+	Purpose              string   `json:"purpose"`               // Human-readable description
+	IntegritySHA256      string   `json:"integrity_sha256"`      // SHA-256 of content
+	LastReviewed         string   `json:"last_reviewed"`         // Date string
+	RequiredCapabilities []string `json:"required_capabilities"` // e.g., ["structured-output"]
+	AllowedTools         []string `json:"allowed_tools"`         // Tools this prompt can use
+	Risk                 string   `json:"risk"`                  // "low", "medium", "high"
 }
 
 // PromptEntry represents a registered prompt with its content and metadata.

@@ -7,7 +7,7 @@ import (
 
 // Registry manages the collection of registered providers.
 type Registry struct {
-	mu       sync.RWMutex
+	mu        sync.RWMutex
 	providers map[string]Provider
 	policy    BillingPolicy
 }

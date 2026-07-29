@@ -66,10 +66,10 @@ type GoalStore interface {
 
 // Engine is the Cognitive Engine that drives the execution loop.
 type Engine struct {
-	llm    LLMCaller
-	tools  ToolExecutor
-	store  GoalStore
-	guard  *LoopGuard
+	llm   LLMCaller
+	tools ToolExecutor
+	store GoalStore
+	guard *LoopGuard
 }
 
 // NewEngine creates a new Cognitive Engine.
@@ -112,9 +112,9 @@ func (e *Engine) StartRun(ctx context.Context, goalID string) (Run, error) {
 	}
 
 	run := Run{
-		ID:         generateID("run"),
-		GoalID:     goalID,
-		State:      RunPending,
+		ID:     generateID("run"),
+		GoalID: goalID,
+		State:  RunPending,
 		Budgets: RunBudgets{
 			MaxSteps:            50,
 			MaxTokens:           100000,
@@ -124,10 +124,10 @@ func (e *Engine) StartRun(ctx context.Context, goalID string) (Run, error) {
 			TimeoutSeconds:      1800, // 30 minutes
 			MaxSpendUSD:         0,    // Always zero
 		},
-		MaxReplans: 3,
+		MaxReplans:  3,
 		ReplanCount: 0,
-		CreatedAt:  time.Now().UTC(),
-		UpdatedAt:  time.Now().UTC(),
+		CreatedAt:   time.Now().UTC(),
+		UpdatedAt:   time.Now().UTC(),
 	}
 
 	if err := e.store.SaveRun(ctx, run); err != nil {
@@ -381,8 +381,8 @@ func (e *Engine) verify(ctx context.Context, goal Goal, run Run) error {
 	e.guard.RecordTokens(resp.Usage.TotalTokens)
 
 	var result struct {
-		Passed  bool   `json:"passed"`
-		Reason  string `json:"reason"`
+		Passed bool   `json:"passed"`
+		Reason string `json:"reason"`
 	}
 	if err := json.Unmarshal([]byte(resp.Content), &result); err != nil {
 		return fmt.Errorf("parse verification: %w", err)

@@ -29,8 +29,8 @@ type Environment struct {
 
 // MockProviderConfig configures a mock provider for benchmarks.
 type MockProviderConfig struct {
-	ID       string
-	Scenario string // "success", "failure", "slow", etc.
+	ID        string
+	Scenario  string   // "success", "failure", "slow", etc.
 	Responses []string // Pre-defined responses
 }
 
@@ -42,15 +42,15 @@ type BenchmarkStore interface {
 
 // Result records the outcome of a benchmark scenario.
 type Result struct {
-	ScenarioID  string        `json:"scenario_id"`
-	Suite       string        `json:"suite"`
-	Passed      bool          `json:"passed"`
-	Duration    time.Duration `json:"duration"`
-	Error       string        `json:"error,omitempty"`
-	Details     string        `json:"details,omitempty"`
-	ProviderUsed string       `json:"provider_used,omitempty"`
-	TokensUsed  int           `json:"tokens_used,omitempty"`
-	Timestamp   time.Time     `json:"timestamp"`
+	ScenarioID   string        `json:"scenario_id"`
+	Suite        string        `json:"suite"`
+	Passed       bool          `json:"passed"`
+	Duration     time.Duration `json:"duration"`
+	Error        string        `json:"error,omitempty"`
+	Details      string        `json:"details,omitempty"`
+	ProviderUsed string        `json:"provider_used,omitempty"`
+	TokensUsed   int           `json:"tokens_used,omitempty"`
+	Timestamp    time.Time     `json:"timestamp"`
 }
 
 // Suite represents a collection of benchmark scenarios.
@@ -285,9 +285,9 @@ func Summary(results []Result) string {
 	}
 
 	b, _ := json.MarshalIndent(struct {
-		Total   int `json:"total"`
-		Passed  int `json:"passed"`
-		Failed  int `json:"failed"`
+		Total   int      `json:"total"`
+		Passed  int      `json:"passed"`
+		Failed  int      `json:"failed"`
 		Results []Result `json:"results"`
 	}{len(results), passed, failed, results}, "", "  ")
 

@@ -10,38 +10,38 @@ import (
 )
 
 var (
-	ErrMaxStepsExceeded      = errors.New("maximum steps exceeded")
-	ErrMaxRepeatedActions    = errors.New("maximum repeated actions exceeded")
-	ErrMaxNoProgressSteps    = errors.New("maximum no-progress steps exceeded")
-	ErrRetryBudgetExhausted  = errors.New("retry budget exhausted")
-	ErrProviderSwitchLimit   = errors.New("provider switch limit exceeded")
-	ErrTokenBudgetExhausted  = errors.New("token budget exhausted")
+	ErrMaxStepsExceeded        = errors.New("maximum steps exceeded")
+	ErrMaxRepeatedActions      = errors.New("maximum repeated actions exceeded")
+	ErrMaxNoProgressSteps      = errors.New("maximum no-progress steps exceeded")
+	ErrRetryBudgetExhausted    = errors.New("retry budget exhausted")
+	ErrProviderSwitchLimit     = errors.New("provider switch limit exceeded")
+	ErrTokenBudgetExhausted    = errors.New("token budget exhausted")
 	ErrToolCallBudgetExhausted = errors.New("tool call budget exhausted")
-	ErrTimeBudgetExhausted   = errors.New("time budget exhausted")
+	ErrTimeBudgetExhausted     = errors.New("time budget exhausted")
 )
 
 // LoopGuard prevents infinite loops and unbounded execution.
 type LoopGuard struct {
-	MaxSteps              int
-	MaxRepeatedActions    int
-	MaxNoProgressSteps    int
-	StateFingerprints     map[string]int
-	RetryBudget           int
-	ProviderSwitchBudget  int
-	TokenBudget           int
-	ToolCallBudget        int
-	TimeBudget            time.Duration
+	MaxSteps             int
+	MaxRepeatedActions   int
+	MaxNoProgressSteps   int
+	StateFingerprints    map[string]int
+	RetryBudget          int
+	ProviderSwitchBudget int
+	TokenBudget          int
+	ToolCallBudget       int
+	TimeBudget           time.Duration
 
 	// Counters
-	steps             int
-	repeatedActions   int
-	noProgressSteps   int
-	retries           int
-	providerSwitches  int
-	tokensUsed        int
-	toolCalls         int
-	startTime         time.Time
-	lastProgressStep  int
+	steps            int
+	repeatedActions  int
+	noProgressSteps  int
+	retries          int
+	providerSwitches int
+	tokensUsed       int
+	toolCalls        int
+	startTime        time.Time
+	lastProgressStep int
 }
 
 // DefaultLoopGuard returns a loop guard with sensible defaults.

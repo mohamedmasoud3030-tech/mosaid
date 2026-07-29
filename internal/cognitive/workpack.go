@@ -19,30 +19,30 @@ var workPackIDPattern = regexp.MustCompile(`^[a-z][a-z0-9-]{1,127}$`)
 type WorkPackStatus string
 
 const (
-	WorkPackDraft     WorkPackStatus = "draft"
-	WorkPackBuilding  WorkPackStatus = "building"
-	WorkPackComplete  WorkPackStatus = "complete"
+	WorkPackDraft      WorkPackStatus = "draft"
+	WorkPackBuilding   WorkPackStatus = "building"
+	WorkPackComplete   WorkPackStatus = "complete"
 	WorkPackDeprecated WorkPackStatus = "deprecated"
 )
 
 // WorkPack represents a pre-defined, tested, beginner-friendly task template.
 type WorkPack struct {
-	ID              string          `json:"id"`
-	Name            string          `json:"name"`
-	Description     string          `json:"description"`
-	Version         string          `json:"version"`
-	Status          WorkPackStatus  `json:"status"`
-	Priority        int             `json:"priority"` // 1 = highest
-	Category        string          `json:"category"`
-	IntakeSchema    json.RawMessage `json:"intake_schema"`    // JSON Schema for inputs
-	Workflow        []WorkflowStep  `json:"workflow"`         // Ordered steps
-	RequiredTools   []string        `json:"required_tools"`
-	QualityChecks   []QualityCheck  `json:"quality_checks"`
-	DeliveryFormat  string          `json:"delivery_format"`  // e.g., "markdown", "json", "file"
-	BeginnerGuide   string          `json:"beginner_guide"`   // Step-by-step guide for beginners
-	EstimatedMinutes int            `json:"estimated_minutes"`
-	CreatedAt       time.Time       `json:"created_at"`
-	UpdatedAt       time.Time       `json:"updated_at"`
+	ID               string          `json:"id"`
+	Name             string          `json:"name"`
+	Description      string          `json:"description"`
+	Version          string          `json:"version"`
+	Status           WorkPackStatus  `json:"status"`
+	Priority         int             `json:"priority"` // 1 = highest
+	Category         string          `json:"category"`
+	IntakeSchema     json.RawMessage `json:"intake_schema"` // JSON Schema for inputs
+	Workflow         []WorkflowStep  `json:"workflow"`      // Ordered steps
+	RequiredTools    []string        `json:"required_tools"`
+	QualityChecks    []QualityCheck  `json:"quality_checks"`
+	DeliveryFormat   string          `json:"delivery_format"` // e.g., "markdown", "json", "file"
+	BeginnerGuide    string          `json:"beginner_guide"`  // Step-by-step guide for beginners
+	EstimatedMinutes int             `json:"estimated_minutes"`
+	CreatedAt        time.Time       `json:"created_at"`
+	UpdatedAt        time.Time       `json:"updated_at"`
 }
 
 // WorkflowStep represents one step in a work pack's workflow.

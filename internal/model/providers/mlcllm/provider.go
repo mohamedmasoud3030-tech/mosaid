@@ -22,8 +22,8 @@ import (
 
 // Config holds the MLC LLM provider configuration.
 type Config struct {
-	BaseURL          string        `json:"base_url"`           // Default: http://127.0.0.1:8081
-	ModelID          string        `json:"model_id"`           // Model name
+	BaseURL          string        `json:"base_url"` // Default: http://127.0.0.1:8081
+	ModelID          string        `json:"model_id"` // Model name
 	Timeout          time.Duration `json:"timeout"`
 	MaxResponseBytes int64         `json:"max_response_bytes"`
 }
@@ -63,16 +63,16 @@ func (p *Provider) Tier() providers.ProviderTier {
 
 func (p *Provider) Capabilities(ctx context.Context) (providers.Capabilities, error) {
 	return providers.Capabilities{
-		Text:              true,
-		StructuredOutput:  false, // Small models may not support structured output well
-		NativeToolCalling: false, // Small models may not support tool calling
-		Coding:            true,
-		ArabicQuality:     providers.QualityMedium,
-		MaxContextTokens:  8192, // Small models have limited context
-		TunnelType:        "none",
+		Text:                true,
+		StructuredOutput:    false, // Small models may not support structured output well
+		NativeToolCalling:   false, // Small models may not support tool calling
+		Coding:              true,
+		ArabicQuality:       providers.QualityMedium,
+		MaxContextTokens:    8192, // Small models have limited context
+		TunnelType:          "none",
 		IsReverseEngineered: false,
-		IsLocalOnly:       true,
-		SessionBased:      false,
+		IsLocalOnly:         true,
+		SessionBased:        false,
 	}, nil
 }
 

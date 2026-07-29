@@ -17,32 +17,32 @@ import (
 type Scenario string
 
 const (
-	ScenarioSuccess               Scenario = "success"
-	ScenarioStructuredJSON        Scenario = "structured_json"
-	ScenarioToolCalls             Scenario = "tool_calls"
-	ScenarioMalformedJSON         Scenario = "malformed_json"
-	ScenarioTimeout               Scenario = "timeout"
-	ScenarioRateLimit             Scenario = "rate_limit"
-	ScenarioTemporaryFailure      Scenario = "temporary_failure"
-	ScenarioPermanentFailure      Scenario = "permanent_failure"
-	ScenarioContextOverflow       Scenario = "context_overflow"
-	ScenarioNonzeroCostRejection  Scenario = "nonzero_cost_rejection"
-	ScenarioKaggleSessionExpired  Scenario = "kaggle_session_expired"
-	ScenarioG4FEndpointRotated    Scenario = "g4f_endpoint_rotated"
-	ScenarioMLCSlowResponse       Scenario = "mlc_slow_response"
+	ScenarioSuccess              Scenario = "success"
+	ScenarioStructuredJSON       Scenario = "structured_json"
+	ScenarioToolCalls            Scenario = "tool_calls"
+	ScenarioMalformedJSON        Scenario = "malformed_json"
+	ScenarioTimeout              Scenario = "timeout"
+	ScenarioRateLimit            Scenario = "rate_limit"
+	ScenarioTemporaryFailure     Scenario = "temporary_failure"
+	ScenarioPermanentFailure     Scenario = "permanent_failure"
+	ScenarioContextOverflow      Scenario = "context_overflow"
+	ScenarioNonzeroCostRejection Scenario = "nonzero_cost_rejection"
+	ScenarioKaggleSessionExpired Scenario = "kaggle_session_expired"
+	ScenarioG4FEndpointRotated   Scenario = "g4f_endpoint_rotated"
+	ScenarioMLCSlowResponse      Scenario = "mlc_slow_response"
 )
 
 // Config holds mock provider configuration.
 type Config struct {
-	ID       string         `json:"id"`
+	ID       string                 `json:"id"`
 	Tier     providers.ProviderTier `json:"tier"`
-	Scenario Scenario       `json:"scenario"`
+	Scenario Scenario               `json:"scenario"`
 	Caps     providers.Capabilities `json:"caps"`
 }
 
 // Provider implements providers.Provider for testing.
 type Provider struct {
-	cfg      Config
+	cfg       Config
 	callCount int
 }
 
@@ -83,9 +83,9 @@ func (p *Provider) Health(ctx context.Context) providers.Health {
 		}
 	case ScenarioKaggleSessionExpired:
 		return providers.Health{
-			Status:         providers.HealthDown,
-			LastCheck:      time.Now().UTC(),
-			LastError:      "kaggle session expired",
+			Status:        providers.HealthDown,
+			LastCheck:     time.Now().UTC(),
+			LastError:     "kaggle session expired",
 			SessionActive: false,
 		}
 	default:
@@ -221,10 +221,10 @@ func (p *Provider) CallCount() int {
 // MarshalJSON implements json.Marshaler for inspection in tests.
 func (p *Provider) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		ID        string         `json:"id"`
+		ID        string                 `json:"id"`
 		Tier      providers.ProviderTier `json:"tier"`
-		Scenario  Scenario       `json:"scenario"`
-		CallCount int            `json:"call_count"`
+		Scenario  Scenario               `json:"scenario"`
+		CallCount int                    `json:"call_count"`
 	}{
 		ID:        p.cfg.ID,
 		Tier:      p.cfg.Tier,

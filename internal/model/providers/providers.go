@@ -14,18 +14,18 @@ import (
 
 // Common errors returned by the provider platform.
 var (
-	ErrProviderNotFound      = errors.New("provider not found")
-	ErrProviderUnavailable   = errors.New("provider unavailable")
-	ErrProviderExhausted     = errors.New("all providers exhausted")
-	ErrCostNotZero           = errors.New("provider estimated non-zero cost")
-	ErrTierNotAllowed        = errors.New("provider tier not allowed in current billing mode")
-	ErrCapabilityMissing     = errors.New("provider lacks required capability")
-	ErrRequestTooLarge       = errors.New("request exceeds provider context limit")
-	ErrInvalidRequest        = errors.New("invalid request")
-	ErrSessionExpired        = errors.New("provider session expired")
-	ErrRateLimited           = errors.New("provider rate limited")
-	ErrMalformedResponse     = errors.New("malformed provider response")
-	ErrContextOverflow       = errors.New("context window overflow")
+	ErrProviderNotFound    = errors.New("provider not found")
+	ErrProviderUnavailable = errors.New("provider unavailable")
+	ErrProviderExhausted   = errors.New("all providers exhausted")
+	ErrCostNotZero         = errors.New("provider estimated non-zero cost")
+	ErrTierNotAllowed      = errors.New("provider tier not allowed in current billing mode")
+	ErrCapabilityMissing   = errors.New("provider lacks required capability")
+	ErrRequestTooLarge     = errors.New("request exceeds provider context limit")
+	ErrInvalidRequest      = errors.New("invalid request")
+	ErrSessionExpired      = errors.New("provider session expired")
+	ErrRateLimited         = errors.New("provider rate limited")
+	ErrMalformedResponse   = errors.New("malformed provider response")
+	ErrContextOverflow     = errors.New("context window overflow")
 )
 
 // ProviderTier classifies the cost model of a provider.
@@ -63,18 +63,18 @@ const (
 
 // Capabilities describes what a provider can do.
 type Capabilities struct {
-	Text              bool         `json:"text"`
-	StructuredOutput  bool         `json:"structured_output"`
-	NativeToolCalling bool         `json:"native_tool_calling"`
-	Vision            bool         `json:"vision"`
-	Coding            bool         `json:"coding"`
-	LongContext       bool         `json:"long_context"` // > 32K tokens
-	ArabicQuality     QualityLevel `json:"arabic_quality"`
-	MaxContextTokens  int          `json:"max_context_tokens"`
-	TunnelType        string       `json:"tunnel_type"`           // "cloudflared" | "ngrok" | "zrok" | "none"
-	IsReverseEngineered bool      `json:"is_reverse_engineered"` // G4F etc.
-	IsLocalOnly       bool         `json:"is_local_only"`         // MLC/llama.cpp
-	SessionBased      bool         `json:"session_based"`         // Kaggle — session ends
+	Text                bool         `json:"text"`
+	StructuredOutput    bool         `json:"structured_output"`
+	NativeToolCalling   bool         `json:"native_tool_calling"`
+	Vision              bool         `json:"vision"`
+	Coding              bool         `json:"coding"`
+	LongContext         bool         `json:"long_context"` // > 32K tokens
+	ArabicQuality       QualityLevel `json:"arabic_quality"`
+	MaxContextTokens    int          `json:"max_context_tokens"`
+	TunnelType          string       `json:"tunnel_type"`           // "cloudflared" | "ngrok" | "zrok" | "none"
+	IsReverseEngineered bool         `json:"is_reverse_engineered"` // G4F etc.
+	IsLocalOnly         bool         `json:"is_local_only"`         // MLC/llama.cpp
+	SessionBased        bool         `json:"session_based"`         // Kaggle — session ends
 }
 
 // Has returns true if the capabilities include all the required capabilities.
@@ -125,19 +125,19 @@ func qualityRank(q QualityLevel) int {
 type HealthStatus string
 
 const (
-	HealthUp      HealthStatus = "up"
+	HealthUp       HealthStatus = "up"
 	HealthDegraded HealthStatus = "degraded"
-	HealthDown    HealthStatus = "down"
-	HealthUnknown HealthStatus = "unknown"
+	HealthDown     HealthStatus = "down"
+	HealthUnknown  HealthStatus = "unknown"
 )
 
 // Health describes the current health of a provider.
 type Health struct {
-	Status       HealthStatus `json:"status"`
-	LastCheck    time.Time    `json:"last_check"`
-	LastError    string       `json:"last_error,omitempty"`
-	LatencyMs    int64        `json:"latency_ms,omitempty"`
-	SessionActive bool        `json:"session_active,omitempty"` // For Kaggle
+	Status        HealthStatus `json:"status"`
+	LastCheck     time.Time    `json:"last_check"`
+	LastError     string       `json:"last_error,omitempty"`
+	LatencyMs     int64        `json:"latency_ms,omitempty"`
+	SessionActive bool         `json:"session_active,omitempty"` // For Kaggle
 }
 
 // CostEstimate represents the estimated cost of a request.
@@ -182,8 +182,8 @@ type Response struct {
 	FinishReason string     `json:"finish_reason"` // "stop", "length", "tool_calls", "error"
 	ToolCalls    []ToolCall `json:"tool_calls,omitempty"`
 	Usage        Usage      `json:"usage"`
-	Model        string     `json:"model"`         // Actual model used
-	Provider     string     `json:"provider"`      // Provider ID
+	Model        string     `json:"model"`    // Actual model used
+	Provider     string     `json:"provider"` // Provider ID
 }
 
 // ToolCall represents a tool invocation from the model.
@@ -204,11 +204,11 @@ type Usage struct {
 type TaskType string
 
 const (
-	TaskPlanning        TaskType = "planning_and_reasoning"
-	TaskCoding          TaskType = "coding"
-	TaskVision          TaskType = "vision"
-	TaskFast            TaskType = "fast_tasks"
-	TaskGeneral         TaskType = "general"
+	TaskPlanning TaskType = "planning_and_reasoning"
+	TaskCoding   TaskType = "coding"
+	TaskVision   TaskType = "vision"
+	TaskFast     TaskType = "fast_tasks"
+	TaskGeneral  TaskType = "general"
 )
 
 // Provider is the interface that all LLM providers must implement.

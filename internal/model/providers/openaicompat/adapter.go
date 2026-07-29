@@ -18,14 +18,14 @@ import (
 
 // Config holds the configuration for an OpenAI-compatible provider.
 type Config struct {
-	ID              string              `json:"id"`
-	BaseURL         string              `json:"base_url"`
-	APIKey          string              `json:"api_key"`          // Empty for local/tunnel providers
-	ModelID         string              `json:"model_id"`
-	Tier            providers.ProviderTier `json:"tier"`
-	Timeout         time.Duration       `json:"timeout"`
-	MaxResponseBytes int64              `json:"max_response_bytes"`
-	Caps            providers.Capabilities `json:"caps"`
+	ID               string                 `json:"id"`
+	BaseURL          string                 `json:"base_url"`
+	APIKey           string                 `json:"api_key"` // Empty for local/tunnel providers
+	ModelID          string                 `json:"model_id"`
+	Tier             providers.ProviderTier `json:"tier"`
+	Timeout          time.Duration          `json:"timeout"`
+	MaxResponseBytes int64                  `json:"max_response_bytes"`
+	Caps             providers.Capabilities `json:"caps"`
 }
 
 // Provider implements providers.Provider for OpenAI-compatible endpoints.
@@ -256,13 +256,13 @@ func (p *Provider) EstimateCost(req providers.Request) (providers.CostEstimate, 
 // OpenAI API types
 
 type openAIRequest struct {
-	Model        string           `json:"model"`
-	Messages     []openAIMessage  `json:"messages"`
-	MaxTokens    int              `json:"max_tokens"`
-	Temperature  float64          `json:"temperature"`
-	Tools        []openAITool     `json:"tools,omitempty"`
+	Model          string          `json:"model"`
+	Messages       []openAIMessage `json:"messages"`
+	MaxTokens      int             `json:"max_tokens"`
+	Temperature    float64         `json:"temperature"`
+	Tools          []openAITool    `json:"tools,omitempty"`
 	ResponseFormat *responseFormat `json:"response_format,omitempty"`
-	Stop         []string         `json:"stop,omitempty"`
+	Stop           []string        `json:"stop,omitempty"`
 }
 
 type openAIMessage struct {
@@ -302,9 +302,9 @@ type openAIResponse struct {
 	Created int64  `json:"created"`
 	Model   string `json:"model"`
 	Choices []struct {
-		Index        int    `json:"index"`
+		Index        int           `json:"index"`
 		Message      openAIMessage `json:"message"`
-		FinishReason string `json:"finish_reason"`
+		FinishReason string        `json:"finish_reason"`
 	} `json:"choices"`
 	Usage struct {
 		PromptTokens     int `json:"prompt_tokens"`

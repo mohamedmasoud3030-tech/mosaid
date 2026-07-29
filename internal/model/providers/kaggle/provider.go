@@ -23,10 +23,10 @@ import (
 
 // Config holds the Kaggle tunnel provider configuration.
 type Config struct {
-	BaseURL      string `json:"base_url"`       // Cloudflared tunnel URL
-	ModelID      string `json:"model_id"`        // Model name on vLLM
-	Timeout      time.Duration `json:"timeout"`
-	MaxResponseBytes int64 `json:"max_response_bytes"`
+	BaseURL          string        `json:"base_url"` // Cloudflared tunnel URL
+	ModelID          string        `json:"model_id"` // Model name on vLLM
+	Timeout          time.Duration `json:"timeout"`
+	MaxResponseBytes int64         `json:"max_response_bytes"`
 }
 
 // Provider implements providers.Provider for Kaggle GPU Tunnel.
@@ -61,17 +61,17 @@ func (p *Provider) Tier() providers.ProviderTier {
 
 func (p *Provider) Capabilities(ctx context.Context) (providers.Capabilities, error) {
 	return providers.Capabilities{
-		Text:              true,
-		StructuredOutput:  true,
-		NativeToolCalling: true,
-		Coding:            true,
-		LongContext:       true, // 32K tokens
-		ArabicQuality:     providers.QualityHigh,
-		MaxContextTokens:  32768,
-		TunnelType:        "cloudflared",
+		Text:                true,
+		StructuredOutput:    true,
+		NativeToolCalling:   true,
+		Coding:              true,
+		LongContext:         true, // 32K tokens
+		ArabicQuality:       providers.QualityHigh,
+		MaxContextTokens:    32768,
+		TunnelType:          "cloudflared",
 		IsReverseEngineered: false,
-		IsLocalOnly:       false, // Accessible via tunnel
-		SessionBased:      true,  // Kaggle sessions expire
+		IsLocalOnly:         false, // Accessible via tunnel
+		SessionBased:        true,  // Kaggle sessions expire
 	}, nil
 }
 
@@ -104,10 +104,10 @@ func (p *Provider) Health(ctx context.Context) providers.Health {
 		resp2, err2 := p.client.Do(req2)
 		if err2 != nil {
 			return providers.Health{
-				Status:         providers.HealthDown,
-				LastCheck:      time.Now().UTC(),
-				LastError:      err.Error(),
-				LatencyMs:      time.Since(start).Milliseconds(),
+				Status:        providers.HealthDown,
+				LastCheck:     time.Now().UTC(),
+				LastError:     err.Error(),
+				LatencyMs:     time.Since(start).Milliseconds(),
 				SessionActive: false,
 			}
 		}
@@ -116,18 +116,18 @@ func (p *Provider) Health(ctx context.Context) providers.Health {
 
 		if resp2.StatusCode >= 500 {
 			return providers.Health{
-				Status:         providers.HealthDown,
-				LastCheck:      time.Now().UTC(),
-				LastError:      fmt.Sprintf("HTTP %d", resp2.StatusCode),
-				LatencyMs:      time.Since(start).Milliseconds(),
+				Status:        providers.HealthDown,
+				LastCheck:     time.Now().UTC(),
+				LastError:     fmt.Sprintf("HTTP %d", resp2.StatusCode),
+				LatencyMs:     time.Since(start).Milliseconds(),
 				SessionActive: false,
 			}
 		}
 
 		return providers.Health{
-			Status:         providers.HealthUp,
-			LastCheck:      time.Now().UTC(),
-			LatencyMs:      time.Since(start).Milliseconds(),
+			Status:        providers.HealthUp,
+			LastCheck:     time.Now().UTC(),
+			LatencyMs:     time.Since(start).Milliseconds(),
 			SessionActive: true,
 		}
 	}
@@ -136,18 +136,18 @@ func (p *Provider) Health(ctx context.Context) providers.Health {
 
 	if resp.StatusCode >= 500 {
 		return providers.Health{
-			Status:         providers.HealthDown,
-			LastCheck:      time.Now().UTC(),
-			LastError:      fmt.Sprintf("HTTP %d", resp.StatusCode),
-			LatencyMs:      time.Since(start).Milliseconds(),
+			Status:        providers.HealthDown,
+			LastCheck:     time.Now().UTC(),
+			LastError:     fmt.Sprintf("HTTP %d", resp.StatusCode),
+			LatencyMs:     time.Since(start).Milliseconds(),
 			SessionActive: false,
 		}
 	}
 
 	return providers.Health{
-		Status:         providers.HealthUp,
-		LastCheck:      time.Now().UTC(),
-		LatencyMs:      time.Since(start).Milliseconds(),
+		Status:        providers.HealthUp,
+		LastCheck:     time.Now().UTC(),
+		LatencyMs:     time.Since(start).Milliseconds(),
 		SessionActive: true,
 	}
 }
@@ -292,13 +292,13 @@ func (p *Provider) EstimateCost(req providers.Request) (providers.CostEstimate, 
 // OpenAI-compatible types for Kaggle/vLLM
 
 type openAIRequest struct {
-	Model          string           `json:"model"`
-	Messages       []openAIMessage  `json:"messages"`
-	MaxTokens      int              `json:"max_tokens"`
-	Temperature    float64          `json:"temperature"`
-	Tools          []openAITool     `json:"tools,omitempty"`
-	ResponseFormat *responseFormat  `json:"response_format,omitempty"`
-	Stop           []string         `json:"stop,omitempty"`
+	Model          string          `json:"model"`
+	Messages       []openAIMessage `json:"messages"`
+	MaxTokens      int             `json:"max_tokens"`
+	Temperature    float64         `json:"temperature"`
+	Tools          []openAITool    `json:"tools,omitempty"`
+	ResponseFormat *responseFormat `json:"response_format,omitempty"`
+	Stop           []string        `json:"stop,omitempty"`
 }
 
 type openAIMessage struct {

@@ -159,13 +159,13 @@ func TestWorkPackHasQualityChecks(t *testing.T) {
 
 func validTestWorkPack() *cognitive.WorkPack {
 	return &cognitive.WorkPack{
-		ID:          "test-pack",
-		Name:        "Test Pack",
-		Description: "A test work pack for unit testing purposes",
-		Version:     "1.0.0",
-		Status:      cognitive.WorkPackComplete,
-		Priority:    1,
-		Category:    "test",
+		ID:           "test-pack",
+		Name:         "Test Pack",
+		Description:  "A test work pack for unit testing purposes",
+		Version:      "1.0.0",
+		Status:       cognitive.WorkPackComplete,
+		Priority:     1,
+		Category:     "test",
 		IntakeSchema: []byte(`{"type":"object","properties":{"input":{"type":"string"}},"required":["input"],"additionalProperties":false}`),
 		Workflow: []cognitive.WorkflowStep{
 			{Name: "step1", Description: "First step", Risk: "low"},

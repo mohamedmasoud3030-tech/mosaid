@@ -10,10 +10,10 @@ import (
 
 // FallbackEntry represents one entry in a fallback chain.
 type FallbackEntry struct {
-	ProviderID string     `json:"provider_id"`
+	ProviderID string       `json:"provider_id"`
 	Tier       ProviderTier `json:"tier"`
-	When       string     `json:"when"`   // "always", "session_active", "emergency_only", etc.
-	Action     string     `json:"action"` // "persist_and_stop" for the final entry
+	When       string       `json:"when"`   // "always", "session_active", "emergency_only", etc.
+	Action     string       `json:"action"` // "persist_and_stop" for the final entry
 }
 
 // FallbackChain defines the order of providers to try for a task type.
@@ -25,10 +25,10 @@ type FallbackChain struct {
 
 // Router selects the best provider for a request based on capabilities and fallback chains.
 type Router struct {
-	mu           sync.RWMutex
-	registry     *Registry
-	chains       map[TaskType][]FallbackEntry
-	lastHealth   map[string]Health
+	mu            sync.RWMutex
+	registry      *Registry
+	chains        map[TaskType][]FallbackEntry
+	lastHealth    map[string]Health
 	providerOrder []string // Stable ordering
 }
 

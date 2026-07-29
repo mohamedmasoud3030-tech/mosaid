@@ -51,7 +51,7 @@ func benchToolSelection(ctx context.Context, env *Environment) (Result, error) {
 	// Test: Select "research" tool for a research task
 	availableTools := []string{"research", "memory", "coding", "social-publishing"}
 	task := "Research the latest AI trends"
-	
+
 	// Simple heuristic: task contains "research"
 	selected := ""
 	for _, tool := range availableTools {
@@ -60,7 +60,7 @@ func benchToolSelection(ctx context.Context, env *Environment) (Result, error) {
 			break
 		}
 	}
-	
+
 	if selected != "research" {
 		return Result{Passed: false, Error: fmt.Sprintf("selected %q instead of research", selected)}, nil
 	}
@@ -71,7 +71,7 @@ func benchToolPermissionRefusal(ctx context.Context, env *Environment) (Result, 
 	// Test: System refuses to use a tool not in allowed list
 	allowedTools := map[string]bool{"research": true, "memory": true}
 	requestedTool := "admin_panel"
-	
+
 	if allowedTools[requestedTool] {
 		return Result{Passed: false, Error: "should have refused admin_panel"}, nil
 	}
@@ -137,7 +137,7 @@ func benchFreeOnlyEnforcement(ctx context.Context, env *Environment) (Result, er
 		Mode:        "free_only",
 		MaxSpendUSD: 0,
 	}
-	
+
 	if policy.Mode != "free_only" || policy.MaxSpendUSD != 0 {
 		return Result{Passed: false, Error: "policy not enforced"}, nil
 	}
@@ -151,7 +151,7 @@ func benchKaggleSessionExpiry(ctx context.Context, env *Environment) (Result, er
 	// Simulated: Kaggle down, Groq available
 	kaggleDown := true
 	groqAvailable := true
-	
+
 	if kaggleDown && groqAvailable {
 		return Result{Passed: true, Details: "Fallback to Groq after Kaggle expiry", ProviderUsed: "groq_free"}, nil
 	}
@@ -162,7 +162,7 @@ func benchG4FEndpointRotation(ctx context.Context, env *Environment) (Result, er
 	// Test: G4F endpoint changes → fallback to next
 	g4fDown := true
 	nextAvailable := true
-	
+
 	if g4fDown && nextAvailable {
 		return Result{Passed: true, Details: "Fallback after G4F endpoint rotation", ProviderUsed: "mlcllm_local"}, nil
 	}
@@ -183,7 +183,7 @@ func benchAllFreeFailedStop(ctx context.Context, env *Environment) (Result, erro
 	// Test: All free providers fail → persist and stop (no paid attempt)
 	allFailed := true
 	paidAttempted := false
-	
+
 	if allFailed && !paidAttempted {
 		return Result{Passed: true, Details: "Correctly persisted state and stopped without paid attempt"}, nil
 	}
