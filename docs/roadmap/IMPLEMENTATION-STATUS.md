@@ -11,9 +11,9 @@
 | 6 | COMPLETE | `d5d79d0` | FTS5 lifecycle and secret-rejection tests, race, vet | Model summarization quality pending | Explicit/provenance memory without vector DB |
 | 7 | COMPLETE | `074e61b` | 18 scheduler tests plus migration, unit, race, vet, Linux/Android builds, secret scan | Physical-phone scheduler validation pending | Durable one-time/recurring jobs, missed-run policy, retries, locks, recovery, cancellation, policy-bound execution; reconstructed from remote after the prior local-only loss |
 | 8 | COMPLETE | `8ecf5f9` | strict loader, integrity/schema/version/scope/malicious-manifest tests, race, vet, Linux/Android builds, secret scan | Provider-backed example Skills await their later integration phases | Declarative, builtin Go, and explicit MCP-backed contracts; all tool calls route through the core registry |
-| 9 | COMPLETE | `33fc32b` | official SDK stdio/Streamable HTTP mocks, allowlist/schema/timeout/output/env/path/restart/policy/audit tests, race, vet, Linux/Android builds, secret scan | Real MCP server identity/configuration pending | Official Go SDK v1.7.0; no discovery/download/run, shell launcher, inherited environment, or unpinned identity |
-| 10 | IN PROGRESS | — | — | Search credentials optional | Web/documents |
-| 11 | PLANNED | — | — | Image provider credentials pending | Images |
+| 9 | COMPLETE | `33fc32b` (`103128a` lifetime fix) | official SDK stdio/Streamable HTTP mocks, allowlist/schema/timeout/output/env/path/restart/policy/audit tests, race, vet, Linux/Android builds, secret scan; CI passed after lifetime fix | Real MCP server identity/configuration pending | Official Go SDK v1.7.0; no discovery/download/run, shell launcher, inherited environment, or unpinned identity |
+| 10 | COMPLETE | `d3bf4a7` | SSRF/private-IP/IPv6/metadata/redirect/rebinding/type/size/timeout/prompt-injection tests, race, vet, Linux/Android builds, secret scan | Search provider credentials optional | DNS-pinned public fetches and bounded UTF-8 text documents tagged `UNTRUSTED_EXTERNAL_CONTENT`; no automatic memory/tool authority |
+| 11 | IN PROGRESS | — | — | Image provider credentials pending | Images |
 | 12 | PLANNED | — | — | Meta credentials/account pending | Instagram |
 | 13 | PLANNED | — | — | — | Hardening |
 | 14 | PLANNED | — | — | Physical phone pending | Android package |
