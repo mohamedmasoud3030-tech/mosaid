@@ -13,8 +13,8 @@
 | 8 | COMPLETE | `8ecf5f9` | strict loader, integrity/schema/version/scope/malicious-manifest tests, race, vet, Linux/Android builds, secret scan | Provider-backed example Skills await their later integration phases | Declarative, builtin Go, and explicit MCP-backed contracts; all tool calls route through the core registry |
 | 9 | COMPLETE | `33fc32b` (`103128a` lifetime fix) | official SDK stdio/Streamable HTTP mocks, allowlist/schema/timeout/output/env/path/restart/policy/audit tests, race, vet, Linux/Android builds, secret scan; CI passed after lifetime fix | Real MCP server identity/configuration pending | Official Go SDK v1.7.0; no discovery/download/run, shell launcher, inherited environment, or unpinned identity |
 | 10 | COMPLETE | `d3bf4a7` | SSRF/private-IP/IPv6/metadata/redirect/rebinding/type/size/timeout/prompt-injection tests, race, vet, Linux/Android builds, secret scan | Search provider credentials optional | DNS-pinned public fetches and bounded UTF-8 text documents tagged `UNTRUSTED_EXTERNAL_CONTENT`; no automatic memory/tool authority |
-| 11 | IN PROGRESS | — | — | Image provider credentials pending | Images |
-| 12 | PLANNED | — | — | Meta credentials/account pending | Instagram |
+| 11 | COMPLETE | `6fc902f` | provider mock/OpenAI contract, request/reference/cost/MIME/dimension/hash/artifact/symlink/audit/policy tests, race, vet, Linux/Android builds, secret scan | Image provider credentials pending | Approval-gated external generation with atomic artifact store and no publishing capability |
+| 12 | IN PROGRESS | — | — | Meta credentials and Instagram Professional account pending | Instagram |
 | 13 | PLANNED | — | — | — | Hardening |
 | 14 | PLANNED | — | — | Physical phone pending | Android package |
 | 15 | PLANNED | — | — | — | Final docs/handoff |
