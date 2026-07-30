@@ -27,6 +27,18 @@ Telegram -> Hermes Agent with Mosaid extensions -> model/tools
 
 The phone is the user interface. It does not run a second Mosaid agent runtime.
 
+Oracle is the **host** and is not replaced by any runtime, container platform or sandbox technology. The first gate installs exactly one service on the instance: the pinned Hermes gateway under `mosaid-hermes.service`.
+
+No execution sandbox is installed in the first gate:
+
+- no Docker daemon requirement;
+- no `/dev/kvm` requirement;
+- no AgentENV service, port, image or environment variable;
+- no `--privileged` container;
+- no publicly reachable execution API.
+
+Docker — already supported inside Hermes — is the first isolation option to evaluate after a successful launch. AgentENV remains deferred and conditional. See [`AGENTENV-EXECUTION-BACKEND-DECISION.md`](AGENTENV-EXECUTION-BACKEND-DECISION.md).
+
 ## Access model
 
 ### Server administration
@@ -108,6 +120,7 @@ First preference:
 - Telegram outbound polling or a tightly controlled webhook.
 - No public model API.
 - No public Hermes dashboard.
+- No public execution or sandbox API; port `8000` is not opened to the internet.
 - SSH restricted to a trusted source or private network.
 
 If an HTTP endpoint is later required:
@@ -164,5 +177,7 @@ Only non-secret instance facts are needed for the next deployment step:
 - RAM;
 - disk size;
 - confirmed billing tier.
+
+The following facts are **not** needed for the first gate and are recorded only if a future execution backend is evaluated: kernel version, `/dev/kvm` presence, `/dev/ublk-control` presence and nested-virtualization support. Oracle Always Free Ampere shapes are reported not to expose KVM, which is one reason AgentENV is deferred rather than planned.
 
 Never provide the SSH private key, Auth Token, API secret or Telegram token in chat.

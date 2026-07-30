@@ -26,3 +26,7 @@
 ## Current decision
 
 One runtime will run on Oracle Cloud: `NousResearch/hermes-agent` with Mosaid product assets. The historical Go foundation remains preserved until the Hermes-based deployment passes Phase 17. No destructive migration occurs before that gate.
+
+## Execution isolation
+
+The first release enables no code execution, so no sandbox layer is installed. Oracle hosts, Hermes runs, Mosaid defines. Docker — already built into Hermes — is the first isolation option to evaluate after launch; AgentENV is deferred and conditional. See [AgentENV execution-backend decision](../pivot/AGENTENV-EXECUTION-BACKEND-DECISION.md).

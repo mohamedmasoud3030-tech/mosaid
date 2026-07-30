@@ -22,7 +22,10 @@ pivot/hermes-oracle-runtime-20260729
 Telegram / phone
       |
       v
-Hermes Agent on Oracle Cloud
+Oracle Cloud Compute            <- hosting and compute
+      |
+      v
+Hermes Agent                    <- the single agent runtime
       |
       +-- Mosaid Arabic identity
       +-- Mosaid safety and approval profile
@@ -32,6 +35,19 @@ Hermes Agent on Oracle Cloud
 ```
 
 There will not be two agent runtimes running beside each other.
+
+### Layers
+
+| Layer | Role | Choice |
+|---|---|---|
+| Hosting and compute | The billed machine that exists | **Oracle Cloud Compute** |
+| Agent runtime | Agent loop, gateways, memory, Skills, tools | **Hermes Agent** (pinned) |
+| Product | Identity, Arabic behavior, policy, approvals, Work Packs | **Mosaid** |
+| Execution sandbox | Isolation for untrusted code | **none in the first release** |
+
+Oracle is the host and is not replaced by any runtime or sandbox technology. **There is no fourth layer active today.** The first release runs with `terminal`, `file` and `code_execution` globally disabled, so no sandbox is needed.
+
+If isolated execution becomes necessary after launch, the first option is the **Docker backend already built into Hermes**. [**AgentENV**](https://github.com/kvcache-ai/AgentENV) is a deferred, optional later stage only — it is not a cloud provider, not a replacement for Oracle or Hermes, and not a dependency of this repository. The reasoning, security requirements and adoption gate are in the [AgentENV execution-backend decision](docs/pivot/AGENTENV-EXECUTION-BACKEND-DECISION.md).
 
 ## Completed foundation
 
@@ -55,6 +71,7 @@ This foundation remains preserved until the Hermes-based Oracle deployment passe
 ## Pivot assets
 
 - [Runtime decision](docs/pivot/HERMES-RUNTIME-DECISION.md)
+- [AgentENV execution-backend decision (deferred)](docs/pivot/AGENTENV-EXECUTION-BACKEND-DECISION.md)
 - [Hermes upstream candidate pin](docs/pivot/HERMES-UPSTREAM-PIN.md)
 - [Migration map](docs/pivot/MIGRATION-MAP.md)
 - [Oracle deployment plan](docs/pivot/ORACLE-DEPLOYMENT-PLAN.md)
@@ -75,6 +92,8 @@ Never commit or paste:
 - populated server environment files.
 
 External Skills are not auto-enabled, self-improvement creates drafts only, high-risk actions require owner approval, and the default billing policy is free-only with no paid fallback.
+
+The first release also enables **no code execution at all**: `terminal`, `file`, `code_execution`, `browser`, `computer_use`, `delegation`, `cronjob`, `image_gen`, `video_gen`, `x_search` and the chat/home integrations are globally disabled. Telegram is limited to `web`, `skills`, `todo`, `memory`, `session_search` and `clarify`. These invariants are enforced in CI by `scripts/verify-hermes-pivot.py`.
 
 ## Next gate
 

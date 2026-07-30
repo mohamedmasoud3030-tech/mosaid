@@ -52,7 +52,7 @@ The first gate expects:
 - `git`;
 - `uv` installed from a reviewed package/source;
 - a system user named `mosaid`;
-- Docker only for a later separately approved execution profile. Terminal and code execution are disabled during the first gate.
+- **no** Docker, `/dev/kvm`, AgentENV or any other sandbox runtime. Terminal and code execution are globally disabled during the first gate, so no isolation layer is installed. Docker is the first isolation option to evaluate *after* launch, under a separate ADR; see [`../../docs/pivot/AGENTENV-EXECUTION-BACKEND-DECISION.md`](../../docs/pivot/AGENTENV-EXECUTION-BACKEND-DECISION.md).
 
 Create the service user with the OS-supported system-user command. On common Oracle Linux/Ubuntu images:
 
@@ -127,10 +127,11 @@ sudo systemctl enable mosaid-hermes
 2. The reply follows the Arabic Mosaid identity.
 3. `/mosaid-research` is discoverable.
 4. Telegram has no terminal, file, code execution, browser, delegation, cron or publishing toolset.
-5. Skill and memory writes are staged for approval.
-6. The selected model endpoint has no paid fallback.
-7. Restarting the service preserves the Hermes session state.
-8. Logs and the repository pass secret scans.
+5. No sandbox or execution service is running and no execution port is listening.
+6. Skill and memory writes are staged for approval.
+7. The selected model endpoint has no paid fallback.
+8. Restarting the service preserves the Hermes session state.
+9. Logs and the repository pass secret scans.
 
 ## Rollback
 

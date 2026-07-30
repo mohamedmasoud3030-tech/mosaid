@@ -43,7 +43,14 @@ Do not continue maintaining parallel implementations of:
 - generic MCP client;
 - generic Skill loader;
 - generic cloud/SSH execution backend;
-- generic subagent orchestration.
+- generic subagent orchestration;
+- generic code-execution sandboxing.
+
+## Execution isolation is out of scope for the first gate
+
+Mosaid does not build, adopt or migrate an execution sandbox in this pivot. The first gate runs with `terminal`, `file` and `code_execution` globally disabled, so there is no untrusted code to isolate.
+
+The accepted order is: **no execution → Hermes' built-in Docker backend after launch → AgentENV only if a real need is proven and the host passes a KVM capability gate.** AgentENV is not a hosting provider, not a runtime and not a dependency of this repository. The rationale, security requirements, adoption gate and rollback conditions live in [`AGENTENV-EXECUTION-BACKEND-DECISION.md`](AGENTENV-EXECUTION-BACKEND-DECISION.md).
 
 ## Mosaid extension layout
 
@@ -100,6 +107,7 @@ Each pack must contain:
 
 ## Safety migration rules
 
+- No execution sandbox is enabled in the first gate; enabling one later requires its own ADR.
 - Hermes Skills Hub content is never auto-enabled.
 - Self-created Skills remain drafts until owner approval.
 - Terminal access is restricted to a dedicated workspace user and path.

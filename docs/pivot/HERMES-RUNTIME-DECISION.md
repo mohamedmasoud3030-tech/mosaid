@@ -9,6 +9,19 @@ Mosaid will use `NousResearch/hermes-agent` as its single general-purpose agent 
 
 There will not be a Go Mosaid runtime running beside Hermes. One runtime avoids duplicate agent loops, Telegram gateways, model routers, memory stores, schedulers, MCP clients and skill loaders.
 
+## Layer separation
+
+These four layers are distinct and are not substitutes for one another:
+
+| Layer | Role | Choice |
+|---|---|---|
+| Hosting and compute | The billed machine that exists | **Oracle Cloud Compute** |
+| Agent runtime | Agent loop, gateways, memory, Skills, tools | **Hermes Agent** (pinned) |
+| Product | Identity, Arabic behavior, policy, approvals, Work Packs | **Mosaid** |
+| Execution sandbox | Isolation for untrusted code | **none in First Gate** |
+
+Oracle is the host and is not replaced by any runtime or sandbox technology. There is no fourth layer active today: the First Gate runs with no execution sandbox at all. Docker — already supported inside Hermes — is the first isolation option to consider after a successful launch, and AgentENV is a deferred, optional, conditional later stage. See [`AGENTENV-EXECUTION-BACKEND-DECISION.md`](AGENTENV-EXECUTION-BACKEND-DECISION.md) for the full rationale and adoption gate.
+
 ## Why
 
 Hermes already provides the capabilities that Mosaid was rebuilding:
@@ -32,22 +45,25 @@ The stopped prototype in PR #3 demonstrated useful product ideas and safety fixe
 Telegram / phone
       |
       v
-Oracle Cloud Compute
+Oracle Cloud Compute            <- hosting and compute
       |
       v
-Hermes Agent runtime
+Hermes Agent runtime            <- the one and only agent runtime
       |
       +-- Mosaid identity and Arabic behavior
       +-- Mosaid policy and approval profile
       +-- Mosaid Work Packs and Skills
       +-- Mosaid portfolio/opportunity/client workflows
       +-- approved model provider or self-hosted endpoint
+
+No execution sandbox layer is active in the first release.
 ```
 
 ## Security boundaries
 
 Hermes features are not enabled wholesale. Mosaid applies a restricted profile:
 
+0. No code execution runs in the first gate; `terminal`, `file`, `code_execution`, `browser` and `computer_use` are globally disabled, so no sandbox technology is required yet.
 1. Tools are deny-by-default and explicitly allowlisted.
 2. External Skills are data until reviewed, pinned, tested and approved.
 3. Skill self-improvement produces a draft only; it never self-activates.
@@ -64,6 +80,8 @@ Hermes features are not enabled wholesale. Mosaid applies a restricted profile:
 - Review updates before adoption; no unattended self-update.
 - Keep Mosaid customizations outside upstream files where practical.
 - Contribute generic fixes upstream rather than maintaining unnecessary forks.
+
+The same pin discipline applies to any future execution backend. The current reviewed pin is recorded in [`HERMES-UPSTREAM-PIN.md`](HERMES-UPSTREAM-PIN.md) and is not changed automatically.
 
 ## Repository policy
 
