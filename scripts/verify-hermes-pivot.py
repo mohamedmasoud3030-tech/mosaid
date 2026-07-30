@@ -28,6 +28,9 @@ REQUIRED = [
     "product/hermes/SOUL.md",
     "product/hermes/.hermes.md",
     "product/skills/research/SKILL.md",
+    "deploy/oracle/PROVISIONING-RUNBOOK.md",
+    "deploy/oracle/bootstrap-host.sh",
+    "deploy/oracle/collect-instance-facts.sh",
 ]
 
 DANGEROUS_TOOLSETS = {
@@ -57,8 +60,28 @@ PRODUCTION_PATHS = [
     "deploy/hermes/stage-release.sh",
     "deploy/hermes/preflight.sh",
     "deploy/hermes/mosaid-hermes.service",
+    "deploy/oracle/bootstrap-host.sh",
+    "deploy/oracle/collect-instance-facts.sh",
     ".github/workflows/product-ci.yml",
     ".github/workflows/phase0-ci.yml",
+]
+
+# Files that declare what the runtime *is*, as opposed to scripts that decide
+# what to install. Any AgentENV mention in these is wiring, not a refusal.
+DECLARATIVE_RUNTIME_PATHS = [
+    "deploy/hermes/config.yaml.example",
+    "deploy/hermes/mosaid.env.example",
+    "deploy/hermes/mosaid-hermes.service",
+    ".github/workflows/product-ci.yml",
+    ".github/workflows/phase0-ci.yml",
+]
+
+# Shell scripts that must parse before they are ever run on the instance.
+SHELL_SCRIPTS = [
+    "deploy/hermes/stage-release.sh",
+    "deploy/hermes/preflight.sh",
+    "deploy/oracle/bootstrap-host.sh",
+    "deploy/oracle/collect-instance-facts.sh",
 ]
 
 # Documents that must point at the ADR instead of restating or contradicting it.
@@ -215,8 +238,15 @@ def validate_adr_is_linked() -> None:
 
 
 def validate_no_agentenv_in_production() -> None:
-    """AgentENV must not appear anywhere in the live deployment path."""
-    for relative in PRODUCTION_PATHS:
+    """AgentENV must not appear in declarative runtime configuration.
+
+    Applied to config, environment, unit and workflow files, where the runtime
+    is *declared*: any mention there is wiring. The provisioning shell scripts
+    are excluded because they must name AgentENV in order to detect and refuse
+    it; they are instead held to the stricter install-command checks in
+    validate_oracle_provisioning and validate_stage_release_isolation.
+    """
+    for relative in DECLARATIVE_RUNTIME_PATHS:
         path = ROOT / relative
         if not path.is_file():
             continue
@@ -255,7 +285,12 @@ def validate_stage_release_isolation() -> None:
 
 
 def validate_no_sandbox_exposure() -> None:
-    """No world-facing execution port, KVM device or privileged container."""
+    """No world-facing execution port, KVM device or privileged container.
+
+    Device and privilege wiring is checked only in declarative runtime files;
+    the provisioning scripts legitimately *probe* for /dev/kvm to report and
+    refuse it, and are covered by validate_no_sandbox_install instead.
+    """
     for relative in PRODUCTION_PATHS:
         path = ROOT / relative
         if not path.is_file():
@@ -263,12 +298,13 @@ def validate_no_sandbox_exposure() -> None:
         text = path.read_text(encoding="utf-8")
         lowered = text.lower()
 
-        if "--privileged" in lowered:
-            fail(f"privileged container flag found in production path: {relative}")
-        if "/dev/kvm" in lowered or "/dev/ublk-control" in lowered:
-            fail(f"virtualization device wired into production path: {relative}")
-        if re.search(r"-v\s+/dev:/dev", lowered):
-            fail(f"host /dev mount found in production path: {relative}")
+        if relative in DECLARATIVE_RUNTIME_PATHS:
+            if "--privileged" in lowered:
+                fail(f"privileged container flag found in production path: {relative}")
+            if "/dev/kvm" in lowered or "/dev/ublk-control" in lowered:
+                fail(f"virtualization device wired into production path: {relative}")
+            if re.search(r"-v\s+/dev:/dev", lowered):
+                fail(f"host /dev mount found in production path: {relative}")
 
         # Port 8000 must never be published to a non-loopback address.
         for match in re.finditer(r"(\d{1,3}(?:\.\d{1,3}){3}|\*|::)?:?8000\b", text):
@@ -318,12 +354,108 @@ def validate_no_autostart(paths: list[str]) -> None:
             fail(f"service is enabled at boot automatically in {relative}")
 
 
+def validate_oracle_provisioning() -> None:
+    """Host provisioning must stay pinned, verified and side-effect free."""
+    bootstrap = read("deploy/oracle/bootstrap-host.sh")
+    collector = read("deploy/oracle/collect-instance-facts.sh")
+    runbook = read("deploy/oracle/PROVISIONING-RUNBOOK.md")
+
+    # uv must be pinned to an exact version and checksum-verified, never piped.
+    if not re.search(r'^readonly UV_VERSION="\d+\.\d+\.\d+"$', bootstrap, flags=re.MULTILINE):
+        fail("bootstrap does not pin an exact uv version")
+    checksums = re.findall(r'^readonly UV_SHA256_[A-Z0-9_]+="([0-9a-f]{64})"$', bootstrap, flags=re.MULTILINE)
+    if len(checksums) < 2:
+        fail("bootstrap must pin a SHA-256 for each supported architecture")
+    if "sha256sum" not in bootstrap or "checksum mismatch" not in bootstrap:
+        fail("bootstrap does not verify the downloaded uv checksum")
+
+    # The staging script owns Hermes installation; the bootstrap must not.
+    for fragment in ("hermes-agent.git", "uv sync"):
+        if fragment in bootstrap:
+            fail(f"bootstrap must not install Hermes itself: {fragment}")
+
+    # Provisioning must refuse a contaminated host rather than proceed.
+    for guard in ("Docker is running", "AgentENV detected", "port 8000 is already listening"):
+        if guard not in bootstrap:
+            fail(f"bootstrap is missing a first-gate guard: {guard}")
+
+    # The collector is read-only and must not leak identifying data.
+    for forbidden in ("curl ", "wget ", "apt-get", "dnf ", "useradd", "install -d", "systemctl start"):
+        if forbidden in collector:
+            fail(f"instance-facts collector must stay read-only: {forbidden}")
+
+    # Identifying values must never be executed into the report. Comments and
+    # the report's own disclaimer may mention them; command substitutions and
+    # address-revealing invocations may not.
+    for pattern, label in (
+        (r"\$\(\s*hostname", "hostname"),
+        (r"\bhostname\s+-[iIf]", "hostname address lookup"),
+        (r"\bip\s+addr\b", "ip addr"),
+        (r"\bifconfig\b", "ifconfig"),
+        (r"\bcurl\b[^\n]*169\.254\.169\.254", "instance metadata service"),
+        (r"\boci\s+compute\b", "OCI CLI instance query"),
+    ):
+        if re.search(pattern, collector):
+            fail(f"instance-facts collector must not report {label}")
+
+    # It must publish port numbers only, never the bound addresses.
+    if re.search(r"^\s*ss\b(?![^\n]*\bawk\b)", collector, flags=re.MULTILINE):
+        fail("instance-facts collector must strip addresses from socket output")
+
+    if "Auth Token" not in runbook or "0600" not in runbook:
+        fail("provisioning runbook must state the Auth Token and secret-permission rules")
+
+    # The provisioning scripts are exempt from the declarative marker scan
+    # because they name AgentENV to refuse it, so hold them to the stronger
+    # rule instead: they may never actually install or launch one.
+    for relative in ("deploy/oracle/bootstrap-host.sh", "deploy/oracle/collect-instance-facts.sh"):
+        validate_no_sandbox_install(relative)
+
+
+def strip_shell_comments(text: str) -> str:
+    """Drop whole-line shell comments so checks test code, not prose."""
+    return "\n".join(
+        line for line in text.splitlines() if not line.lstrip().startswith("#")
+    )
+
+
+def validate_no_sandbox_install(relative: str) -> None:
+    """A script may detect a sandbox runtime, but never install or start one."""
+    lowered = strip_shell_comments(read(relative)).lower()
+
+    forbidden = [
+        r"\baenv\s+(auth|pull|start|exec)\b",
+        r"\baenv-server\b",
+        r"\bsystemctl\s+(start|enable)\s+aenv\b",
+        r"\bdocker\s+(run|pull|start)\b",
+        r"\bdocker-setup\.sh\b",
+        r"\binstall-cli\.sh\b",
+        r"\b(apt-get|apt|dnf|yum)\s+install\b[^\n]*\bdocker\b",
+        r"\bmodprobe\s+kvm\b",
+        r"--privileged\b",
+    ]
+    for pattern in forbidden:
+        match = re.search(pattern, lowered)
+        if match:
+            fail(
+                f"{relative} must not install or run a sandbox runtime: "
+                f"{match.group(0).strip()}"
+            )
+
+    if re.search(r"(curl|wget)[^\n|]*\|\s*(sudo\s+)?(ba)?sh", lowered):
+        fail(f"{relative} must not pipe a remote script into a shell")
+
+    # Any download must be checksum-verified before it is trusted.
+    if re.search(r"^\s*curl\b", lowered, flags=re.MULTILINE) and "sha256sum" not in lowered:
+        fail(f"{relative} downloads a file without verifying a checksum")
+
+
 def validate_shell_syntax() -> None:
     """Deployment shell scripts must parse."""
     bash = shutil.which("bash")
     if bash is None:
         return
-    for relative in ("deploy/hermes/stage-release.sh", "deploy/hermes/preflight.sh"):
+    for relative in SHELL_SCRIPTS:
         path = ROOT / relative
         if not path.is_file():
             fail(f"missing shell script: {relative}")
@@ -462,7 +594,10 @@ def main() -> None:
     validate_stage_release_isolation()
     validate_no_sandbox_exposure()
     validate_service_isolation()
-    validate_no_autostart(["deploy/hermes/stage-release.sh"])
+    validate_no_autostart(
+        ["deploy/hermes/stage-release.sh", "deploy/oracle/bootstrap-host.sh"]
+    )
+    validate_oracle_provisioning()
     validate_shell_syntax()
 
     validate_no_secrets(REQUIRED + ADR_REFERENCES)

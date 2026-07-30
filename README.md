@@ -75,6 +75,7 @@ This foundation remains preserved until the Hermes-based Oracle deployment passe
 - [Hermes upstream candidate pin](docs/pivot/HERMES-UPSTREAM-PIN.md)
 - [Migration map](docs/pivot/MIGRATION-MAP.md)
 - [Oracle deployment plan](docs/pivot/ORACLE-DEPLOYMENT-PLAN.md)
+- [Oracle provisioning runbook](deploy/oracle/PROVISIONING-RUNBOOK.md)
 - [Deployment entrypoint](deploy/hermes/README.md)
 - [Mosaid identity](product/identity/MOSAID.md)
 - [Mosaid safety policy](product/policies/SAFETY.md)

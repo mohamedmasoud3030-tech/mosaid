@@ -31,6 +31,15 @@ The exact Hermes upstream candidate is pinned to:
 b8ceba97ed0b2bf0255cc5c8c61c9110a026cda4
 ```
 
+## Before this: provision the host
+
+If the Oracle instance does not exist yet, start with
+[`../oracle/PROVISIONING-RUNBOOK.md`](../oracle/PROVISIONING-RUNBOOK.md). It covers shape
+selection and the Always Free billing check, SSH key creation, instance creation,
+locking ingress to SSH only, and host preparation via
+`deploy/oracle/bootstrap-host.sh` (pinned, checksum-verified `uv`; no Docker, no
+sandbox runtime, no service started).
+
 ## Required external facts
 
 - instance IP;

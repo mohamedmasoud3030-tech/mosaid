@@ -66,6 +66,16 @@ Docker — already supported inside Hermes — is the first isolation option to 
 
 Hermes does not need tenancy-wide Oracle API credentials to run on a Compute instance. Add OCI API access only when a concrete feature requires it, using a dedicated least-privilege identity. Do not place tenancy admin credentials in the runtime.
 
+## Executable runbook
+
+The steps below are implemented as an executable runbook and two scripts:
+
+- [`deploy/oracle/PROVISIONING-RUNBOOK.md`](../../deploy/oracle/PROVISIONING-RUNBOOK.md) — shape and billing check, SSH key, instance creation, SSH-only ingress, hardening.
+- `deploy/oracle/collect-instance-facts.sh` — read-only; produces the non-secret fact report required below.
+- `deploy/oracle/bootstrap-host.sh` — idempotent host preparation; installs a pinned, checksum-verified `uv`, creates the `mosaid` user and directory layout, and refuses to run if Docker, AgentENV or a listening port 8000 is present.
+
+Neither script clones Hermes, creates a secret, or starts a service.
+
 ## Installation policy
 
 Do not use an unreviewed `curl | bash` deployment in production.
