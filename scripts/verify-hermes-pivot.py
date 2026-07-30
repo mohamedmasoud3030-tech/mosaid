@@ -4,17 +4,22 @@
 from __future__ import annotations
 
 import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PIN = "b8ceba97ed0b2bf0255cc5c8c61c9110a026cda4"
 
+AGENTENV_ADR = "docs/pivot/AGENTENV-EXECUTION-BACKEND-DECISION.md"
+
 REQUIRED = [
     "docs/pivot/HERMES-RUNTIME-DECISION.md",
     "docs/pivot/HERMES-UPSTREAM-PIN.md",
     "docs/pivot/MIGRATION-MAP.md",
     "docs/pivot/ORACLE-DEPLOYMENT-PLAN.md",
+    AGENTENV_ADR,
     "deploy/hermes/config.yaml.example",
     "deploy/hermes/mosaid.env.example",
     "deploy/hermes/stage-release.sh",
@@ -41,6 +46,63 @@ DANGEROUS_TOOLSETS = {
     "discord",
     "discord_admin",
 }
+
+
+# Files that describe what actually gets installed and run on the Oracle host.
+# Prose documentation is deliberately excluded: an ADR must be able to name a
+# forbidden pattern in order to forbid it.
+PRODUCTION_PATHS = [
+    "deploy/hermes/config.yaml.example",
+    "deploy/hermes/mosaid.env.example",
+    "deploy/hermes/stage-release.sh",
+    "deploy/hermes/preflight.sh",
+    "deploy/hermes/mosaid-hermes.service",
+    ".github/workflows/product-ci.yml",
+    ".github/workflows/phase0-ci.yml",
+]
+
+# Documents that must point at the ADR instead of restating or contradicting it.
+ADR_REFERENCES = [
+    "README.md",
+    "docs/pivot/HERMES-RUNTIME-DECISION.md",
+    "docs/pivot/MIGRATION-MAP.md",
+    "docs/pivot/ORACLE-DEPLOYMENT-PLAN.md",
+    "deploy/hermes/README.md",
+]
+
+ADR_REQUIRED_SECTIONS = [
+    "## 1. What AgentENV is",
+    "## 2. Why AgentENV does not replace Oracle",
+    "## 3. Why AgentENV does not replace Hermes",
+    "## 4. Where AgentENV could fit in the future",
+    "## 5. Why AgentENV is not added now",
+    "## 6. Accepted execution order",
+    "## 7. Security requirements for any future AgentENV use",
+    "## 8. Conditions for future adoption",
+    "## 9. Rejection and rollback conditions",
+    "## 10. Architecture diagrams",
+]
+
+ADR_REQUIRED_GATE_FACTS = [
+    "Ubuntu 24.04",
+    "6.8+",
+    "/dev/kvm",
+    "/dev/ublk-control",
+    "Nested virtualization",
+    "CAP_NET_ADMIN",
+    "CAP_SYS_ADMIN",
+]
+
+# Tokens that would indicate AgentENV entering the live deployment path.
+AGENTENV_PRODUCTION_MARKERS = [
+    "agentenv",
+    "aenv_api_url",
+    "aenv-server",
+    "kvcache-ai",
+    "e2b_api_url",
+    "firecracker",
+    "overlaybd",
+]
 
 
 def fail(message: str) -> None:
@@ -115,18 +177,187 @@ def validate_skill(text: str) -> None:
         fail(f"research Skill description exceeds 60 chars: {len(description)}")
 
 
+def validate_agentenv_adr() -> None:
+    """The AgentENV decision must exist and stay substantive, not a stub."""
+    text = read(AGENTENV_ADR)
+
+    for section in ADR_REQUIRED_SECTIONS:
+        if section not in text:
+            fail(f"AgentENV ADR missing section: {section}")
+
+    for fact in ADR_REQUIRED_GATE_FACTS:
+        if fact not in text:
+            fail(f"AgentENV ADR missing adoption-gate requirement: {fact}")
+
+    # The decision itself, not merely a mention.
+    if "deferred, not adopted" not in text:
+        fail("AgentENV ADR does not record a deferred/not-adopted status")
+
+    # The layering conclusions that other documents depend on.
+    for claim in [
+        "https://github.com/kvcache-ai/AgentENV",
+        "does not support authorization",
+        "127.0.0.1",
+    ]:
+        if claim not in text:
+            fail(f"AgentENV ADR missing required content: {claim}")
+
+    if len(text.splitlines()) < 120:
+        fail("AgentENV ADR is too short to carry the required decision content")
+
+
+def validate_adr_is_linked() -> None:
+    """Other documents must reference the ADR rather than duplicate it."""
+    target = "AGENTENV-EXECUTION-BACKEND-DECISION.md"
+    for relative in ADR_REFERENCES:
+        if target not in read(relative):
+            fail(f"{relative} does not link to the AgentENV decision record")
+
+
+def validate_no_agentenv_in_production() -> None:
+    """AgentENV must not appear anywhere in the live deployment path."""
+    for relative in PRODUCTION_PATHS:
+        path = ROOT / relative
+        if not path.is_file():
+            continue
+        lowered = path.read_text(encoding="utf-8").lower()
+        for marker in AGENTENV_PRODUCTION_MARKERS:
+            if marker in lowered:
+                fail(f"AgentENV marker '{marker}' found in production path: {relative}")
+
+
+def validate_stage_release_isolation() -> None:
+    """The staging script must not install or enable any sandbox runtime."""
+    stage = read("deploy/hermes/stage-release.sh")
+    lowered = stage.lower()
+
+    forbidden_commands = [
+        "install.sh",
+        "install-cli.sh",
+        "docker-setup.sh",
+        "aenv ",
+        "docker run",
+        "docker pull",
+        "apt-get install docker",
+        "apt install docker",
+        "systemctl start aenv",
+        "modprobe kvm",
+    ]
+    for fragment in forbidden_commands:
+        if fragment in lowered:
+            fail(f"stage script must not install or run a sandbox runtime: {fragment}")
+
+    # Unpinned remote code execution as root is forbidden outright.
+    if re.search(r"curl[^\n|]*\|\s*(sudo\s+)?(ba)?sh", lowered):
+        fail("stage script must not pipe a remote script into a shell")
+    if re.search(r"wget[^\n|]*\|\s*(sudo\s+)?(ba)?sh", lowered):
+        fail("stage script must not pipe a downloaded script into a shell")
+
+
+def validate_no_sandbox_exposure() -> None:
+    """No world-facing execution port, KVM device or privileged container."""
+    for relative in PRODUCTION_PATHS:
+        path = ROOT / relative
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        lowered = text.lower()
+
+        if "--privileged" in lowered:
+            fail(f"privileged container flag found in production path: {relative}")
+        if "/dev/kvm" in lowered or "/dev/ublk-control" in lowered:
+            fail(f"virtualization device wired into production path: {relative}")
+        if re.search(r"-v\s+/dev:/dev", lowered):
+            fail(f"host /dev mount found in production path: {relative}")
+
+        # Port 8000 must never be published to a non-loopback address.
+        for match in re.finditer(r"(\d{1,3}(?:\.\d{1,3}){3}|\*|::)?:?8000\b", text):
+            window = text[max(0, match.start() - 60) : match.end() + 20].lower()
+            if any(
+                token in window
+                for token in ("0.0.0.0:8000", "*:8000", ":::8000", "-p 8000", "--publish 8000")
+            ):
+                fail(f"port 8000 is exposed in production path: {relative}")
+
+
+def validate_service_isolation() -> None:
+    """The systemd unit must not gain virtualization or privileged access."""
+    unit = read("deploy/hermes/mosaid-hermes.service")
+
+    if re.search(r"^DeviceAllow=.*kvm", unit, flags=re.MULTILINE | re.IGNORECASE):
+        fail("systemd unit grants KVM device access")
+    if re.search(r"^PrivateDevices=false", unit, flags=re.MULTILINE):
+        fail("systemd unit disables PrivateDevices")
+    if re.search(r"^(Ambient|Capability(Bounding)?)Capabilities?=\s*CAP_", unit, flags=re.MULTILINE):
+        fail("systemd unit grants Linux capabilities")
+
+    # Capability sets must remain empty, not merely present.
+    for key in ("CapabilityBoundingSet", "AmbientCapabilities"):
+        match = re.search(rf"^{key}=(.*)$", unit, flags=re.MULTILINE)
+        if match is None:
+            fail(f"systemd unit missing {key}")
+        if match.group(1).strip():
+            fail(f"systemd unit must keep {key} empty; found: {match.group(1).strip()}")
+
+    if "ExecStart=/opt/mosaid/current/.venv/bin/hermes gateway" not in unit:
+        fail("systemd unit must start only the Hermes gateway")
+    if re.search(r"^ExecStart(Pre|Post)?=.*(docker|aenv|podman)", unit, flags=re.MULTILINE):
+        fail("systemd unit must not invoke a container or sandbox runtime")
+
+
+def validate_no_autostart(paths: list[str]) -> None:
+    """Staging must never start, enable or auto-run the service."""
+    for relative in paths:
+        path = ROOT / relative
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if re.search(r"\bsystemctl\s+(--now\s+)?(start|restart|enable)\b", text):
+            fail(f"service is started or enabled automatically in {relative}")
+        if re.search(r"\bsystemctl\s+enable\s+--now\b", text):
+            fail(f"service is enabled at boot automatically in {relative}")
+
+
+def validate_shell_syntax() -> None:
+    """Deployment shell scripts must parse."""
+    bash = shutil.which("bash")
+    if bash is None:
+        return
+    for relative in ("deploy/hermes/stage-release.sh", "deploy/hermes/preflight.sh"):
+        path = ROOT / relative
+        if not path.is_file():
+            fail(f"missing shell script: {relative}")
+        result = subprocess.run(
+            [bash, "-n", str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            fail(f"shell syntax error in {relative}: {result.stderr.strip()}")
+
+
 def validate_no_secrets(paths: list[str]) -> None:
     telegram_token = re.compile(r"(?<!REPLACE_WITH_)\b\d{6,}:[A-Za-z0-9_-]{20,}\b")
     api_key = re.compile(r"\b(?:sk|sk-or|gsk|AIza)[-_A-Za-z0-9]{16,}\b")
-    private_key = "-----BEGIN PRIVATE KEY-----"
+    github_pat = re.compile(r"\b(?:ghp|gho|ghu|ghs|ghr|github_pat)_[A-Za-z0-9_]{20,}\b")
+    private_key_headers = (
+        "-----BEGIN PRIVATE KEY-----",
+        "-----BEGIN RSA PRIVATE KEY-----",
+        "-----BEGIN OPENSSH PRIVATE KEY-----",
+        "-----BEGIN EC PRIVATE KEY-----",
+    )
     for relative in paths:
         text = read(relative)
         if telegram_token.search(text):
             fail(f"possible Telegram token in {relative}")
         if api_key.search(text):
             fail(f"possible API key in {relative}")
-        if private_key in text:
-            fail(f"private key material in {relative}")
+        if github_pat.search(text):
+            fail(f"possible GitHub token in {relative}")
+        for header in private_key_headers:
+            if header in text:
+                fail(f"private key material in {relative}")
 
 
 def main() -> None:
@@ -223,7 +454,18 @@ def main() -> None:
             fail(f"project policy missing invariant: {phrase}")
 
     validate_skill(skill)
-    validate_no_secrets(REQUIRED + ["README.md"])
+
+    # AgentENV execution-backend decision and its enforcement.
+    validate_agentenv_adr()
+    validate_adr_is_linked()
+    validate_no_agentenv_in_production()
+    validate_stage_release_isolation()
+    validate_no_sandbox_exposure()
+    validate_service_isolation()
+    validate_no_autostart(["deploy/hermes/stage-release.sh"])
+    validate_shell_syntax()
+
+    validate_no_secrets(REQUIRED + ADR_REFERENCES)
 
     print("Hermes pivot assets verified")
 
