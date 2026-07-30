@@ -166,8 +166,9 @@ fi
 # --- verdict ----------------------------------------------------------------
 
 blockers=()
+# Blockers are conditions the bootstrap cannot fix. Anything the bootstrap
+# installs is a warning, not a blocker.
 [[ "${init_system}" == systemd* ]] || blockers+=("systemd is not the init system")
-[[ "${python_supported}" == yes* ]] || blockers+=("no Python in the 3.11-3.13 range")
 [[ "${arch}" == "aarch64" || "${arch}" == "x86_64" ]] || blockers+=("unexpected architecture: ${arch}")
 [[ "${port_8000}" == "no" ]] || blockers+=("port 8000 is listening; the first gate must not expose an execution API")
 [[ "${docker_running}" == "no" ]] || blockers+=("Docker is running; the first gate installs no sandbox runtime")
@@ -175,6 +176,10 @@ blockers=()
 
 warnings=()
 [[ "${ssh_password_auth}" == "no" ]] || warnings+=("SSH password authentication is '${ssh_password_auth}'; it should be 'no'")
+case "${python_supported}" in
+  yes*) ;;
+  *) warnings+=("no Python in the 3.11-3.13 range yet; bootstrap-host.sh will install one") ;;
+esac
 [[ "${git_present}" == "yes" ]] || warnings+=("git is not installed; bootstrap-host.sh will install it")
 [[ "${uv_present}" == "yes" ]] || warnings+=("uv is not installed; bootstrap-host.sh will install it pinned")
 if [[ "${mem_total_gib}" != "unknown" ]] && awk -v m="${mem_total_gib}" 'BEGIN{exit !(m < 1.9)}'; then
