@@ -1,0 +1,25 @@
+{
+  "data_dir": "__MOSAID_HOME__",
+  "owner_telegram_id": 0,
+  "telegram": {
+    "token_file": "__CONFIG_HOME__/telegram.token",
+    "poll_timeout_seconds": 30
+  },
+  "model": {
+    "base_url": "__MODEL_BASE__",
+    "api_key_file": "__CONFIG_HOME__/model.key",
+    "name": "__MODEL_NAME__",
+    "timeout_seconds": 60
+  },
+  "limits": {
+    "max_message_bytes": 16384,
+    "max_response_bytes": 65536,
+    "max_model_steps": 4,
+    "max_tool_calls": 16,
+    "max_tokens": 32000,
+    "max_cost_usd": 1.0,
+    "max_retries": 5,
+    "messages_per_minute": 30,
+    "message_burst": 5
+  }
+}

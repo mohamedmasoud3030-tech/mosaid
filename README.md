@@ -4,32 +4,25 @@ Mosaid is a planned lightweight, extensible general personal AI agent for coding
 
 ## Current status
 
-**Research and Phase 0 qualification only. The product has not been built.**
+**Phases 1–13 complete (product core, hardening, CI) and Phase 14 complete (Android/Termux product package). Phase 15 (final documentation/handoff) is the remaining planned phase.**
 
-The initial runtime target is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. PicoClaw `v0.3.1` is the current **conditional candidate** for runtime qualification; it is not yet a confirmed permanent dependency or the final architecture.
+The initial runtime target is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. PicoClaw `v0.3.1` was the **Phase 0 conditional qualification candidate only**; the product runtime is the Mosaid codebase itself (`cmd/mosaid`), and Phase 14 packages it for the phone.
 
-Phase 1 has not started. Phone testing is intentionally deferred by the owner.
+Physical-phone testing remains intentionally deferred by the owner.
 
 ## What exists today
 
-- A deep comparison of open-source personal-agent runtimes and frameworks.
-- ADR-0001 recording the conditional PicoClaw decision.
-- Proposed security-first Mosaid architecture.
-- A pinned and reproducible Phase 0 Android ARM64 qualification build.
-- Telegram private-owner controls with `/status` and `/echo` only.
-- All dangerous tools disabled: Shell, filesystem tools, MCP, cron commands, web, GitHub, images, Instagram, dynamic Skills, remote execution, and self-update.
-- Termux installation, preflight, runit supervision, wake lock, Termux:Boot, health sampling, log rotation, test harness, SBOM, license report, and diagnostics collector.
-- Numeric acceptance criteria for 30-minute, 2-hour, 12-hour, and 24-hour tests plus network, reboot, crash, memory, battery, thermal, duplicate, and continuity scenarios.
+- Phases 1–13: durable Telegram inbox/outbox, fail-closed policy and approvals, structured exec without shell, draft-only GitHub operations, FTS5 memory, durable scheduler, skills/MCP with strict contracts, bounded research fetch, approval-gated image generation, Instagram prepare-only workflows, and Phase 13 hardening (secrets/redaction, flood and execution budgets, DB integrity/backup/restore, deterministic SBOM, active hardened CI).
+- Phase 14: a fail-closed Android/Termux product package — installer, preflight, runit supervision, wake lock, Termux:Boot hook, log redaction, health sampling, diagnostics collector with leak refusal, and uninstaller — built as a deterministic phone-kit tarball by the packaging script (`phase14-android-package/`; a CI package job is preserved locally pending workflow-permission activation).
+- A pinned and reproducible Phase 0 Android ARM64 qualification build (historical; PicoClaw v0.3.1).
+- Numeric acceptance criteria for 30-minute, 2-hour, 12-hour, and 24-hour tests plus network, reboot, crash, memory, battery, thermal, duplicate, and continuity scenarios (product version in the Phase 14 checklist).
 
 ## What does not exist
 
-- A production-ready personal agent.
-- A safe general Shell or Permission Engine.
-- Durable exactly-once Telegram processing.
-- Git/GitHub runtime integration.
-- Skills or MCP runtime enablement.
-- Image generation or Instagram publishing.
-- A passed real-phone qualification report.
+- A physical-phone qualification report (Phase 0 or product).
+- Real integration credentials for any external service (Telegram/model/GitHub/MCP/images/Meta remain test-only pending).
+- A published product release.
+- Phase 15 final documentation/handoff.
 
 ## Start with the evidence
 
@@ -44,6 +37,8 @@ Phase 1 has not started. Phone testing is intentionally deferred by the owner.
 - [Next-session handoff](docs/handoff/NEXT-SESSION.md)
 
 The self-contained harness is under [`phase0-android-runtime/`](phase0-android-runtime/README.md).
+
+The Phase 14 product phone package is under [`phase14-android-package/`](phase14-android-package/README.md).
 
 ## Phase 0 pinned identity
 
