@@ -37,11 +37,13 @@ if [[ "$NETWORK" == "1" ]]; then
     network_telegram="unreachable"
   fi
   model_base="$(jq -r '.model.base_url' "$M_HOME/config.json")"
-  if curl -fsS -m 15 -o /dev/null "$model_base/models" 2>/dev/null; then
-    network_model="reachable"
-  else
-    network_model="unreachable"
-  fi
+  model_key="$(tr -d '\r' < "$M_HOME/secrets/model.key")"
+  model_http="$(curl -sS -m 15 -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $model_key" "$model_base/models" 2>/dev/null || echo 000)"
+  case "$model_http" in
+    200) network_model="reachable" ;;
+    401|403) network_model="reachable-auth-check-failed" ;;
+    *) network_model="unreachable" ;;
+  esac
 fi
 
 jq -n \

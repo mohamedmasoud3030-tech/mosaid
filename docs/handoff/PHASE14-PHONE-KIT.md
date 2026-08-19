@@ -62,6 +62,23 @@ Phone-kit SHA-256: 8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89
   clean under 1.25.13) and the Phase 0 preservation CI shows the same
   pre-existing database drift plus its hardcoded advisory expectation.
 
+## Real-phone findings (first run, 2026-08-19)
+
+- Device: Android 11 (SDK 30), Termux 0.119.0-beta.3, aarch64 — install,
+  checksums, verify-config, and preflight all passed on the first attempt.
+- Blocker found via logs: the pure-Go binary failed DNS with
+  `lookup api.telegram.org on [::1]:53 ... connection refused` while
+  curl-based checks passed (Android resolves for curl through netd). Fix
+  on device: `pkg install resolv-conf` and/or a static public-DNS
+  `$PREFIX/etc/resolv.conf`, then `sv restart mosaid`. Documented in the
+  phone guide.
+- `preflight.sh --network` previously marked the model endpoint
+  unreachable because it sent no API key (Gemini answers 401 without
+  auth). Fixed to send the key and report
+  `reachable-auth-check-failed` for 401/403.
+- Log redaction verified on the real device: the bot token appeared as
+  `[REDACTED]` in the runtime logs.
+
 ## Owner's next actions (no technical skill required)
 
 1. Follow `phase14-android-package/docs/PHONE-GUIDE.ar.md` on the phone:

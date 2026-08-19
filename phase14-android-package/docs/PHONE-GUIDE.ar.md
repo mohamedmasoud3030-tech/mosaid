@@ -165,6 +165,39 @@ bash mosaid-phone-kit/phone/install-phone.sh
 
 ---
 
+## مشكلة DNS — السبب الأكثر شيوعًا لعدم ردّ البوت
+
+إذا ظهر في السجل (`logs/current`) سطر يشبه:
+
+```
+telegram poll failed ... lookup api.telegram.org on [::1]:53 ... connection refused
+```
+
+فهذا يعني أن برنامج البوت لا يستطيع حل أسماء الإنترنت عبر إعدادات DNS المحلية في
+Termux (ملاحظة: فحص `curl` قد ينجح لأن أندرويد يحل الأسماء لـ curl مباشرة). الحل:
+
+```
+pkg install resolv-conf
+```
+
+ثم اطبع الإعدادات:
+
+```
+cat $PREFIX/etc/resolv.conf
+```
+
+إن ظهر فيها `::1` أو `127.0.0.1` فقط، استبدلها بأسماء عامة:
+
+```
+rm -f $PREFIX/etc/resolv.conf && printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > $PREFIX/etc/resolv.conf
+```
+
+ثم أعد تشغيل الخدمة وأعد إرسال `/status`:
+
+```
+sv restart mosaid
+```
+
 ## إذا لم يردّ البوت
 
 1. أرسل `/status` مرة أخرى وانتظر ١٥ ثانية.
