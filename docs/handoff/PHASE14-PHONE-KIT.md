@@ -34,13 +34,31 @@ Phone-kit SHA-256: 8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89
 
 - Full baseline re-verified locally with the pinned Go toolchain built from
   official source: `go build`, `go vet`, gofmt clean, 140/140 tests,
-  `go test -race` clean, Linux AMD64 + Android ARM64 builds.
+  `go test -race` clean, Linux AMD64 + Android ARM64 builds,
+  `staticcheck@v0.7.0` clean.
+- `govulncheck@v1.6.0` parity with a locally reconstructed vulnerability
+  database (built from the official `golang/vulndb` repository per the
+  published database API): **Go 1.25.12 → exit 3 with 4 stdlib
+  vulnerabilities** (fixed in 1.25.13), **Go 1.25.13 → "No vulnerabilities
+  found"**. This is why `go.mod` pins `toolchain go1.25.13`: the existing CI
+  toolchain (1.25.12) fails the govulncheck gate since the database gained
+  the stdlib entries — the same drift tracked in PR #6.
 - Kit self-test passed: script syntax, binary + staged-file checksums,
   tripwire values, secret-pattern scan, and fail-closed smoke (binary rejects
   the unpersonalized template).
-- `staticcheck` and `govulncheck` were not completed this session (the owner
-  interrupted the run); they remain pending for the next session. CI
-  continues to enforce them on every push.
+
+## Known CI limitations (owner action eventually needed)
+
+- The `phone-kit` CI job is staged in `docs/handoff/phone-kit-ci-job.yml`,
+  not activated: the session's GitHub App credential lacks the `workflows`
+  permission and GitHub correctly rejected that update (same mechanism as
+  Phase 13). Activation needs an owner-approved credential with Workflows
+  write.
+- The Phase 0 preservation CI pins `GOTOOLCHAIN: local` with Go 1.25.12 and
+  hardcodes the expected advisory set, so its govulncheck step fails on the
+  same database drift and cannot be fixed without a workflow edit
+  (credential-blocked). Pre-existing drift, not caused by this PR; PR #6
+  (draft) tracks the Go-version fix.
 
 ## Owner's next actions (no technical skill required)
 
