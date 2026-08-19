@@ -17,6 +17,14 @@ mkdir -p "$RUNTIME" "$M_HOME/logs" "$M_HOME/tmp"
 
 bash "$SCRIPTS/verify-config.sh"
 
+# DNS guard: some Termux builds ship $PREFIX/etc/resolv.conf pointing at an
+# inactive local resolver (nameserver ::1); pure-Go binaries then fail to
+# resolve (curl works because Android resolves through netd for it). Ensure
+# a working public DNS is configured before each start.
+if ! grep -qE '^nameserver[[:space:]]+[0-9]+(\.[0-9]+){3}[[:space:]]*$' "$PREFIX/etc/resolv.conf" 2>/dev/null; then
+  printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > "$PREFIX/etc/resolv.conf" 2>/dev/null || true
+fi
+
 LOCK="$RUNTIME/supervisor.lock"
 if ! mkdir "$LOCK" 2>/dev/null; then
   old_pid="$(cat "$LOCK/pid" 2>/dev/null || true)"

@@ -71,7 +71,7 @@ cd ~
 > بدلًا من `cp` الخاص بملف التحقق (ينشئ الملف نفسه حرفيًا):
 
 ```
-printf '8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89c21  mosaid-phone-kit.tar.gz\n' > mosaid-phone-kit.tar.gz.sha256
+printf '12c39d15ab8314d5347e41b02f2855e76a8fc0770e4821e021d9fdb848184d30  mosaid-phone-kit.tar.gz\n' > mosaid-phone-kit.tar.gz.sha256
 ```
 
 ثم تحقق من سلامة الملف (يجب أن يطبع `OK`):
@@ -174,7 +174,9 @@ telegram poll failed ... lookup api.telegram.org on [::1]:53 ... connection refu
 ```
 
 فهذا يعني أن برنامج البوت لا يستطيع حل أسماء الإنترنت عبر إعدادات DNS المحلية في
-Termux (ملاحظة: فحص `curl` قد ينجح لأن أندرويد يحل الأسماء لـ curl مباشرة). الحل:
+Termux (ملاحظة: فحص `curl` قد ينجح لأن أندرويد يحل الأسماء لـ curl مباشرة).
+
+**الإصلاح يدويًا:**
 
 ```
 pkg install resolv-conf
@@ -189,7 +191,7 @@ cat $PREFIX/etc/resolv.conf
 إن ظهر فيها `::1` أو `127.0.0.1` فقط، استبدلها بأسماء عامة:
 
 ```
-rm -f $PREFIX/etc/resolv.conf && printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > $PREFIX/etc/resolv.conf
+printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > $PREFIX/etc/resolv.conf
 ```
 
 ثم أعد تشغيل الخدمة وأعد إرسال `/status`:
@@ -197,6 +199,11 @@ rm -f $PREFIX/etc/resolv.conf && printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\
 ```
 sv restart mosaid
 ```
+
+> **الإصلاح التلقائي:** الإصدارات الجديدة من الحزمة (من بصمة
+> `12c39d15…`) تتضمن حارس DNS في المثبّت والمشغّل — يفحص `resolv.conf` ويكتب
+> أسماء عامة تلقائيًا عند كل تشغيل، فلا تحتاج للخطوات اليدوية أعلاه بعد
+> إعادة التثبيت.
 
 ## إذا لم يردّ البوت
 

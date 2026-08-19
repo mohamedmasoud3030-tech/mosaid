@@ -40,7 +40,7 @@ Version:         v0.14.0
 Qualification Go: 1.25.13 (built from official golang/go source)
 Android target:  arm64-v8a
 Binary SHA-256:  4f8679caa0271051835d4016ab003a4dd24e44e13b1d8169af9fb20e985dba43
-Phone-kit SHA-256: 8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89c21
+Phone-kit SHA-256: 12c39d15ab8314d5347e41b02f2855e76a8fc0770e4821e021d9fdb848184d30
 ```
 
 ## Warning

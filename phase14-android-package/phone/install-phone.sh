@@ -99,6 +99,13 @@ rm -f "$SERVICE/down"
 mkdir -p "$HOME/.termux/boot"
 install -m 0700 "$KIT_DIR/phone/10-mosaid.boot" "$HOME/.termux/boot/10-mosaid"
 
+# DNS guard: Termux builds may point $PREFIX/etc/resolv.conf at an inactive
+# local resolver (nameserver ::1) which breaks pure-Go DNS. Normalize it now;
+# the supervisor re-checks on every start.
+if ! grep -qE '^nameserver[[:space:]]+[0-9]+(\.[0-9]+){3}[[:space:]]*$' "$PREFIX/etc/resolv.conf" 2>/dev/null; then
+  printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > "$PREFIX/etc/resolv.conf" 2>/dev/null || true
+fi
+
 "$M_HOME/scripts/verify-config.sh"
 "$M_HOME/scripts/preflight.sh"
 
