@@ -49,16 +49,18 @@ Phone-kit SHA-256: 8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89
 
 ## Known CI limitations (owner action eventually needed)
 
-- The `phone-kit` CI job is staged in `docs/handoff/phone-kit-ci-job.yml`,
-  not activated: the session's GitHub App credential lacks the `workflows`
-  permission and GitHub correctly rejected that update (same mechanism as
-  Phase 13). Activation needs an owner-approved credential with Workflows
-  write.
-- The Phase 0 preservation CI pins `GOTOOLCHAIN: local` with Go 1.25.12 and
-  hardcodes the expected advisory set, so its govulncheck step fails on the
-  same database drift and cannot be fixed without a workflow edit
-  (credential-blocked). Pre-existing drift, not caused by this PR; PR #6
-  (draft) tracks the Go-version fix.
+- The owner approved providing an approved credential with Workflows write
+  through Arena's secure channel (Phase-13 mechanism). The exact activation
+  package is ready in `docs/handoff/activation/` (final `product-ci.yml`
+  with Go 1.25.13 + `phone-kit` job, final `phase0-ci.yml` with Go 1.25.13
+  + pinned `expected-govulncheck.txt`, and a temporary measurement workflow
+  that re-pins the Phase 0 artifacts on the real proxy). Activation is a
+  copy + push + one dispatch + review cycle; see
+  `docs/handoff/activation/README.md`.
+- Until activation, this PR's `Mosaid product CI` shows only the
+  `Vulnerability scan` step red (Go 1.25.12 stdlib findings; locally proven
+  clean under 1.25.13) and the Phase 0 preservation CI shows the same
+  pre-existing database drift plus its hardcoded advisory expectation.
 
 ## Owner's next actions (no technical skill required)
 
