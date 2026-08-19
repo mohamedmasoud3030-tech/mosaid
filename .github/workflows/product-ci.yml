@@ -46,7 +46,9 @@ jobs:
           cmp security/product-license-report.tsv build/product-license-report.tsv
       - name: Clean-clone verification
         run: git diff --exit-code
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+      - name: Upload build artifacts
+        continue-on-error: true
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: mosaid-product-${{ github.sha }}
           path: |
