@@ -40,7 +40,12 @@ __pycache__/
 
 # Intentionally versioned archival qualification kit
 !phase0-android-runtime/release/phase0-phone-kit.tar.gz
+# Intentionally versioned Phase 14 phone kit (binary + manifests, checksum-pinned)
+!phase14-android-package/release/mosaid-phone-kit.tar.gz
 
 # Preservation archives are attached to the archival GitHub Release, not Git history
 archive/phase0-local-all-refs.bundle
 archive/phase0-working-tree-complete.tar.gz
+
+# Staged phone-kit directory (the pinned tarball is versioned instead)
+phase14-android-package/release/mosaid-phone-kit/

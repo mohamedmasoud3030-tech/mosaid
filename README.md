@@ -1,70 +1,54 @@
 # Mosaid
 
-Mosaid is a planned lightweight, extensible general personal AI agent for coding workflows, safe local tools, repository work, scheduled assistance, and future modular integrations.
+Mosaid is a lightweight, extensible general personal AI agent for coding workflows, safe local tools, repository work, scheduled assistance, and future modular integrations. The runtime is implemented and hardened (Phases 1–13); a fail-closed Android/Termux phone package (Phase 14) is ready, and real-phone qualification is pending the owner's test run.
 
 ## Current status
 
-**Research and Phase 0 qualification only. The product has not been built.**
+**Phase 14 complete: the Android/Termux phone kit is built, checksum-pinned, and self-tested. The first physical-phone run has not happened yet.**
 
-The initial runtime target is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. PicoClaw `v0.3.1` is the current **conditional candidate** for runtime qualification; it is not yet a confirmed permanent dependency or the final architecture.
-
-Phase 1 has not started. Phone testing is intentionally deferred by the owner.
+The intended first device is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. The default model provider is the Google Gemini free tier via its officially documented OpenAI-compatible endpoint; the owner chose a free-only model policy.
 
 ## What exists today
 
-- A deep comparison of open-source personal-agent runtimes and frameworks.
-- ADR-0001 recording the conditional PicoClaw decision.
-- Proposed security-first Mosaid architecture.
-- A pinned and reproducible Phase 0 Android ARM64 qualification build.
-- Telegram private-owner controls with `/status` and `/echo` only.
-- All dangerous tools disabled: Shell, filesystem tools, MCP, cron commands, web, GitHub, images, Instagram, dynamic Skills, remote execution, and self-update.
-- Termux installation, preflight, runit supervision, wake lock, Termux:Boot, health sampling, log rotation, test harness, SBOM, license report, and diagnostics collector.
-- Numeric acceptance criteria for 30-minute, 2-hour, 12-hour, and 24-hour tests plus network, reboot, crash, memory, battery, thermal, duplicate, and continuity scenarios.
+- The implemented, hardened Go runtime (Phases 1–13): durable Telegram inbox/outbox, fail-closed policy and approvals, structured-argv tools (no shell), draft-only GitHub integration, FTS5 memory, scheduler, Skills, official MCP SDK, DNS-pinned fetch, approval-gated image generation, and a recoverable Instagram container workflow.
+- Phase 14 phone kit: Termux installer, preflight, runit supervision, wake lock, Termux:Boot, health sampling, log rotation, redacted diagnostics collector, self-test, SBOM/license manifests, numeric acceptance criteria, an Arabic owner guide, and a free-only model policy with a pinned cost tripwire.
+- The pinned Phase 0 qualification harness (archived, historical).
 
 ## What does not exist
 
-- A production-ready personal agent.
-- A safe general Shell or Permission Engine.
-- Durable exactly-once Telegram processing.
-- Git/GitHub runtime integration.
-- Skills or MCP runtime enablement.
-- Image generation or Instagram publishing.
-- A passed real-phone qualification report.
+- A passed real-phone qualification report (30-minute, 2-hour, 12-hour, 24-hour, network, reboot, battery, thermal, duplicate, and continuity scenarios).
+- Real Telegram/model runtime credentials in this repository (the owner enters them on the phone; the installer writes them as 0600 single-line files).
 
 ## Start with the evidence
 
 - [Full runtime/framework evaluation](docs/research/2026-07-29-agent-runtime-evaluation.md)
 - [ADR-0001: conditional PicoClaw selection](docs/decisions/ADR-0001-picoclaw-conditional-selection.md)
 - [Proposed architecture](docs/architecture/proposed-architecture.md)
-- [Phase 0 execution report](docs/phase0/EXECUTION-REPORT.md)
-- [Pinned source verification](docs/phase0/SOURCE-VERIFICATION.md)
-- [Numeric acceptance criteria](docs/phase0/ACCEPTANCE-CRITERIA.md)
-- [Threat notes](docs/phase0/THREAT-NOTES.md)
-- [Phone guide](docs/phase0/PHONE-GUIDE.md)
-- [Next-session handoff](docs/handoff/NEXT-SESSION.md)
+- [Implementation status by phase](docs/roadmap/IMPLEMENTATION-STATUS.md)
+- [Phase 14 phone package](phase14-android-package/README.md)
+- [Phase 14 test plan](phase14-android-package/docs/TEST-PLAN.md)
+- [Phase 14 free-only model policy](phase14-android-package/docs/MODEL-FREE-TIER.md)
+- [دليل التشغيل بالعربية](phase14-android-package/docs/PHONE-GUIDE.ar.md)
 
-The self-contained harness is under [`phase0-android-runtime/`](phase0-android-runtime/README.md).
+The archived Phase 0 harness is under [`phase0-android-runtime/`](phase0-android-runtime/README.md).
 
-## Phase 0 pinned identity
+## Phase 14 pinned identity
 
 ```text
-Upstream:         sipeed/picoclaw
-Tag:              v0.3.1
-Tag object:       9fba4cec050cbfe3d73dfcfe015d7960447b9c7f (unsigned)
-Commit:           2cf030d2fd3b871d7ec17e3be34c24688aac76da
-Tree:             79530d185c4c5eb30719fd45cf323217d2a9f5c5
-Qualification Go: 1.25.12
-Android target:   arm64-v8a
-Binary SHA-256:   b68746ddeeb341c291da5f93f59f857cdd892d8fe76940367604a2ec1c729a4f
-Phone-kit SHA-256: 78b9fd3c50b4d0a33e0d20066675491823574b480418fe54b29d662e76595b1e
+Source commit:   b6b0a9b53820842fe9e5b42e3a9c0a9545eeefc3
+Version:         v0.14.0
+Qualification Go: 1.25.13 (built from official golang/go source)
+Android target:  arm64-v8a
+Binary SHA-256:  4f8679caa0271051835d4016ab003a4dd24e44e13b1d8169af9fb20e985dba43
+Phone-kit SHA-256: 8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89c21
 ```
 
 ## Warning
 
-Do **not** use the Phase 0 kit with production Telegram bots, production model keys, sensitive repositories, public groups, or publishing accounts. Use dedicated low-quota test credentials and revoke them after testing.
+Do **not** use the phone kit with production Telegram bots, production model keys, sensitive repositories, public groups, or publishing accounts. Use a dedicated owner-only bot and a free-tier key you can revoke. The Gemini free tier may use conversations to improve its models — do not share secrets in chats.
 
-`chmod 600`, allowlists, redaction, and Termux's app directory are defense in depth. They are not a substitute for an OS sandbox, and arbitrary untrusted code must not run under the same Termux UID as secrets.
+`chmod 600`, owner allowlisting, redaction, and Termux's app directory are defense in depth. They are not a substitute for an OS sandbox, and arbitrary untrusted code must not run under the same Termux UID as secrets.
 
 ## Licensing
 
-Original Mosaid material is MIT-licensed. The qualification binary and patches derive from MIT-licensed PicoClaw and retain its attribution. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the Phase 0 SBOM/license report.
+Original Mosaid material is MIT-licensed. The Phase 0 qualification binary and patches derive from MIT-licensed PicoClaw and retain its attribution. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the SBOM/license reports.
