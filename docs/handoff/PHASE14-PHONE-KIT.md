@@ -63,8 +63,10 @@ Phone-kit SHA-256: 8402f949822fe29cc8eb22989bf1213248573a95228935fadb5fa2e24ba89
 ## Owner's next actions (no technical skill required)
 
 1. Follow `phase14-android-package/docs/PHONE-GUIDE.ar.md` on the phone:
-   create the free Gemini key, download the kit from the GitHub release,
-   run `install-phone.sh`, answer the five prompts (bot token and model key
+   create the free Gemini key, download the kit (direct repository link is
+   in the guide; the GitHub release asset upload was blocked by the sandbox
+   network, so the kit is distributed from the committed file), run
+   `install-phone.sh`, answer the five prompts (bot token and model key
    are typed on the phone only and never leave it).
 2. Send `/status` to the bot and run scenario `01-initial-30m`.
 3. After each scenario, run `collect-diagnostics.sh` and keep the redacted

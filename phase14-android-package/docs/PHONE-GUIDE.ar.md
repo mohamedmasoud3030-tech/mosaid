@@ -29,13 +29,14 @@
 
 ## الخطوة ٢: تنزيل الحزمة داخل Termux
 
-افتح تطبيق Termux وانسخ السطرين التاليين واحدًا تلو الآخر
-(استبدل `LINK` برابط ملف `mosaid-phone-kit.tar.gz` من صفحة إصدار GitHub للمشروع):
+افتح تطبيق Termux وانسخ السطرين التاليين واحدًا تلو الآخر كما هما:
 
 ```
-curl -L -o kit.tar.gz "LINK"
-curl -L -o kit.tar.gz.sha256 "LINK.sha256"
+curl -L -o kit.tar.gz "https://raw.githubusercontent.com/mohamedmasoud3030-tech/mosaid/arena/01a01769-mosaid/phase14-android-package/release/mosaid-phone-kit.tar.gz"
+curl -L -o kit.tar.gz.sha256 "https://raw.githubusercontent.com/mohamedmasoud3030-tech/mosaid/arena/01a01769-mosaid/phase14-android-package/release/mosaid-phone-kit.tar.gz.sha256"
 ```
+
+> بعد دمج التحديث في الفرع الرئيسي، استبدل `arena/01a01769-mosaid` بكلمة `main` في الرابطين.
 
 ثم تحقق من سلامة الملف (يجب أن يطبع `OK`):
 
