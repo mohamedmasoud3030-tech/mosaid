@@ -27,7 +27,7 @@ Version:         v0.14.0
 Qualification Go: 1.25.13 (built from official golang/go source)
 Android target:  arm64-v8a
 Binary SHA-256:  4f8679caa0271051835d4016ab003a4dd24e44e13b1d8169af9fb20e985dba43
-Phone-kit SHA-256: 12c39d15ab8314d5347e41b02f2855e76a8fc0770e4821e021d9fdb848184d30
+Phone-kit SHA-256: f1b67b5b33ea92abd866d756913d77415a08e77950a80195b6ff9ce6629b42c6
 ```
 
 ## Evidence produced this session
@@ -74,7 +74,11 @@ Phone-kit SHA-256: 12c39d15ab8314d5347e41b02f2855e76a8fc0770e4821e021d9fdb848184
   phone guide, and now automated: both `install-phone.sh` and
   `supervisor.sh` include a DNS guard that rewrites `$PREFIX/etc/resolv.conf`
   to `1.1.1.1`/`8.8.8.8` whenever no IPv4 nameserver is configured (kit
-  re-pinned to `12c39d15…`; the binary hash is unchanged).
+  re-pinned to `f1b67b5b…`; the binary hash is unchanged). The final fix
+  (kit `f1b67b5b…`) runs the agent under `proot` with
+  `$PREFIX/etc/resolv.conf` bound over `/etc/resolv.conf` — the documented
+  remedy for stock-Go binaries on Android — and the supervisor now exits
+  cleanly on TERM so `sv restart` can no longer orphan the agent child.
 - `preflight.sh --network` previously marked the model endpoint
   unreachable because it sent no API key (Gemini answers 401 without
   auth). Fixed to send the key and report

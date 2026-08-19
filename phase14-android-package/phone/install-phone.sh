@@ -19,7 +19,7 @@ esac
 
 command -v pkg >/dev/null 2>&1 || fail "pkg command is missing"
 pkg update -y
-pkg install -y ca-certificates curl jq coreutils procps findutils gawk grep sed termux-services termux-api
+pkg install -y ca-certificates curl jq coreutils procps findutils gawk grep sed termux-services termux-api resolv-conf proot
 
 for f in "$KIT_DIR/bin/mosaid" "$KIT_DIR/BINARY.sha256" "$KIT_DIR/config/config.phone.template.json"; do
   [[ -f "$f" ]] || fail "kit is incomplete: $f"
