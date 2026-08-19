@@ -46,6 +46,11 @@ if find . -type d -name secrets | grep -q .; then
 fi
 echo "ok"
 
+echo "== supervisor lifecycle regression (TERM exit, no orphan) =="
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bash "$SCRIPT_DIR/selftest-supervisor.sh" "$(pwd)/phone"
+echo "ok"
+
 if [[ -n "$SMOKE_BIN" && -f "$SMOKE_BIN" ]]; then
   echo "== smoke: binary must reject the unpersonalized template (fail-closed) =="
   if "$SMOKE_BIN" --config "$STAGE/config/config.phone.template.json" >/dev/null 2>&1; then

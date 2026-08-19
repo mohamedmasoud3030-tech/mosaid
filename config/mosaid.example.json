@@ -9,7 +9,9 @@
     "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
     "api_key_file": "/data/data/com.termux/files/home/.local/share/mosaid/secrets/model.key",
     "name": "gemini-2.5-flash",
-    "timeout_seconds": 60
+    "timeout_seconds": 60,
+    "input_price_per_1m": 0,
+    "output_price_per_1m": 0
   },
   "limits": {
     "max_message_bytes": 16384,

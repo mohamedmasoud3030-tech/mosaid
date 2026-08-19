@@ -88,3 +88,18 @@ func TestMessageGuardFloodAndRefill(t *testing.T) {
 		t.Fatalf("oversized err=%v", err)
 	}
 }
+
+func TestTokenCostUSD(t *testing.T) {
+	if v := TokenCostUSD(0, 5); v != 0 {
+		t.Fatal(v)
+	}
+	if v := TokenCostUSD(100, 0); v != 0 {
+		t.Fatal(v)
+	}
+	if v := TokenCostUSD(1000, 10); v != 0.01 {
+		t.Fatalf("cost=%v", v)
+	}
+	if v := TokenCostUSD(2000000, 0.5); v != 1.0 {
+		t.Fatalf("cost=%v", v)
+	}
+}

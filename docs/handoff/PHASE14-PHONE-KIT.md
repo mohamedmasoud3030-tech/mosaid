@@ -27,7 +27,7 @@ Version:         v0.14.0
 Qualification Go: 1.25.13 (built from official golang/go source)
 Android target:  arm64-v8a
 Binary SHA-256:  4f8679caa0271051835d4016ab003a4dd24e44e13b1d8169af9fb20e985dba43
-Phone-kit SHA-256: f1b67b5b33ea92abd866d756913d77415a08e77950a80195b6ff9ce6629b42c6
+Phone-kit SHA-256: eaac4ff02647629ff258adee4b4b7288fe7bc35ab27a04dbf7114b246599824f
 ```
 
 ## Evidence produced this session
@@ -74,8 +74,8 @@ Phone-kit SHA-256: f1b67b5b33ea92abd866d756913d77415a08e77950a80195b6ff9ce6629b4
   phone guide, and now automated: both `install-phone.sh` and
   `supervisor.sh` include a DNS guard that rewrites `$PREFIX/etc/resolv.conf`
   to `1.1.1.1`/`8.8.8.8` whenever no IPv4 nameserver is configured (kit
-  re-pinned to `f1b67b5b…`; the binary hash is unchanged). The final fix
-  (kit `f1b67b5b…`) runs the agent under `proot` with
+  re-pinned to `eaac4ff0…`; the binary hash is unchanged). The final fix
+  (kit `eaac4ff0…`) runs the agent under `proot` with
   `$PREFIX/etc/resolv.conf` bound over `/etc/resolv.conf` — the documented
   remedy for stock-Go binaries on Android — and the supervisor now exits
   cleanly on TERM so `sv restart` can no longer orphan the agent child.
@@ -113,3 +113,15 @@ could not be selected or verified by Arena tooling in this session. The
 owner explicitly authorized direct, documented orchestrator execution.
 Nothing in this repository claims that any named specialist model performed
 this work.
+
+## Remediation milestones (2026-08-19, same branch)
+
+- M1 phone DNS + supervisor lifecycle: fixed with a proot-based DNS launch
+  (D-03) and a supervisor TERM contract (D-04), guarded by a new lifecycle
+  regression test (`scripts/selftest-supervisor.sh`, wired into the
+  self-test). Kit re-pinned to `eaac4ff0…`; binary unchanged.
+- M2 cost accounting: per-request cost enforcement (D-02) with visible
+  budget-exceeded replies (D-09); 145/145 tests, race/vet/staticcheck/
+  govulncheck green locally.
+- See root `TECHNICAL_HEALTH_REPORT.md`, `TECHNICAL_DECISIONS.md`,
+  `TECHNICAL_REMEDIATION_PLAN.md`.

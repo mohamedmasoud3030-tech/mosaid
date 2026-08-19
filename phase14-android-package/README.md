@@ -63,7 +63,7 @@ Source commit:    b6b0a9b53820842fe9e5b42e3a9c0a9545eeefc3
 Version:          v0.14.0
 Android target:   arm64-v8a (GOOS=android GOARCH=arm64 CGO_ENABLED=0, -trimpath)
 Binary SHA-256:   4f8679caa0271051835d4016ab003a4dd24e44e13b1d8169af9fb20e985dba43
-Kit SHA-256:      f1b67b5b33ea92abd866d756913d77415a08e77950a80195b6ff9ce6629b42c6
+Kit SHA-256:      eaac4ff02647629ff258adee4b4b7288fe7bc35ab27a04dbf7114b246599824f
 ```
 
 The binary records its own identity via `mosaid --version`

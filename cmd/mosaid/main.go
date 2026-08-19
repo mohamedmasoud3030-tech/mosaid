@@ -87,7 +87,8 @@ func main() {
 	approvalManager := &approval.Manager{DB: db.SQL(), Audit: audit.Logger{DB: db.SQL()}}
 	memoryStore := &memory.Store{DB: db.SQL()}
 	budgetLimits := security.BudgetLimits{ModelSteps: cfg.Limits.MaxModelSteps, ToolCalls: cfg.Limits.MaxToolCalls, Tokens: cfg.Limits.MaxTokens, CostUSD: cfg.Limits.MaxCostUSD, Retries: cfg.Limits.MaxRetries}
-	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version, Approvals: approvalManager, Memory: memoryStore, Limits: budgetLimits}
+	priceLimits := security.PriceLimits{InputPer1M: cfg.Model.InputPricePer1M, OutputPer1M: cfg.Model.OutputPricePer1M}
+	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version, Approvals: approvalManager, Memory: memoryStore, Limits: budgetLimits, Prices: priceLimits}
 	guard, err := security.NewMessageGuard(security.SystemClock{}, cfg.Limits.MaxMessageBytes, cfg.Limits.MessagesPerMinute, cfg.Limits.MessageBurst)
 	if err != nil {
 		log.Error("message guard", "error", err.Error())

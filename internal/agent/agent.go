@@ -24,6 +24,7 @@ type Agent struct {
 	Approvals *approval.Manager
 	Memory    *memory.Store
 	Limits    security.BudgetLimits
+	Prices    security.PriceLimits
 	mu        sync.Mutex
 	cancel    context.CancelFunc
 }
@@ -141,6 +142,9 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	if err = budget.UseTokens(estimatedTokens(inputCharacters)); err != nil {
 		return out, err
 	}
+	if err = budget.UseCost(security.TokenCostUSD(estimatedTokens(inputCharacters), a.Prices.InputPer1M)); err != nil {
+		return out, err
+	}
 	run, cancel := context.WithCancel(security.WithBudget(ctx, budget))
 	a.mu.Lock()
 	if a.cancel != nil {
@@ -157,6 +161,9 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 		return out, err
 	}
 	if err = budget.UseTokens(estimatedTokens(len(answer))); err != nil {
+		return out, err
+	}
+	if err = budget.UseCost(security.TokenCostUSD(estimatedTokens(len(answer)), a.Prices.OutputPer1M)); err != nil {
 		return out, err
 	}
 	_ = a.Sessions.Append(in.ChatID, "assistant", answer)

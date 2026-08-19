@@ -5,7 +5,11 @@ import (
 	"errors"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 	"log/slog"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -65,5 +69,33 @@ func TestOwnerPrivateOnly(t *testing.T) {
 	}
 	if len(f.sent) != 2 {
 		t.Fatalf("sent=%d", len(f.sent))
+	}
+}
+
+type budgetHnd struct{}
+
+func (budgetHnd) Handle(_ context.Context, m message.Inbound) (message.Outbound, error) {
+	return message.Outbound{}, security.ErrBudgetExceeded
+}
+
+func TestBudgetExceededReplyVisible(t *testing.T) {
+	f := &fake{updates: []message.Inbound{{UpdateID: 5, ChatID: 1, UserID: 1, ChatType: "private", Text: "expensive"}}}
+	db, err := storage.Open(filepath.Join(t.TempDir(), "m.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	g := Gateway{Client: f, Handler: budgetHnd{}, Owner: 1, PollTimeout: 1, Log: slog.Default(), Health: health.New(t.TempDir(), "v"), Guard: allowGuard{}, Store: db, MaxAttempts: 3}
+	if err := g.Run(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, m := range f.sent {
+		if strings.Contains(m.Text, "budget exceeded") {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("budget reply missing, sent=%+v", f.sent)
 	}
 }

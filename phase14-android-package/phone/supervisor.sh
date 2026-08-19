@@ -17,12 +17,24 @@ mkdir -p "$RUNTIME" "$M_HOME/logs" "$M_HOME/tmp"
 
 bash "$SCRIPTS/verify-config.sh"
 
-# DNS guard: some Termux builds ship $PREFIX/etc/resolv.conf pointing at an
-# inactive local resolver (nameserver ::1); pure-Go binaries then fail to
-# resolve (curl works because Android resolves through netd for it). Ensure
-# a working public DNS is configured before each start.
-if ! grep -qE '^nameserver[[:space:]]+[0-9]+(\.[0-9]+){3}[[:space:]]*$' "$PREFIX/etc/resolv.conf" 2>/dev/null; then
-  printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > "$PREFIX/etc/resolv.conf" 2>/dev/null || true
+# On Android, a stock-Go binary reads /etc/resolv.conf (-> /system/etc, not
+# writable from Termux) and falls back to localhost:53 DNS, which fails.
+# Running under proot with $PREFIX/etc/resolv.conf bound over /etc/resolv.conf
+# is the documented fix. proot is installed by install-phone.sh.
+case "${PREFIX:-}" in
+  /data/data/com.termux/files/usr|/data/user/0/com.termux/files/usr) is_android=1 ;;
+  *) is_android=0 ;;
+esac
+
+# DNS guard (Termux only): some Termux builds ship $PREFIX/etc/resolv.conf
+# pointing at an inactive local resolver (nameserver ::1); pure-Go binaries
+# then fail to resolve (curl works because Android resolves through netd for
+# it). Ensure a working public DNS is configured before each start. Never
+# touches /etc/resolv.conf outside the Termux prefix.
+if [[ "$is_android" == "1" ]]; then
+  if ! grep -qE '^nameserver[[:space:]]+[0-9]+(\.[0-9]+){3}[[:space:]]*$' "${PREFIX}/etc/resolv.conf" 2>/dev/null; then
+    printf 'nameserver 1.1.1.1\nnameserver 8.8.8.8\n' > "${PREFIX}/etc/resolv.conf" 2>/dev/null || true
+  fi
 fi
 
 LOCK="$RUNTIME/supervisor.lock"
@@ -74,15 +86,6 @@ trap shutdown TERM INT HUP
 trap cleanup_state EXIT
 
 command -v termux-wake-lock >/dev/null 2>&1 && termux-wake-lock >/dev/null 2>&1 || true
-
-# On Android, a stock-Go binary reads /etc/resolv.conf (-> /system/etc, not
-# writable from Termux) and falls back to localhost:53 DNS, which fails.
-# Running under proot with $PREFIX/etc/resolv.conf bound over /etc/resolv.conf
-# is the documented fix. proot is installed by install-phone.sh.
-case "${PREFIX:-}" in
-  /data/data/com.termux/files/usr|/data/user/0/com.termux/files/usr) is_android=1 ;;
-  *) is_android=0 ;;
-esac
 
 launch_agent() {
   if [[ "$is_android" == "1" ]]; then
