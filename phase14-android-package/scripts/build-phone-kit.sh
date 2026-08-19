@@ -44,6 +44,7 @@ EOF
 )
 mkdir -p "$OUT_DIR"
 tar -C "$OUT_DIR" --sort=name --mtime='UTC 2026-08-19 00:00:00' --owner=0 --group=0 --numeric-owner -czf "$OUT_DIR/mosaid-phone-kit.tar.gz" mosaid-phone-kit
-sha256sum "$OUT_DIR/mosaid-phone-kit.tar.gz" > "$OUT_DIR/mosaid-phone-kit.tar.gz.sha256"
+( cd "$OUT_DIR" && sha256sum mosaid-phone-kit.tar.gz > mosaid-phone-kit.tar.gz.sha256 )
+[[ "$(awk '{print $2}' "$OUT_DIR/mosaid-phone-kit.tar.gz.sha256")" == "mosaid-phone-kit.tar.gz" ]] || { echo "sha256 file must use a relative filename" >&2; exit 1; }
 echo "$OUT_DIR/mosaid-phone-kit.tar.gz"
 cat "$OUT_DIR/mosaid-phone-kit.tar.gz.sha256"
