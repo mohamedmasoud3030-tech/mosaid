@@ -6,10 +6,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
   id-token: write
@@ -26,7 +22,7 @@ jobs:
       UPSTREAM_TAG_OBJECT: 9fba4cec050cbfe3d73dfcfe015d7960447b9c7f
       UPSTREAM_COMMIT: 2cf030d2fd3b871d7ec17e3be34c24688aac76da
       UPSTREAM_TREE: 79530d185c4c5eb30719fd45cf323217d2a9f5c5
-      GO_VERSION: 1.25.12
+      GO_VERSION: 1.25.13
       CGO_ENABLED: '0'
       GOTOOLCHAIN: local
       GOMAXPROCS: '2'
@@ -39,7 +35,7 @@ jobs:
       - name: Setup pinned Go
         uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: '1.25.12'
+          go-version: '1.25.13'
           check-latest: false
           cache: false
 
@@ -125,9 +121,10 @@ jobs:
           rc=$?
           set -e
           ids="$(grep -o 'GO-[0-9]\{4\}-[0-9]\{4\}' "$PHASE0_OUT/evidence/govulncheck.txt" | sort -u | tr '\n' ' ')"
-          test "$rc" = 3
-          grep -q 'GO-2026-5932' "$PHASE0_OUT/evidence/govulncheck.txt"
-          echo "Archived Phase 0 vulnerability IDs observed: $ids"
+          exp_rc="$(sed -n '1p' "$HARNESS/manifests/expected-govulncheck.txt")"
+          exp_ids="$(sed -n '2p' "$HARNESS/manifests/expected-govulncheck.txt")"
+          test "$rc" = "$exp_rc"
+          test "$ids" = "$exp_ids"
           if (cd "$PICOCLAW_SOURCE" && GOOS=android GOARCH=arm64 go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
             echo 'openpgp unexpectedly imported' >&2; exit 1
           fi
@@ -151,7 +148,6 @@ jobs:
             ${{ env.PHASE0_OUT }}/release/phase0-phone-kit.tar.gz
 
       - name: Upload CI evidence
-        continue-on-error: true
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: phase0-preservation-${{ github.sha }}

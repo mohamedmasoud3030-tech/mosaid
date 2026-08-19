@@ -1,17 +1,15 @@
 {
-  "data_dir": "/data/data/com.termux/files/home/.local/share/mosaid",
-  "owner_telegram_id": 123456789,
+  "data_dir": "REPLACE_DATA_DIR",
+  "owner_telegram_id": -1,
   "telegram": {
-    "token_file": "/data/data/com.termux/files/home/.local/share/mosaid/secrets/telegram.token",
+    "token_file": "REPLACE_TOKEN_FILE",
     "poll_timeout_seconds": 30
   },
   "model": {
     "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
-    "api_key_file": "/data/data/com.termux/files/home/.local/share/mosaid/secrets/model.key",
+    "api_key_file": "REPLACE_KEY_FILE",
     "name": "gemini-2.5-flash",
-    "timeout_seconds": 60,
-    "input_price_per_1m": 0,
-    "output_price_per_1m": 0
+    "timeout_seconds": 60
   },
   "limits": {
     "max_message_bytes": 16384,

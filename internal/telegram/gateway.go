@@ -12,6 +12,7 @@ import (
 
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 )
 
@@ -116,6 +117,15 @@ func (g *Gateway) drainInbox(ctx context.Context) {
 		}
 		out, e := g.Handler.Handle(ctx, in.Message)
 		if e != nil {
+			if errors.Is(e, security.ErrBudgetExceeded) {
+				key := "telegram-reply:" + strconv.FormatInt(in.Message.UpdateID, 10)
+				reply := message.Outbound{ChatID: in.Message.ChatID, ReplyTo: in.Message.MessageID, Text: "Request rejected: execution budget exceeded."}
+				if cerr := g.Store.CompleteWithOutbox(ctx, in.ID, reply, key); cerr != nil {
+					_ = g.Store.FailInbox(ctx, in.ID, cerr, g.MaxAttempts)
+				}
+				g.Log.Warn("request budget exceeded", "update_id", in.Message.UpdateID)
+				continue
+			}
 			_ = g.Store.FailInbox(ctx, in.ID, e, g.MaxAttempts)
 			continue
 		}

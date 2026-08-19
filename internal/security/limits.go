@@ -21,6 +21,21 @@ type BudgetLimits struct {
 	Retries    int
 }
 
+// PriceLimits holds optional model pricing in USD per 1M tokens.
+// Zero prices mean "free tier": no cost accrues and the budget never trips.
+type PriceLimits struct {
+	InputPer1M  float64
+	OutputPer1M float64
+}
+
+// TokenCostUSD estimates the USD cost of tokens at pricePer1M.
+func TokenCostUSD(tokens int, pricePer1M float64) float64 {
+	if tokens <= 0 || pricePer1M <= 0 {
+		return 0
+	}
+	return float64(tokens) * pricePer1M / 1_000_000
+}
+
 type Budget struct {
 	mu     sync.Mutex
 	limits BudgetLimits

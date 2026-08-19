@@ -1,0 +1,213 @@
+name: Phase 0 re-pin measurement (temporary)
+
+# Temporary workflow: rebuilds the Phase 0 qualification artifacts with
+# Go 1.25.13 (the govulncheck-gate fix) and commits the measured pins
+# (binary/kit hashes, SBOM, licenses, govulncheck expectation) back to the
+# branch. Removed after activation; a copy is kept at
+# docs/handoff/activation/measure-phase0.yml for reproducibility.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      HARNESS: phase0-android-runtime
+      UPSTREAM_REPOSITORY: sipeed/picoclaw
+      UPSTREAM_TAG: v0.3.1
+      UPSTREAM_TAG_OBJECT: 9fba4cec050cbfe3d73dfcfe015d7960447b9c7f
+      UPSTREAM_COMMIT: 2cf030d2fd3b871d7ec17e3be34c24688aac76da
+      UPSTREAM_TREE: 79530d185c4c5eb30719fd45cf323217d2a9f5c5
+      GO_VERSION: 1.25.13
+      CGO_ENABLED: '0'
+      GOTOOLCHAIN: local
+      GOMAXPROCS: '2'
+    steps:
+      - name: Checkout Mosaid (push-enabled)
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: true
+
+      - name: Setup pinned Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: '1.25.13'
+          check-latest: false
+          cache: false
+
+      - name: Official toolchain archive hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" | sha256sum | awk '{print $1}' > "$RUNNER_TEMP/toolchain.sha256"
+          cat "$RUNNER_TEMP/toolchain.sha256"
+
+      - name: Fetch and pin upstream source
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/picoclaw"
+          git clone --filter=blob:none --no-checkout "https://github.com/${UPSTREAM_REPOSITORY}.git" "$src"
+          cd "$src"
+          test "$(git ls-remote origin "refs/tags/${UPSTREAM_TAG}" | awk '{print $1}')" = "$UPSTREAM_TAG_OBJECT"
+          git fetch --depth=1 origin "$UPSTREAM_COMMIT"
+          git checkout --detach "$UPSTREAM_COMMIT"
+          test "$(git rev-parse HEAD)" = "$UPSTREAM_COMMIT"
+          test "$(git rev-parse HEAD^{tree})" = "$UPSTREAM_TREE"
+          test "$(curl -fsSL -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${UPSTREAM_REPOSITORY}/commits/${UPSTREAM_COMMIT}" \
+            | jq -r '.commit.verification.verified')" = true
+          git apply --check "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-qualification.patch"
+          git apply "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-qualification.patch"
+          git apply --check "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-security-overrides.patch"
+          git apply "$GITHUB_WORKSPACE/$HARNESS/patches/phase0-security-overrides.patch"
+          git diff --check
+          echo "PICOCLAW_SOURCE=$src" >> "$GITHUB_ENV"
+
+      - name: Formatting and scoped tests (toolchain compatibility gate)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PICOCLAW_SOURCE"
+          go mod verify
+          test -z "$(gofmt -l pkg/channels/telegram/telegram.go pkg/channels/telegram/phase0_qualification_test.go pkg/tools/integration/web.go)"
+          go test -tags stdjson ./pkg/channels/telegram
+          go test -tags stdjson ./pkg/agent
+          go test -tags stdjson -skip 'TestWebTool_Kagi' ./pkg/tools/integration
+          cd "$GITHUB_WORKSPACE"
+          bash "$HARNESS/scripts/ci-selftest.sh"
+
+      - name: Reproducible Android ARM64 build
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/out"
+          mkdir -p "$out/a" "$out/b" "$out/manifests" "$out/evidence" "$out/release"
+          cd "$PICOCLAW_SOURCE"
+          ldflags="-s -w -buildid= -X github.com/sipeed/picoclaw/pkg/config.Version=v0.3.1-phase0.1 -X github.com/sipeed/picoclaw/pkg/config.GitCommit=${UPSTREAM_COMMIT} -X github.com/sipeed/picoclaw/pkg/config.BuildTime=2026-06-30T09:42:07Z -X github.com/sipeed/picoclaw/pkg/config.GoVersion=go${GO_VERSION}"
+          for bin in "$out/a/picoclaw-phase0" "$out/b/picoclaw-phase0"; do
+            GOOS=android GOARCH=arm64 go build -p 1 -trimpath -buildvcs=false -tags stdjson -ldflags "$ldflags" -o "$bin" ./cmd/picoclaw
+          done
+          test "$(sha256sum "$out/a/picoclaw-phase0" | awk '{print $1}')" = "$(sha256sum "$out/b/picoclaw-phase0" | awk '{print $1}')"
+          install -m 0755 "$out/a/picoclaw-phase0" "$out/picoclaw-phase0-v0.3.1-android-arm64"
+          sha256sum "$out/picoclaw-phase0-v0.3.1-android-arm64" | awk '{print $1}' > "$RUNNER_TEMP/binary.sha256"
+          go version -m "$out/picoclaw-phase0-v0.3.1-android-arm64" > "$out/evidence/go-version-m.txt"
+          if grep -q 'kagisearch/kagi-openapi-golang' "$out/evidence/go-version-m.txt"; then
+            echo true > "$RUNNER_TEMP/kagi.linked"
+          else
+            echo false > "$RUNNER_TEMP/kagi.linked"
+          fi
+          echo "PHASE0_OUT=$out" >> "$GITHUB_ENV"
+
+      - name: SBOM, licenses, and vulnerability measurement
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 "$HARNESS/scripts/generate-sbom.py" \
+            --binary "$PHASE0_OUT/picoclaw-phase0-v0.3.1-android-arm64" \
+            --source "$PICOCLAW_SOURCE" \
+            --output-dir "$PHASE0_OUT/manifests"
+          if awk -F '\t' 'NR>1 && ($3=="UNKNOWN" || $3=="NOT_FOUND" || $3 ~ /^GPL/){bad=1} END{exit bad}' "$PHASE0_OUT/manifests/license-report.tsv"; then :; else
+            echo 'Unknown, missing, or GPL-classified linked license' >&2; exit 1
+          fi
+          GOBIN="$RUNNER_TEMP/bin" go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          set +e
+          "$RUNNER_TEMP/bin/govulncheck" -mode=binary "$PHASE0_OUT/picoclaw-phase0-v0.3.1-android-arm64" > "$PHASE0_OUT/evidence/govulncheck.txt" 2>&1
+          rc=$?
+          set -e
+          ids="$(grep -o 'GO-[0-9]\{4\}-[0-9]\{4\}' "$PHASE0_OUT/evidence/govulncheck.txt" | sort -u | tr '\n' ' ')"
+          printf '%s\n%s\n' "$rc" "$ids" > "$RUNNER_TEMP/expected-govulncheck.txt"
+          if (cd "$PICOCLAW_SOURCE" && GOOS=android GOARCH=arm64 go list -deps -tags stdjson ./cmd/picoclaw) | grep -q '^golang.org/x/crypto/openpgp'; then
+            echo 'openpgp unexpectedly imported' >&2; exit 1
+          fi
+          echo "govulncheck rc=$rc ids=$ids"
+
+      - name: Rebuild archival phone kit
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$PICOCLAW_SOURCE/LICENSE" "$HARNESS/evidence/upstream/LICENSE"
+          bash "$HARNESS/scripts/build-phone-kit.sh" "$PHASE0_OUT/picoclaw-phase0-v0.3.1-android-arm64" "$PHASE0_OUT/release"
+          awk '{print $1}' "$PHASE0_OUT/release/phase0-phone-kit.tar.gz.sha256" > "$RUNNER_TEMP/kit.sha256"
+
+      - name: Update pinned artifacts and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          BIN_SHA="$(cat "$RUNNER_TEMP/binary.sha256")"
+          KIT_SHA="$(cat "$RUNNER_TEMP/kit.sha256")"
+          TOOLCHAIN_SHA="$(cat "$RUNNER_TEMP/toolchain.sha256")"
+          KAGI="$(cat "$RUNNER_TEMP/kagi.linked")"
+          LINKED_COUNT="$(awk 'END{print NR-1}' "$PHASE0_OUT/manifests/linked-modules.tsv")"
+          DB_UTC="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          RC="$(sed -n '1p' "$RUNNER_TEMP/expected-govulncheck.txt")"
+          IDS="$(sed -n '2p' "$RUNNER_TEMP/expected-govulncheck.txt")"
+          FINDINGS="$(jq -cn --arg ids "$IDS" '[$ids | split(" ")[] | select(length>0)]')"
+
+          cp "$PHASE0_OUT/manifests/sbom.cdx.json" "$HARNESS/manifests/sbom.cdx.json"
+          cp "$PHASE0_OUT/manifests/sbom-summary.json" "$HARNESS/manifests/sbom-summary.json"
+          cp "$PHASE0_OUT/manifests/linked-modules.tsv" "$HARNESS/manifests/linked-modules.tsv"
+          cp "$PHASE0_OUT/manifests/license-report.tsv" "$HARNESS/manifests/license-report.tsv"
+          cp "$PHASE0_OUT/manifests/go-version-m.txt" "$HARNESS/manifests/go-version-m.txt"
+          cp "$PHASE0_OUT/manifests/go-version-m.txt" "$HARNESS/evidence/go-version-m.txt"
+          cp "$PHASE0_OUT/evidence/govulncheck.txt" "$HARNESS/evidence/govulncheck.txt"
+          cp "$PHASE0_OUT/release/phase0-phone-kit.tar.gz" "$HARNESS/release/phase0-phone-kit.tar.gz"
+          cp "$PHASE0_OUT/release/phase0-phone-kit.tar.gz.sha256" "$HARNESS/release/phase0-phone-kit.tar.gz.sha256"
+          cp "$RUNNER_TEMP/expected-govulncheck.txt" "$HARNESS/manifests/expected-govulncheck.txt"
+
+          NOTE='The finding is module-level for x/crypto/openpgp. go list -deps for cmd/picoclaw confirms that golang.org/x/crypto/openpgp is not imported. The exception is acceptable for qualification only, not an assertion of zero risk.'
+          if [[ "$IDS" != "GO-2026-5932 " ]]; then
+            NOTE='Measured after the Go 1.25.13 re-pin. Reviewed in the re-pin commit; exception applies only to documented module-level findings for packages that are not imported.'
+          fi
+
+          jq --arg bin "$BIN_SHA" --arg kit "$KIT_SHA" --arg tc "$TOOLCHAIN_SHA" \
+             --arg gov "go${GO_VERSION}" --arg kagi "$KAGI" --argjson n "$LINKED_COUNT" \
+             --arg now "$DB_UTC" --argjson findings "$FINDINGS" --arg note "$NOTE" \
+             '.generated_at=$now
+              | .qualification_derivative.binary_sha256=$bin
+              | .qualification_derivative.phone_kit_sha256=$kit
+              | .qualification_derivative.build_go_version=$gov
+              | .qualification_derivative.go_toolchain_archive_sha256=$tc
+              | .qualification_derivative.linked_module_count=$n
+              | .qualification_derivative.unlicensed_kagi_client_linked=($kagi=="true")
+              | .qualification_derivative.two_independent_local_builds_match=true
+              | .vulnerability_scan.database_updated_utc=$now
+              | .vulnerability_scan.remaining_findings=$findings
+              | .vulnerability_scan.exception_note=$note' \
+            "$HARNESS/manifests/source-manifest.json" > "$RUNNER_TEMP/source-manifest.json"
+          mv "$RUNNER_TEMP/source-manifest.json" "$HARNESS/manifests/source-manifest.json"
+
+          jq --arg bin "$BIN_SHA" --arg kit "$KIT_SHA" --arg tc "$TOOLCHAIN_SHA" \
+             --arg gov "go${GO_VERSION}" \
+             '.go_version=$gov
+              | .go_toolchain_archive_sha256=$tc
+              | .outputs.android_binary_sha256=$bin
+              | .outputs.phone_kit_sha256=$kit' \
+            "$HARNESS/manifests/build-metadata.json" > "$RUNNER_TEMP/build-metadata.json"
+          mv "$RUNNER_TEMP/build-metadata.json" "$HARNESS/manifests/build-metadata.json"
+
+          (
+            cd "$HARNESS/manifests"
+            sha256sum go-mod-graph.txt sbom.cdx.json sbom-summary.json linked-modules.tsv \
+              license-report.tsv build-metadata.json go-modules-all.txt source-manifest.json \
+              DELIVERABLES.sha256 go-version-m.txt > MANIFESTS.sha256
+          )
+
+          git config user.name "arena-ai-coding-agent[bot]"
+          git config user.email "171755817+arena-ai-coding-agent[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "build(phase0): re-pin qualification artifacts for Go 1.25.13
+
+Measured by the temporary re-pin workflow on the real proxy/toolchain:
+- binary_sha256: $BIN_SHA
+- phone_kit_sha256: $KIT_SHA
+- toolchain archive sha256: $TOOLCHAIN_SHA
+- govulncheck rc=$RC ids=$IDS
+- linked modules: $LINKED_COUNT" || echo "no changes to commit"
+          git push origin "HEAD:${GITHUB_REF_NAME}" || echo "push skipped"

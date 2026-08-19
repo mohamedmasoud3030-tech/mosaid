@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -24,10 +25,12 @@ type Telegram struct {
 	PollTimeoutSeconds int    `json:"poll_timeout_seconds"`
 }
 type Model struct {
-	BaseURL        string `json:"base_url"`
-	APIKeyFile     string `json:"api_key_file"`
-	Name           string `json:"name"`
-	TimeoutSeconds int    `json:"timeout_seconds"`
+	BaseURL          string  `json:"base_url"`
+	APIKeyFile       string  `json:"api_key_file"`
+	Name             string  `json:"name"`
+	TimeoutSeconds   int     `json:"timeout_seconds"`
+	InputPricePer1M  float64 `json:"input_price_per_1m"`
+	OutputPricePer1M float64 `json:"output_price_per_1m"`
 }
 type Limits struct {
 	MaxMessageBytes   int     `json:"max_message_bytes"`
@@ -78,6 +81,11 @@ func (c *Config) Validate() error {
 	}
 	if c.Model.Name == "" || len(c.Model.Name) > 128 {
 		return errors.New("model.name required and bounded")
+	}
+	for _, p := range []float64{c.Model.InputPricePer1M, c.Model.OutputPricePer1M} {
+		if p < 0 || p > 1000 || math.IsNaN(p) || math.IsInf(p, 0) {
+			return errors.New("model token prices must be between 0 and 1000 USD per 1M tokens")
+		}
 	}
 	u, err := url.Parse(c.Model.BaseURL)
 	if err != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || u.Fragment != "" {
