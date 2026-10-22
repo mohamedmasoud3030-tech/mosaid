@@ -12,7 +12,7 @@ The intended first device is an unused Android/ARM64 phone running Termux, contr
 
 - The implemented, hardened Go runtime (Phases 1–13): durable Telegram inbox/outbox, fail-closed policy and approvals, structured-argv tools (no shell), draft-only GitHub integration, FTS5 memory, scheduler, Skills, official MCP SDK, DNS-pinned fetch, approval-gated image generation, and a recoverable Instagram container workflow.
 - Phase 14 phone kit: Termux installer, preflight, runit supervision, wake lock, Termux:Boot, health sampling, log rotation, redacted diagnostics collector, self-test, SBOM/license manifests, numeric acceptance criteria, an Arabic owner guide, and a free-only model policy with a pinned cost tripwire.
-- The pinned Phase 0 qualification harness (archived, historical).
+- The pinned Phase 0 qualification harness (historical; see `phase0-android-runtime/`).
 
 ## What does not exist
 
@@ -21,10 +21,10 @@ The intended first device is an unused Android/ARM64 phone running Termux, contr
 
 ## Start with the evidence
 
-- [Full runtime/framework evaluation](docs/research/2026-07-29-agent-runtime-evaluation.md)
+- Runtime/framework selection: [ADR-0001](docs/decisions/ADR-0001-picoclaw-conditional-selection.md) (the 2026-07-29 evaluation itself is in Git history)
 - [ADR-0001: conditional PicoClaw selection](docs/decisions/ADR-0001-picoclaw-conditional-selection.md)
 - [Proposed architecture](docs/architecture/proposed-architecture.md)
-- [Implementation status by phase](docs/roadmap/IMPLEMENTATION-STATUS.md)
+- [Implementation status by phase](docs/STATUS.md)
 - [Phase 14 phone package](phase14-android-package/README.md)
 - [Phase 14 test plan](phase14-android-package/docs/TEST-PLAN.md)
 - [Phase 14 free-only model policy](phase14-android-package/docs/MODEL-FREE-TIER.md)

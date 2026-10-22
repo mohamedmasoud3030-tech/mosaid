@@ -67,7 +67,7 @@ owner-authorized direct execution; no specialist-model claims are made.
   `toolchain` directive cannot switch CI.
 - Decision: keep `go 1.25.12` + `toolchain go1.25.13` in `go.mod` (local
   builds use 1.25.13) and stage the one-line CI fix (`go-version: '1.25.13'`)
-  plus a `phone-kit` job in `docs/handoff/activation/`, pending an
+  plus a `phone-kit` job in `docs/specs/phone-kit/activation/`, pending an
   owner-approved credential with Workflows write (GitHub correctly rejects
   the App credential for workflow edits). Phase 0 preservation CI gets the
   same bump plus a pinned `expected-govulncheck.txt` measured by a temporary
