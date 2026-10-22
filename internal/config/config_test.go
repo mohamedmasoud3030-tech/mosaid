@@ -165,3 +165,30 @@ func TestAgentSettingsValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestTelegramIsOptionalForTerminalUse(t *testing.T) {
+	// The terminal client runs the same agent with no bot at all, so a config
+	// with no Telegram section must load.
+	path := writeConfig(t, baseConfigJSON(t, func(d map[string]any) { delete(d, "telegram") }))
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("telegram-free config rejected: %v", err)
+	}
+	if cfg.Telegram.TokenFile != "" {
+		t.Fatalf("token file = %q", cfg.Telegram.TokenFile)
+	}
+	// An absolute token path without a poll timeout is a half-configured daemon.
+	halfway := writeConfig(t, baseConfigJSON(t, func(d map[string]any) {
+		d["telegram"] = map[string]any{"token_file": "/run/secrets/telegram.token"}
+	}))
+	if _, err := Load(halfway); err == nil {
+		t.Fatal("token without poll timeout accepted")
+	}
+	// A relative token path stays rejected.
+	relative := writeConfig(t, baseConfigJSON(t, func(d map[string]any) {
+		d["telegram"] = map[string]any{"token_file": "telegram.token", "poll_timeout_seconds": 30}
+	}))
+	if _, err := Load(relative); err == nil {
+		t.Fatal("relative token path accepted")
+	}
+}

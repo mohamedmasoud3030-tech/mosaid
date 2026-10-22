@@ -96,6 +96,46 @@ Rules enforced by `config.Validate`:
 * `agent.max_steps` must not exceed `limits.max_model_steps`.
 * `max_tool_result_bytes` is capped at 64 KiB, `max_tokens` at 8192.
 
+## Laptop / no phone
+
+Yes. The phone is only one possible host. Three modes, in ascending order of setup:
+
+| Mode | Needs | What you get |
+|---|---|---|
+| `mosaid-cli` | a model key | the same agent, tools, policy and approvals in a terminal; **no bot, no phone, no inbound port** |
+| `mosaid` daemon on the laptop | model key + Telegram bot token | identical behaviour to the phone, reachable from your phone's Telegram app while the laptop is on |
+| `mosaid` daemon on the phone | the Phase 14 kit | always-on without a laptop |
+
+The Telegram bot is created from BotFather, which works from Telegram Desktop or
+web — no phone required. `telegram` is now an optional config section: omit it
+and `mosaid-cli` runs with no chat at all, while the daemon refuses to start with
+`telegram.token_file is required to run the Telegram daemon; use mosaid-cli for a
+chat-free session` (exit 2), so a misconfigured daemon still fails closed.
+
+Laptop config (`config/mosaid.laptop.example.json`) is the smallest one — no
+Telegram block:
+
+```bash
+mkdir -p ~/mosaid/.data ~/mosaid/.secrets ~/mosaid/notes
+printf '%s\n' 'YOUR_GEMINI_KEY' > ~/mosaid/.secrets/model.key
+chmod 600 ~/mosaid/.secrets/model.key
+sed "s#/HOME#$HOME#g" config/mosaid.laptop.example.json > ~/mosaid/config.json
+go run ./cmd/mosaid-cli --config ~/mosaid/config.json
+```
+
+Verified in this session: config with **no** `telegram` key → `mosaid-cli` ran a
+full session (list → approval → write → read) against the scripted provider, and
+the daemon exited 2 with the message above.
+
+Platform matrix (cross-compiled from the same source, no CGO):
+
+| OS | Daemon | CLI | Notes |
+|---|---|---|---|
+| Linux amd64/arm64 | ✅ builds and runs | ✅ | the reference host |
+| macOS arm64/amd64 | ✅ builds | ✅ | untested at runtime here |
+| Android arm64 (Termux) | ✅ | ✅ | Phase 14 kit |
+| Windows | ✗ | ✗ | `internal/security/singleton.go` uses `syscall.Kill`; use WSL2 |
+
 ## Running it
 
 ```bash

@@ -59,6 +59,10 @@ func main() {
 		fmt.Fprintln(os.Stderr, "config:", err)
 		os.Exit(1)
 	}
+	if cfg.Telegram.TokenFile == "" {
+		fmt.Fprintln(os.Stderr, "telegram.token_file is required to run the Telegram daemon; use mosaid-cli for a chat-free session")
+		os.Exit(2)
+	}
 	secretSource := secrets.FileSource{}
 	tokenValue, err := secretSource.Read(cfg.Telegram.TokenFile)
 	if err != nil {

@@ -86,8 +86,13 @@ func (c *Config) Validate() error {
 		return errors.New("data_dir must be absolute")
 	}
 	c.DataDir = filepath.Clean(c.DataDir)
-	if c.Telegram.TokenFile == "" || !filepath.IsAbs(c.Telegram.TokenFile) {
-		return errors.New("telegram.token_file must be absolute")
+	// A Telegram bot is optional: the terminal client (mosaid-cli) runs the same
+	// agent without any inbound chat. The daemon enforces the token at startup,
+	// so an empty path fails closed there rather than here.
+	if c.Telegram.TokenFile != "" {
+		if !filepath.IsAbs(c.Telegram.TokenFile) {
+			return errors.New("telegram.token_file must be absolute")
+		}
 	}
 	if c.Model.APIKeyFile == "" || !filepath.IsAbs(c.Model.APIKeyFile) {
 		return errors.New("model.api_key_file must be absolute")
@@ -104,8 +109,11 @@ func (c *Config) Validate() error {
 	if err != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || u.Fragment != "" {
 		return errors.New("model.base_url must be HTTPS without credentials or fragment")
 	}
-	if c.Telegram.PollTimeoutSeconds < 1 || c.Telegram.PollTimeoutSeconds > 60 || c.Model.TimeoutSeconds < 1 || c.Model.TimeoutSeconds > 300 {
-		return errors.New("network timeouts must be explicitly configured and bounded")
+	if c.Telegram.TokenFile != "" && (c.Telegram.PollTimeoutSeconds < 1 || c.Telegram.PollTimeoutSeconds > 60) {
+		return errors.New("telegram.poll_timeout_seconds must be explicitly configured and bounded")
+	}
+	if c.Model.TimeoutSeconds < 1 || c.Model.TimeoutSeconds > 300 {
+		return errors.New("model.timeout_seconds must be explicitly configured and bounded")
 	}
 	if c.Limits.MaxMessageBytes < 1 || c.Limits.MaxMessageBytes > 1024*1024 || c.Limits.MaxResponseBytes < 1 || c.Limits.MaxResponseBytes > 4*1024*1024 {
 		return errors.New("message and response limits must be explicitly configured and bounded")

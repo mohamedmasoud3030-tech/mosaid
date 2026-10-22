@@ -1,0 +1,30 @@
+{
+  "data_dir": "/HOME/mosaid/.data",
+  "workspace_dir": "/HOME/mosaid/notes",
+  "owner_telegram_id": 1,
+  "model": {
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "api_key_file": "/HOME/mosaid/.secrets/model.key",
+    "name": "gemini-2.5-flash",
+    "timeout_seconds": 60,
+    "input_price_per_1m": 0,
+    "output_price_per_1m": 0
+  },
+  "agent": {
+    "max_steps": 4,
+    "max_calls_per_step": 4,
+    "max_tool_result_bytes": 8192,
+    "max_tokens": 1024
+  },
+  "limits": {
+    "max_message_bytes": 16384,
+    "max_response_bytes": 65536,
+    "max_model_steps": 6,
+    "max_tool_calls": 16,
+    "max_tokens": 32000,
+    "max_cost_usd": 0.05,
+    "max_retries": 5,
+    "messages_per_minute": 30,
+    "message_burst": 5
+  }
+}
