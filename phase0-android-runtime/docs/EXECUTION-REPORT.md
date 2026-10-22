@@ -1,3 +1,5 @@
+> 📌 **Canonical source:** [`docs/phase0/EXECUTION-REPORT.md`](../../docs/phase0/EXECUTION-REPORT.md) — this file is a packaged snapshot inside the phone-kit. Edit the canonical file, not this copy. _(portfolio cleanup 2026-10-21)_
+
 # Phase 0 — Android Runtime Qualification execution report
 
 Status at 2026-07-29: **all environment-local work completed; physical-phone qualification pending**.
