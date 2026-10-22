@@ -1,3 +1,5 @@
+> 📌 **Canonical source:** [`docs/phase0/PHONE-GUIDE.md`](../../docs/phase0/PHONE-GUIDE.md) — this file is a packaged snapshot inside the phone-kit. Edit the canonical file, not this copy. _(portfolio cleanup 2026-10-21)_
+
 # Short phone guide
 
 ## Before Termux
