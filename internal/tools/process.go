@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -78,7 +77,7 @@ func (p *ProcessRunner) Run(ctx context.Context, args json.RawMessage) (any, err
 	cmd := exec.CommandContext(ctx, prof.Executable, a.Argv...)
 	cmd.Dir = cwd
 	cmd.Env = []string{"PATH=" + os.Getenv("PATH"), "HOME=" + filepath.Join(root, ".mosaid-home"), "TMPDIR=" + filepath.Join(root, ".mosaid-tmp"), "LANG=C.UTF-8"}
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	isolateProcess(cmd)
 	buf := &limitedBuffer{max: p.MaxOutput}
 	cmd.Stdout = buf
 	cmd.Stderr = buf
@@ -91,7 +90,7 @@ func (p *ProcessRunner) Run(ctx context.Context, args json.RawMessage) (any, err
 	select {
 	case err = <-done:
 	case <-ctx.Done():
-		_ = syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+		terminateProcess(cmd)
 		err = <-done
 	}
 	code := 0

@@ -2,15 +2,19 @@
 
 Mosaid is a lightweight, extensible general personal AI agent for coding workflows, safe local tools, repository work, scheduled assistance, and future modular integrations. The runtime is implemented and hardened (Phases 1–13); a fail-closed Android/Termux phone package (Phase 14) is ready, and real-phone qualification is pending the owner's test run.
 
+Phase 15 adds the **agent core**: native tool calling, a bounded execution loop, approval-gated writes, and a terminal client, so the model can act instead of only answering.
+
 ## Current status
 
-**Phase 14 complete: the Android/Termux phone kit is built, checksum-pinned, and self-tested. The first physical-phone run has not happened yet.**
+**Phase 15 complete: the agent can call tools through the existing policy and approval engine. 168 tests pass (including `-race`), and a credential-free end-to-end demo runs the real binary. The first physical-phone run has not happened yet.**
 
 The intended first device is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. The default model provider is the Google Gemini free tier via its officially documented OpenAI-compatible endpoint; the owner chose a free-only model policy.
 
 ## What exists today
 
-- The implemented, hardened Go runtime (Phases 1–13): durable Telegram inbox/outbox, fail-closed policy and approvals, structured-argv tools (no shell), draft-only GitHub integration, FTS5 memory, scheduler, Skills, official MCP SDK, DNS-pinned fetch, approval-gated image generation, and a recoverable Instagram container workflow.
+- The agent core (Phase 15): native OpenAI-compatible tool calling, a bounded loop (steps, tool calls, result size, tokens, cost, retries), approval-gated writes with single-use bound tokens, model-facing tool schemas derived from the enforced policy, `memory.search`/`memory.remember`, `/tools`, and a bounded final-answer turn.
+- `cmd/mosaid-cli`: the same agent in a terminal, which needs a model key only — no bot token, no inbound ports. `scripts/dev/demo-agent-local.sh` runs it end to end against a scripted local HTTPS provider.
+- The implemented, hardened Go runtime (Phases 1–13): durable Telegram inbox/outbox, fail-closed policy and approvals, structured-argv tools (no shell), draft-only GitHub integration, FTS5 memory, scheduler, Skills, official MCP SDK, DNS-pinned fetch, approval-gated image generation, and a recoverable Instagram container workflow. Note: scheduler, Skills, MCP, research, images, Instagram, GitHub and gitops are implemented and tested but **not yet wired into `cmd/mosaid`**; see [docs/agent-core](docs/agent-core/README.md).
 - Phase 14 phone kit: Termux installer, preflight, runit supervision, wake lock, Termux:Boot, health sampling, log rotation, redacted diagnostics collector, self-test, SBOM/license manifests, numeric acceptance criteria, an Arabic owner guide, and a free-only model policy with a pinned cost tripwire.
 - The pinned Phase 0 qualification harness (archived, historical).
 
@@ -19,7 +23,27 @@ The intended first device is an unused Android/ARM64 phone running Termux, contr
 - A passed real-phone qualification report (30-minute, 2-hour, 12-hour, 24-hour, network, reboot, battery, thermal, duplicate, and continuity scenarios).
 - Real Telegram/model runtime credentials in this repository (the owner enters them on the phone; the installer writes them as 0600 single-line files).
 
+## Try it in two minutes
+
+```bash
+# No API key, no Telegram bot, no network: real binary, scripted provider.
+scripts/dev/demo-agent-local.sh
+
+# Windows 10: unzip release/windows-amd64/mosaid-windows-amd64.zip, put your key in
+# secrets/model.key, then run start-mosaid.bat. No Go install, no bot, ~16 MB RAM.
+# See docs/agent-core/RUN-WINDOWS.ar.md
+
+# Linux/macOS: your own model key, terminal session. No bot, no phone, no inbound port.
+cp config/mosaid.laptop.example.json ~/mosaid/config.json   # then fill in the key path
+go run ./cmd/mosaid-cli --config ~/mosaid/config.json --workspace ~/notes
+```
+
+In chat: `/tools` lists the exposed surface, writes ask for `/approve <token>` or `/deny <token>`.
+
 ## Start with the evidence
+
+- [Agent core design, configuration and threat notes](docs/agent-core/README.md)
+- [Arabic capability audit and results](docs/findings/2026-10-22-capability-audit.ar.md)
 
 - [Full runtime/framework evaluation](docs/research/2026-07-29-agent-runtime-evaluation.md)
 - [ADR-0001: conditional PicoClaw selection](docs/decisions/ADR-0001-picoclaw-conditional-selection.md)

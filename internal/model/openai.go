@@ -16,10 +16,12 @@ type OpenAI struct {
 	base, key, name string
 	client          *http.Client
 	max             int64
+	attempts        int
+	sleep           func(time.Duration)
 }
 
 func NewOpenAI(base, key, name string, timeout time.Duration, max int64) *OpenAI {
-	return &OpenAI{strings.TrimRight(base, "/"), key, name, &http.Client{Timeout: timeout}, max}
+	return &OpenAI{base: strings.TrimRight(base, "/"), key: key, name: name, client: &http.Client{Timeout: timeout}, max: max, attempts: defaultAttempts}
 }
 func (o *OpenAI) Complete(ctx context.Context, msgs []Message) (string, error) {
 	body := struct {

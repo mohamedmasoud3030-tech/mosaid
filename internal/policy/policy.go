@@ -33,7 +33,10 @@ const (
 )
 
 type Tool struct {
-	Name, Version           string
+	Name, Version string
+	// Description is the model-facing purpose of the tool. It is optional for
+	// execution but required before a tool may be exposed to a model.
+	Description             string
 	InputSchema             []byte
 	Risk                    Risk
 	Modes                   []Mode

@@ -12,10 +12,12 @@ import (
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/memory"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/observability"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/policy"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/secrets"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/telegram"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/tools"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -23,6 +25,18 @@ import (
 	"syscall"
 	"time"
 )
+
+// modelAttempts bounds retries per completion so a free-tier rate limit cannot
+// pin a single Telegram turn.
+func modelAttempts(maxRetries int) int {
+	if maxRetries < 1 {
+		return 1
+	}
+	if maxRetries > 4 {
+		return 4
+	}
+	return maxRetries
+}
 
 var version = "dev"
 var commit = "unknown"
@@ -44,6 +58,10 @@ func main() {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "config:", err)
 		os.Exit(1)
+	}
+	if cfg.Telegram.TokenFile == "" {
+		fmt.Fprintln(os.Stderr, "telegram.token_file is required to run the Telegram daemon; use mosaid-cli for a chat-free session")
+		os.Exit(2)
 	}
 	secretSource := secrets.FileSource{}
 	tokenValue, err := secretSource.Read(cfg.Telegram.TokenFile)
@@ -72,7 +90,8 @@ func main() {
 	defer h.Update(func(s *health.State) { s.Status = "stopped" })
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
-	m := model.NewOpenAI(cfg.Model.BaseURL, key, cfg.Model.Name, time.Duration(cfg.Model.TimeoutSeconds)*time.Second, int64(cfg.Limits.MaxResponseBytes))
+	m := model.NewOpenAI(cfg.Model.BaseURL, key, cfg.Model.Name, time.Duration(cfg.Model.TimeoutSeconds)*time.Second, int64(cfg.Limits.MaxResponseBytes)).
+		Configure(modelAttempts(cfg.Limits.MaxRetries), nil)
 	sessions := storage.NewSessionStore(filepath.Join(cfg.DataDir, "state"))
 	db, err := storage.Open(filepath.Join(cfg.DataDir, "mosaid.db"))
 	if err != nil {
@@ -88,14 +107,37 @@ func main() {
 	memoryStore := &memory.Store{DB: db.SQL()}
 	budgetLimits := security.BudgetLimits{ModelSteps: cfg.Limits.MaxModelSteps, ToolCalls: cfg.Limits.MaxToolCalls, Tokens: cfg.Limits.MaxTokens, CostUSD: cfg.Limits.MaxCostUSD, Retries: cfg.Limits.MaxRetries}
 	priceLimits := security.PriceLimits{InputPer1M: cfg.Model.InputPricePer1M, OutputPer1M: cfg.Model.OutputPricePer1M}
-	a := &agent.Agent{Model: m, Sessions: sessions, Health: h, Version: version, Approvals: approvalManager, Memory: memoryStore, Limits: budgetLimits, Prices: priceLimits}
+	toolRegistry := tools.NewRegistry(approvalManager)
+	if err = tools.RegisterMemory(toolRegistry, memoryStore); err != nil {
+		log.Error("memory tools", "error", err.Error())
+		os.Exit(1)
+	}
+	if cfg.WorkspaceDir != "" {
+		if err = tools.RegisterWorkspace(toolRegistry, tools.NewWorkspace(cfg.WorkspaceDir), nil); err != nil {
+			log.Error("workspace tools", "error", err.Error())
+			os.Exit(1)
+		}
+	}
+	catalog, err := toolRegistry.Catalog()
+	if err != nil {
+		log.Error("tool catalog", "error", err.Error())
+		os.Exit(1)
+	}
+	a := &agent.Agent{
+		Model: m, Sessions: sessions, Health: h, Version: version,
+		Approvals: approvalManager, Memory: memoryStore, Limits: budgetLimits, Prices: priceLimits,
+		Tools: toolRegistry, WorkspaceRoot: cfg.WorkspaceDir, SystemPrompt: cfg.Agent.SystemPrompt,
+		MaxSteps: cfg.Agent.MaxSteps, MaxCallsPerStep: cfg.Agent.MaxCallsPerStep,
+		MaxToolResultBytes: cfg.Agent.MaxToolResultBytes, MaxTokens: cfg.Agent.MaxTokens,
+		Mode: policy.Admin,
+	}
 	guard, err := security.NewMessageGuard(security.SystemClock{}, cfg.Limits.MaxMessageBytes, cfg.Limits.MessagesPerMinute, cfg.Limits.MessageBurst)
 	if err != nil {
 		log.Error("message guard", "error", err.Error())
 		os.Exit(1)
 	}
 	g := &telegram.Gateway{Client: telegram.New(token), Handler: a, Owner: cfg.OwnerTelegramID, PollTimeout: cfg.Telegram.PollTimeoutSeconds, Log: log, Health: h, Store: db, Guard: guard, MaxAttempts: cfg.Limits.MaxRetries}
-	log.Info("mosaid started", "version", version, "commit", commit)
+	log.Info("mosaid started", "version", version, "commit", commit, "tools", len(catalog), "workspace", cfg.WorkspaceDir != "")
 	if err = g.Run(ctx); err != nil {
 		log.Error("gateway stopped", "error", err.Error())
 		os.Exit(1)
