@@ -1,8 +1,8 @@
 module github.com/mohamedmasoud3030-tech/mosaid
 
-go 1.25.12
+go 1.26.10
 
-toolchain go1.25.13
+toolchain go1.26.10
 
 require (
 	github.com/modelcontextprotocol/go-sdk v1.7.0
