@@ -2,8 +2,6 @@ module github.com/mohamedmasoud3030-tech/mosaid
 
 go 1.26.10
 
-toolchain go1.26.10
-
 require (
 	github.com/modelcontextprotocol/go-sdk v1.7.0
 	modernc.org/sqlite v1.53.0
