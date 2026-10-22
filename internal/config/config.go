@@ -9,16 +9,29 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/secrets"
 )
 
 type Config struct {
-	DataDir         string   `json:"data_dir"`
-	OwnerTelegramID int64    `json:"owner_telegram_id"`
-	Telegram        Telegram `json:"telegram"`
-	Model           Model    `json:"model"`
-	Limits          Limits   `json:"limits"`
+	DataDir         string        `json:"data_dir"`
+	WorkspaceDir    string        `json:"workspace_dir,omitempty"`
+	OwnerTelegramID int64         `json:"owner_telegram_id"`
+	Telegram        Telegram      `json:"telegram"`
+	Model           Model         `json:"model"`
+	Agent           AgentSettings `json:"agent"`
+	Limits          Limits        `json:"limits"`
+}
+
+// AgentSettings configures the bounded tool-calling loop. Every field is
+// optional; the runtime applies conservative defaults for zero values.
+type AgentSettings struct {
+	MaxSteps           int    `json:"max_steps,omitempty"`
+	MaxCallsPerStep    int    `json:"max_calls_per_step,omitempty"`
+	MaxToolResultBytes int    `json:"max_tool_result_bytes,omitempty"`
+	MaxTokens          int    `json:"max_tokens,omitempty"`
+	SystemPrompt       string `json:"system_prompt,omitempty"`
 }
 type Telegram struct {
 	TokenFile          string `json:"token_file"`
@@ -106,7 +119,64 @@ func (c *Config) Validate() error {
 	if c.Limits.MessagesPerMinute < 1 || c.Limits.MessagesPerMinute > 600 || c.Limits.MessageBurst < 1 || c.Limits.MessageBurst > c.Limits.MessagesPerMinute {
 		return errors.New("Telegram flood limits must be explicitly configured and bounded")
 	}
+	if err := c.validateAgent(); err != nil {
+		return err
+	}
 	return nil
+}
+
+func (c *Config) validateAgent() error {
+	if c.Agent.MaxSteps != 0 && (c.Agent.MaxSteps < 1 || c.Agent.MaxSteps > 12) {
+		return errors.New("agent.max_steps must be between 1 and 12")
+	}
+	if c.Agent.MaxSteps > 0 && c.Agent.MaxSteps > c.Limits.MaxModelSteps {
+		return errors.New("agent.max_steps must not exceed limits.max_model_steps")
+	}
+	if c.Agent.MaxCallsPerStep != 0 && (c.Agent.MaxCallsPerStep < 1 || c.Agent.MaxCallsPerStep > 8) {
+		return errors.New("agent.max_calls_per_step must be between 1 and 8")
+	}
+	if c.Agent.MaxToolResultBytes != 0 && (c.Agent.MaxToolResultBytes < 512 || c.Agent.MaxToolResultBytes > 65536) {
+		return errors.New("agent.max_tool_result_bytes must be between 512 and 65536")
+	}
+	if c.Agent.MaxTokens != 0 && (c.Agent.MaxTokens < 128 || c.Agent.MaxTokens > 8192) {
+		return errors.New("agent.max_tokens must be between 128 and 8192")
+	}
+	if len(c.Agent.SystemPrompt) > 8000 {
+		return errors.New("agent.system_prompt must not exceed 8000 bytes")
+	}
+	if c.WorkspaceDir == "" {
+		return nil
+	}
+	if !filepath.IsAbs(c.WorkspaceDir) {
+		return errors.New("workspace_dir must be absolute")
+	}
+	c.WorkspaceDir = filepath.Clean(c.WorkspaceDir)
+	if c.WorkspaceDir == string(filepath.Separator) {
+		return errors.New("workspace_dir must not be the filesystem root")
+	}
+	info, err := os.Stat(c.WorkspaceDir)
+	if err != nil {
+		return fmt.Errorf("workspace_dir: %w", err)
+	}
+	if !info.IsDir() {
+		return errors.New("workspace_dir must be a directory")
+	}
+	if within(c.WorkspaceDir, c.DataDir) {
+		return errors.New("workspace_dir must not contain data_dir (secrets and database)")
+	}
+	if within(c.DataDir, c.WorkspaceDir) {
+		return errors.New("data_dir must not be inside workspace_dir")
+	}
+	return nil
+}
+
+// within reports whether child is parent or inside parent.
+func within(parent, child string) bool {
+	relative, err := filepath.Rel(parent, child)
+	if err != nil {
+		return false
+	}
+	return relative == "." || (relative != ".." && !strings.HasPrefix(relative, ".."+string(filepath.Separator)))
 }
 func ReadSecret(path string) (string, error) {
 	value, err := (secrets.FileSource{}).Read(path)

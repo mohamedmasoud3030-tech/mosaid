@@ -22,6 +22,8 @@ phase0-diagnostics-*.tar.gz*
 
 # Build/cache
 .cache/
+go.work
+go.work.sum
 build/
 build-*/
 dist/

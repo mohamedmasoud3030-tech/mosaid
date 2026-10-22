@@ -3,19 +3,25 @@ package agent
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/health"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/memory"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/message"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/model"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/policy"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/security"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/storage"
-	"strconv"
-	"strings"
-	"sync"
-	"time"
+	"github.com/mohamedmasoud3030-tech/mosaid/internal/tools"
 )
 
+// Agent is the Telegram-facing owner agent. When Tools is configured and the
+// model client supports native tool calling, user messages run through the
+// bounded agent loop; otherwise the agent degrades to plain chat.
 type Agent struct {
 	Model     model.Client
 	Sessions  *storage.SessionStore
@@ -25,9 +31,24 @@ type Agent struct {
 	Memory    *memory.Store
 	Limits    security.BudgetLimits
 	Prices    security.PriceLimits
+
+	// Agent-core configuration.
+	Tools              *tools.Registry
+	WorkspaceRoot      string
+	SystemPrompt       string
+	MaxSteps           int
+	MaxCallsPerStep    int
+	MaxToolResultBytes int
+	MaxTokens          int
+	Mode               policy.Mode
+
 	mu        sync.Mutex
 	cancel    context.CancelFunc
+	pending   map[string]pendingApproval
+	pendingMu sync.Mutex
 }
+
+const helpText = "Mosaid commands: /help /status /tools /stop /approve <token> /deny <token> /memory <query> /remember <text> /forget <id> /export"
 
 func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outbound, error) {
 	text := strings.TrimSpace(in.Text)
@@ -38,23 +59,12 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	}
 	switch fields[0] {
 	case "/help":
-		out.Text = "Mosaid commands: /status /help /stop /approve /deny /memory <query> /remember <text> /forget <id> /export"
+		out.Text = helpText
 		return out, nil
 	case "/approve", "/deny":
-		if a.Approvals == nil || len(fields) != 2 {
-			out.Text = "Approval command requires one token."
-			return out, nil
-		}
-		decision := "approved"
-		if fields[0] == "/deny" {
-			decision = "denied"
-		}
-		if err := a.Approvals.ResolveToken(ctx, fields[1], in.UserID, decision); err != nil {
-			out.Text = "Approval rejected: " + err.Error()
-			return out, nil
-		}
-		out.Text = "Approval " + decision + "."
-		return out, nil
+		return a.handleApproval(ctx, in, fields)
+	case "/tools":
+		return a.handleTools(in)
 	case "/memory":
 		if a.Memory == nil || len(fields) < 2 {
 			out.Text = "Usage: /memory <query>"
@@ -123,11 +133,23 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 		out.Text = "Active request stopped."
 		return out, nil
 	}
-	_ = a.Sessions.Append(in.ChatID, "user", text)
-	hist, err := a.Sessions.Recent(in.ChatID, 20)
+
+	if err := a.Sessions.Append(in.ChatID, "user", text); err != nil {
+		return out, err
+	}
+	history, err := a.Sessions.Recent(in.ChatID, 20)
 	if err != nil {
 		return out, err
 	}
+	if _, ok := a.agenticEnabled(); ok {
+		return a.handleAgenticChat(ctx, in, history)
+	}
+	return a.legacyChat(ctx, in, out, history)
+}
+
+// legacyChat is the pre-agent-core path: one completion, no tools. It remains
+// for clients that cannot do native tool calling and for offline tests.
+func (a *Agent) legacyChat(ctx context.Context, in message.Inbound, out message.Outbound, history []model.Message) (message.Outbound, error) {
 	budget, err := security.NewBudget(a.Limits)
 	if err != nil {
 		return out, err
@@ -136,7 +158,7 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 		return out, err
 	}
 	inputCharacters := 0
-	for _, item := range hist {
+	for _, item := range history {
 		inputCharacters += len(item.Content)
 	}
 	if err = budget.UseTokens(estimatedTokens(inputCharacters)); err != nil {
@@ -152,7 +174,7 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	}
 	a.cancel = cancel
 	a.mu.Unlock()
-	answer, err := a.Model.Complete(run, hist)
+	answer, err := a.Model.Complete(run, history)
 	cancel()
 	a.mu.Lock()
 	a.cancel = nil
@@ -166,7 +188,9 @@ func (a *Agent) Handle(ctx context.Context, in message.Inbound) (message.Outboun
 	if err = budget.UseCost(security.TokenCostUSD(estimatedTokens(len(answer)), a.Prices.OutputPer1M)); err != nil {
 		return out, err
 	}
-	_ = a.Sessions.Append(in.ChatID, "assistant", answer)
+	if err = a.Sessions.Append(in.ChatID, "assistant", answer); err != nil {
+		return out, err
+	}
 	out.Text = answer
 	return out, nil
 }
