@@ -128,6 +128,21 @@ go run ./cmd/mosaid-cli --config /path/config.json --message "/tools"
 * Approval previews are bounded to 400 bytes, so a huge file body cannot flood
   the chat.
 
+## CI state
+
+* `gofmt`, `go vet`, unit tests, race tests and the secret scan pass in CI for
+  this branch.
+* `staticcheck` findings from the first push were fixed: a duration that was
+  always zero, an S1016 struct conversion, and one unused test helper.
+* `govulncheck` fails on symbols that predate this change (`research.Fetcher.Fetch`,
+  `mcpclient.init`, `storage.RestoreBackup`). The same job fails on `main`, so it
+  is a pre-existing stdlib advisory, not a regression here. Fixing it means
+  changing the pinned Go version and therefore the phone-kit binary checksums —
+  an owner decision.
+* SBOM and license reproducibility could not run in the build sandbox because
+  `proxy.golang.org` is blocked; `go.mod` and `go.sum` are untouched, so CI
+  regenerates identical manifests.
+
 ## Known limitations
 
 * One turn is processed at a time by the Telegram gateway; long tool calls delay
