@@ -1,3 +1,5 @@
+> 📌 **Canonical source:** [`docs/phase0/ACCEPTANCE-CRITERIA.md`](../../docs/phase0/ACCEPTANCE-CRITERIA.md) — this file is a packaged snapshot inside the phone-kit. Edit the canonical file, not this copy. _(portfolio cleanup 2026-10-21)_
+
 # Phase 0 numeric acceptance criteria
 
 Phase 0 cannot receive a final GO before real-phone evidence covers all mandatory scenarios.
