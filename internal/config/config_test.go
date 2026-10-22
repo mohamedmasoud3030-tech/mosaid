@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -190,5 +191,32 @@ func TestTelegramIsOptionalForTerminalUse(t *testing.T) {
 	}))
 	if _, err := Load(relative); err == nil {
 		t.Fatal("relative token path accepted")
+	}
+}
+
+// TestShippedTemplatesDecode guards the example configs people copy and edit.
+// They cannot be run through Validate (they point at another machine's paths),
+// but every key must be known to the struct, or a copy-paste would fail later.
+func TestShippedTemplatesDecode(t *testing.T) {
+	for _, path := range []string{
+		"../../config/mosaid.laptop.example.json",
+		"../../config/mosaid.example.json",
+	} {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatalf("%s: %v", path, err)
+		}
+		decoder := json.NewDecoder(bytes.NewReader(data))
+		decoder.DisallowUnknownFields()
+		var cfg Config
+		if err := decoder.Decode(&cfg); err != nil {
+			t.Fatalf("%s: %v", path, err)
+		}
+		if cfg.Model.Name == "" || cfg.Model.BaseURL == "" {
+			t.Fatalf("%s: model section incomplete", path)
+		}
+		if cfg.Limits.MaxCostUSD <= 0 || cfg.Limits.MaxModelSteps <= 0 {
+			t.Fatalf("%s: limits missing, the cost tripwire would be disabled", path)
+		}
 	}
 }

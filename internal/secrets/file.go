@@ -2,7 +2,6 @@ package secrets
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 )
@@ -42,8 +41,8 @@ func (FileSource) Read(path string) (*Value, error) {
 	if info.Mode()&os.ModeSymlink != 0 || !info.Mode().IsRegular() {
 		return nil, errors.New("secret must be a regular non-symlink file")
 	}
-	if info.Mode().Perm()&0o077 != 0 {
-		return nil, fmt.Errorf("secret file permissions too broad: %o", info.Mode().Perm())
+	if err := checkSecretMode(info); err != nil {
+		return nil, err
 	}
 	if info.Size() < 1 || info.Size() > maxSecretBytes {
 		return nil, errors.New("secret file size invalid")

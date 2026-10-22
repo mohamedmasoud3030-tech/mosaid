@@ -134,7 +134,47 @@ Platform matrix (cross-compiled from the same source, no CGO):
 | Linux amd64/arm64 | ✅ builds and runs | ✅ | the reference host |
 | macOS arm64/amd64 | ✅ builds | ✅ | untested at runtime here |
 | Android arm64 (Termux) | ✅ | ✅ | Phase 14 kit |
-| Windows | ✗ | ✗ | `internal/security/singleton.go` uses `syscall.Kill`; use WSL2 |
+| Windows amd64 | ✅ builds | ✅ builds | prebuilt kit: `release/windows-amd64/`, see below |
+
+## Windows 10, 4 GB RAM, no phone
+
+Measured on this build (Linux host, same code paths): **11 MB RSS idle, 16 MB peak**
+during a full turn with a model call, tool execution and SQLite writes. The model
+runs on the provider, so the laptop only holds the process and your files. A 4 GB
+machine is not the constraint; the browser is.
+
+The prebuilt kit needs **no Go toolchain**: `release/windows-amd64/mosaid-windows-amd64.zip`
+(9.5 MB) contains `mosaid.exe`, `mosaid-cli.exe`, `config.example.json`,
+`start-mosaid.bat` and `RUN-WINDOWS.ar.md`. Rebuild it with
+`scripts/dev/build-windows-kit.sh`; the archive ships a `SHA256SUMS.txt` and the
+zip has a sidecar `.sha256`.
+
+Best path for that machine:
+
+1. Unzip to `C:\mosaid`, create `C:\mosaid\secrets\model.key` (one line, the
+   Gemini key), copy `config.example.json` to `config.json`.
+2. Run `start-mosaid.bat` (it sets `GOMEMLIMIT=64MiB` and keeps the window open
+   on error). Use **`mosaid-cli.exe`, not the daemon**: no bot, no open port, no
+   need to leave it running.
+3. Skip the Telegram daemon unless you later want phone access; then add a
+   `telegram` block and run `mosaid.exe`.
+
+Windows-specific behaviour:
+
+* `%LOCALAPPDATA%`-style per-user paths are the intended home for the key; when
+  the kit is used it lives in a per-user folder, which is what protects it.
+* Secret permissions are **not** checked on Windows (`internal/secrets/mode_windows.go`):
+  NTFS ACLs decide access, and Go reports every readable file as `0666`.
+  Rejecting that unconditionally would make the product unusable on Windows.
+* `process.run` termination stops the child process only, not its grandchildren
+  (`CREATE_NEW_PROCESS_GROUP` + `Process.Kill`), because no portable group kill
+  exists without spawning a shell. That tool stays unregistered in `cmd/mosaid`.
+* The singleton lock uses `OpenProcess` + `GetExitCodeProcess` instead of
+  `syscall.Kill`, so a stale lock after a crash or reboot is still taken over.
+
+Cross-compiled and compile-checked here for `windows/amd64` and `windows/arm64`;
+Linux runtime behaviour is verified end to end. The Windows *runtime* run is the
+one step that needs the owner's machine.
 
 ## Running it
 

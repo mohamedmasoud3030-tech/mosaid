@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"syscall"
 )
 
 type Lock struct{ dir string }
@@ -25,7 +24,7 @@ func Acquire(data string) (*Lock, error) {
 	}
 	b, _ := os.ReadFile(filepath.Join(d, "pid"))
 	pid, _ := strconv.Atoi(string(b))
-	if pid > 0 && syscall.Kill(pid, 0) == nil {
+	if processAlive(pid) {
 		return nil, fmt.Errorf("mosaid already running pid=%d", pid)
 	}
 	if err := os.RemoveAll(d); err != nil {
