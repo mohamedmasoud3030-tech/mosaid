@@ -298,7 +298,7 @@ func TestAgentFallsBackWithoutTools(t *testing.T) {
 
 func TestPendingApprovalsExpire(t *testing.T) {
 	f := newAgentFixture(t, &scriptedToolClient{})
-	f.agent.storePending(pendingLoop("tok"), message.Inbound{ChatID: 1, UserID: 42})
+	f.agent.storePending(pendingLoop("tok"))
 	f.agent.pendingMu.Lock()
 	item := f.agent.pending["tok"]
 	item.created = time.Now().UTC().Add(-2 * pendingTTL)
@@ -312,7 +312,7 @@ func TestPendingApprovalsExpire(t *testing.T) {
 func TestPendingApprovalsAreBounded(t *testing.T) {
 	f := newAgentFixture(t, &scriptedToolClient{})
 	for i := 0; i < pendingLimit+3; i++ {
-		f.agent.storePending(pendingLoop(string(rune('a'+i))), message.Inbound{ChatID: 1, UserID: 42})
+		f.agent.storePending(pendingLoop(string(rune('a' + i))))
 	}
 	f.agent.pendingMu.Lock()
 	size := len(f.agent.pending)

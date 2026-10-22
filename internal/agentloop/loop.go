@@ -269,9 +269,13 @@ func (r *runner) callID(call model.ToolCall) string {
 
 func (r *runner) execute(ctx context.Context, call model.ToolCall) (string, *Pending, ToolEvent) {
 	started := r.cfg.Clock()
-	event := ToolEvent{Name: call.Function.Name}
-	defer func() { event.Duration = r.cfg.Clock().Sub(started) }()
+	observation, pending, event := r.executeCall(ctx, call)
+	event.Duration = r.cfg.Clock().Sub(started)
+	return observation, pending, event
+}
 
+func (r *runner) executeCall(ctx context.Context, call model.ToolCall) (string, *Pending, ToolEvent) {
+	event := ToolEvent{Name: call.Function.Name}
 	if err := call.Validate(); err != nil {
 		event.Failed = true
 		event.Summary = err.Error()

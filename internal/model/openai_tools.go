@@ -83,14 +83,7 @@ func (o *OpenAI) CompleteWithTools(ctx context.Context, req ToolRequest) (Comple
 			if err := validateToolSpec(spec); err != nil {
 				return Completion{}, err
 			}
-			wire = append(wire, wireTool{
-				Type: "function",
-				Function: wireFunction{
-					Name:        spec.Name,
-					Description: spec.Description,
-					Parameters:  spec.Parameters,
-				},
-			})
+			wire = append(wire, wireTool{Type: "function", Function: spec})
 		}
 		payload["tools"] = wire
 		payload["tool_choice"] = "auto"
@@ -198,14 +191,8 @@ func parseCompletion(data []byte) (Completion, bool, time.Duration, error) {
 }
 
 type wireTool struct {
-	Type     string       `json:"type"`
-	Function wireFunction `json:"function"`
-}
-
-type wireFunction struct {
-	Name        string          `json:"name"`
-	Description string          `json:"description,omitempty"`
-	Parameters  json.RawMessage `json:"parameters"`
+	Type     string   `json:"type"`
+	Function ToolSpec `json:"function"`
 }
 
 type wireToolCall struct {

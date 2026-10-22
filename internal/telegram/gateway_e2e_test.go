@@ -48,12 +48,6 @@ func (f *fakeTelegram) Send(_ context.Context, out message.Outbound) error {
 	return nil
 }
 
-func (f *fakeTelegram) push(update message.Inbound) {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-	f.updates = append(f.updates, update)
-}
-
 func (f *fakeTelegram) replies() []string {
 	f.mu.Lock()
 	defer f.mu.Unlock()

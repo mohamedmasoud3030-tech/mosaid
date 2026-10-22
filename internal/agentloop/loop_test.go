@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/approval"
 	"github.com/mohamedmasoud3030-tech/mosaid/internal/audit"
@@ -613,5 +614,28 @@ func TestProcessToolAbsentWithoutRunner(t *testing.T) {
 		if name == "process.run" {
 			t.Fatal("process.run registered without a runner")
 		}
+	}
+}
+
+func TestToolDurationIsMeasured(t *testing.T) {
+	f := newFixture(t)
+	f.writeFile(t, "a.md", "a")
+	cfg := f.config(&scriptedModel{steps: []func(model.ToolRequest) model.Completion{
+		func(model.ToolRequest) model.Completion {
+			return toolCompletion("c1", "workspace.list", `{"path":"."}`)
+		},
+		func(model.ToolRequest) model.Completion { return answerCompletion("done") },
+	}})
+	ticks := 0
+	cfg.Clock = func() time.Time {
+		ticks++
+		return time.Unix(0, 0).Add(time.Duration(ticks) * 10 * time.Millisecond)
+	}
+	outcome, err := Run(context.Background(), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(outcome.ToolEvents) != 1 || outcome.ToolEvents[0].Duration != 10*time.Millisecond {
+		t.Fatalf("duration = %v", outcome.ToolEvents)
 	}
 }

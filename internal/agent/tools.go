@@ -20,11 +20,8 @@ import (
 // intentionally not persisted: an approval that outlives the process is refused
 // rather than replayed, which keeps approval binding fail-closed.
 type pendingApproval struct {
-	loop     agentloop.Pending
-	chatID   int64
-	userID   int64
-	created  time.Time
-	messages []model.ChatMessage
+	loop    agentloop.Pending
+	created time.Time
 }
 
 const (
@@ -106,7 +103,7 @@ func (a *Agent) handleAgenticChat(ctx context.Context, in message.Inbound, histo
 func (a *Agent) finishTurn(ctx context.Context, in message.Inbound, out message.Outbound, outcome agentloop.Outcome) (message.Outbound, error) {
 	footer := a.toolFooter(outcome.ToolEvents)
 	if outcome.Pending != nil {
-		a.storePending(*outcome.Pending, in)
+		a.storePending(*outcome.Pending)
 		out.Text = a.approvalPrompt(*outcome.Pending) + footer
 		return out, nil
 	}
@@ -176,7 +173,7 @@ func previewArguments(raw string) string {
 	return raw[:approvalPreview] + "…"
 }
 
-func (a *Agent) storePending(pending agentloop.Pending, in message.Inbound) {
+func (a *Agent) storePending(pending agentloop.Pending) {
 	a.pendingMu.Lock()
 	defer a.pendingMu.Unlock()
 	if a.pending == nil {
@@ -199,13 +196,7 @@ func (a *Agent) storePending(pending agentloop.Pending, in message.Inbound) {
 		}
 		delete(a.pending, oldestToken)
 	}
-	a.pending[pending.Token] = pendingApproval{
-		loop:     pending,
-		chatID:   in.ChatID,
-		userID:   in.UserID,
-		created:  now,
-		messages: append([]model.ChatMessage(nil), pending.Messages...),
-	}
+	a.pending[pending.Token] = pendingApproval{loop: pending, created: now}
 }
 
 func (a *Agent) takePending(token string) (pendingApproval, bool) {

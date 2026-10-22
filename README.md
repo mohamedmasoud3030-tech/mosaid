@@ -6,7 +6,7 @@ Phase 15 adds the **agent core**: native tool calling, a bounded execution loop,
 
 ## Current status
 
-**Phase 15 complete: the agent can call tools through the existing policy and approval engine. 162 tests pass (including `-race`), and a credential-free end-to-end demo runs the real binary. The first physical-phone run has not happened yet.**
+**Phase 15 complete: the agent can call tools through the existing policy and approval engine. 163 tests pass (including `-race`), and a credential-free end-to-end demo runs the real binary. The first physical-phone run has not happened yet.**
 
 The intended first device is an unused Android/ARM64 phone running Termux, controlled from an iPhone through a private Telegram bot. The default model provider is the Google Gemini free tier via its officially documented OpenAI-compatible endpoint; the owner chose a free-only model policy.
 
