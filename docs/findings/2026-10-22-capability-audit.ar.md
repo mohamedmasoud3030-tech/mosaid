@@ -165,10 +165,15 @@ go run ./cmd/mosaid-cli --config ./config.json --workspace ~/notes
 - **حالة الفرع الحالي:** الوحدة والاختبارات و`vet` و`gofmt` والتغطية الأمنية كلها
   خضراء داخل CI. فحص `staticcheck` أظهر ثلاث ملاحظات، عالجتها كلها. الفحص الوحيد
   الذي يبقى أحمر هو `govulncheck` الموروث أعلاه.
-- **مهمة «Phase 0 preservation CI»** فشلت في خطوة تعمل على نسخة PicoClaw المثبّتة من
-  مستودع خارجي (وليس على كودنا). الدليل: `git diff origin/main` في مجلدات
-  `phase0-android-runtime` و`archive` و`phase14-android-package` و`.github` = صفر،
-  و`ci-selftest.sh` ينجح محلياً. الأرجح أنها مشكلة شبكة/بيئة في تلك الخطوة.
+- **مهمة «Phase 0 preservation CI»** فشلت مرة واحدة في خطوة تعمل على نسخة PicoClaw
+  المثبّتة من مستودع خارجي، ثم **نجحت عند إعادة المحاولة على نفس الكوميت** (5m18s).
+  أي أنها عابرة/بيئية وليست ناتجة عن التغييرات. الدليل الإضافي:
+  `git diff origin/main` في مجلدات `phase0-android-runtime` و`archive` و
+  `phase14-android-package` و`.github` = صفر، و`ci-selftest.sh` ينجح محلياً.
+- **كيف تعرف الثغرة بالاسم** عندك:
+  `go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 -json ./... | jq -r '.vulns[].osv.id'`
+  ثم قرّر: ترقية إصدار Go في CI فقط (حزمة الهاتف تبني بإصدارها المثبّت، فلن تتأثر)،
+  أو توثيق استثناء مؤقت. لا تخفِ الإشارة الحمراء.
 
 ## ملاحظة منهجية
 
