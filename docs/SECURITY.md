@@ -18,7 +18,7 @@ Report suspected vulnerabilities privately to the repository owner. Do not open 
 - No free-form shell, browser automation, dynamic Go plugins, MCP auto-discovery, self-modification, or automatic self-update.
 - Official Meta Graph API only; no passwords, cookies, or unofficial Instagram API.
 
-See [the product threat model](docs/security/THREAT-MODEL.md) and [hardening controls](docs/security/HARDENING.md).
+See [the product threat model](security/THREAT-MODEL.md) and [hardening controls](security/HARDENING.md).
 
 ## Secret rules
 
@@ -37,7 +37,7 @@ Termux does **not** provide a strong sandbox between processes running under its
 
 ## Continuous controls
 
-The Phase 13 gate verifies formatting, module checksums, 140 unit tests, race tests, vet, staticcheck, govulncheck, Linux and Android builds, binary checksums, secret scan, deterministic CycloneDX SBOM, license classification, and a clean clone. The expanded Product CI is active and passed on commit `9376d77`; see [`docs/handoff/PHASE13-WORKFLOW-ACTIVATION.md`](docs/handoff/PHASE13-WORKFLOW-ACTIVATION.md). Tracked SBOM/license evidence is under [`security/`](security/).
+The Phase 13 gate verifies formatting, module checksums, 140 unit tests, race tests, vet, staticcheck, govulncheck, Linux and Android builds, binary checksums, secret scan, deterministic CycloneDX SBOM, license classification, and a clean clone. The expanded Product CI is active and passed on commit `9376d77`; see [`docs/specs/phone-kit/PHASE13-WORKFLOW-ACTIVATION.md`](specs/phone-kit/PHASE13-WORKFLOW-ACTIVATION.md). Tracked SBOM/license evidence is under [`security/`](security/).
 
 Security scans are point-in-time evidence, not proof that the system is vulnerability-free.
 
