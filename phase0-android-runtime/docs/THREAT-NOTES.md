@@ -1,3 +1,5 @@
+> 📌 **Canonical source:** [`docs/phase0/THREAT-NOTES.md`](../../docs/phase0/THREAT-NOTES.md) — this file is a packaged snapshot inside the phone-kit. Edit the canonical file, not this copy. _(portfolio cleanup 2026-10-21)_
+
 # Phase 0 threat notes
 
 This is a qualification harness, not a hardened personal-agent product.

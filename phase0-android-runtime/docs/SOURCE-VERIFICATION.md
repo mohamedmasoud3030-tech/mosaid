@@ -1,3 +1,5 @@
+> 📌 **Canonical source:** [`docs/phase0/SOURCE-VERIFICATION.md`](../../docs/phase0/SOURCE-VERIFICATION.md) — this file is a packaged snapshot inside the phone-kit. Edit the canonical file, not this copy. _(portfolio cleanup 2026-10-21)_
+
 # Phase 0 — Source and release verification
 
 Cut-off: 2026-07-29 (Asia/Muscat)
