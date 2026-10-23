@@ -1,3 +1,5 @@
+> Canonical status lives in [docs/STATUS.md](../STATUS.md). This file is kept for history.
+
 # Mosaid implementation status
 
 | Phase | Status | Commit | Tests | External gates | Notes |
